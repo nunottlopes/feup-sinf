@@ -16,7 +16,7 @@
 
 */
 // @material-ui/icons
-import Dashboard from "@material-ui/icons/Dashboard";
+import { Home, TrendingUp, EuroSymbol, Store, ShoppingCart } from "@material-ui/icons";
 
 // core components/views for Admin layout
 import { Overview, Financial, Sales, Inventory, Purchases } from './views/';
@@ -25,35 +25,35 @@ const dashboardRoutes = [
   {
     path: "/overview",
     name: "Overview",
-    icon: Dashboard,
+    icon: Home,
     component: Overview,
     layout: "/admin"
   },
   {
     path: "/financial",
     name: "Financial",
-    icon: Dashboard,
+    icon: TrendingUp,
     component: Financial,
     layout: "/admin"
   },
   {
     path: "/sales",
     name: "Sales",
-    icon: Dashboard,
+    icon: EuroSymbol,
     component: Sales,
     layout: "/admin"
   },
   {
     path: "/inventory",
     name: "Inventory",
-    icon: Dashboard,
+    icon: Store,
     component: Inventory,
     layout: "/admin"
   },
   {
     path: "/purchases",
     name: "Purchases",
-    icon: Dashboard,
+    icon: ShoppingCart,
     component: Purchases,
     layout: "/admin"
   },
