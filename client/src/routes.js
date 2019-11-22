@@ -19,22 +19,42 @@
 import Dashboard from "@material-ui/icons/Dashboard";
 
 // core components/views for Admin layout
+import { Overview, Financial, Sales, Inventory, Purchases } from './views/';
 
 const dashboardRoutes = [
   {
+    path: "/overview",
+    name: "Overview",
     icon: Dashboard,
+    component: Overview,
     layout: "/admin"
   },
   {
+    path: "/financial",
+    name: "Financial",
+    icon: Dashboard,
+    component: Financial,
     layout: "/admin"
   },
   {
+    path: "/sales",
+    name: "Sales",
+    icon: Dashboard,
+    component: Sales,
     layout: "/admin"
   },
   {
+    path: "/inventory",
+    name: "Inventory",
+    icon: Dashboard,
+    component: Inventory,
     layout: "/admin"
   },
   {
+    path: "/purchases",
+    name: "Purchases",
+    icon: Dashboard,
+    component: Purchases,
     layout: "/admin"
   },
 ];
