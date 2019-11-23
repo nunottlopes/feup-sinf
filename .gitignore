@@ -1,1 +1,4 @@
 node_modules/
+server/store/
+server/.env
+server/logs/
