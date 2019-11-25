@@ -3,6 +3,7 @@ import {
   transition,
   container
 } from "assets/jss/material-dashboard-react.js";
+import { blue } from "@material-ui/core/colors";
 
 const appStyle = theme => ({
   wrapper: {
@@ -30,6 +31,9 @@ const appStyle = theme => ({
   container,
   map: {
     marginTop: "70px"
+  },
+  sideBar: {
+    backgroundcolor: "blue"
   }
 });
 
