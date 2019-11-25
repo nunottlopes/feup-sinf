@@ -31,9 +31,6 @@ const appStyle = theme => ({
   container,
   map: {
     marginTop: "70px"
-  },
-  sideBar: {
-    backgroundcolor: "blue"
   }
 });
 

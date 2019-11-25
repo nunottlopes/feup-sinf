@@ -93,7 +93,7 @@ export default function Admin({ ...rest }) {
         logoText={"Company Dashboard"}
         className={classes.sideBar}
         //logo={logo}
-        //handleDrawerToggle={handleDrawerToggle}
+        handleDrawerToggle={handleDrawerToggle}
         open={mobileOpen}
         color={color}
         {...rest}
