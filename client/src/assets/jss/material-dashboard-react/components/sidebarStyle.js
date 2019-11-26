@@ -19,6 +19,7 @@ const sidebarStyle = theme => ({
   drawerPaper: {
     border: "none",
     position: "fixed",
+    backgroundColor: "rgb(62, 63, 65)",
     top: "0",
     bottom: "0",
     left: "0",
@@ -62,6 +63,7 @@ const sidebarStyle = theme => ({
   },
   logo: {
     position: "relative",
+    color: "white",
     padding: "15px 15px",
     zIndex: "4",
     "&:after": {

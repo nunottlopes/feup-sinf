@@ -3,6 +3,7 @@ import {
   transition,
   container
 } from "assets/jss/material-dashboard-react.js";
+import { blue } from "@material-ui/core/colors";
 
 const appStyle = theme => ({
   wrapper: {
