@@ -56,3 +56,15 @@ exports.getTaxTypeInfo = async () => {
     }
   });
 };
+
+exports.getJasminAPI = async (endpoint) => {
+  return await request({
+    method: "GET",
+    url: `${url}/api/${tenant}/${organization}${endpoint}`,
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      Authorization: await this.getToken(),
+    }
+  });
+};
