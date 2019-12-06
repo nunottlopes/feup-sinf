@@ -90,7 +90,7 @@ export default function Admin({ ...rest }) {
     <div className={classes.wrapper}>
       <Sidebar
         routes={routes}
-        logoText={"Company Dashboard"}
+        logoText={"360º CompanyDashboard"}
         className={classes.sideBar}
         //logo={logo}
         handleDrawerToggle={handleDrawerToggle}
@@ -98,26 +98,13 @@ export default function Admin({ ...rest }) {
         color={color}
         {...rest}
       />
+      // classes.mainPanel é um problema, try
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
+          color="danger"
           routes={routes}
-          handleDrawerToggle={handleDrawerToggle}
+          //handleDrawerToggle={handleDrawerToggle}
           {...rest}
-        />
-        {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
-        {getRoute() ? (
-          <div className={classes.content}>
-            <div className={classes.container}>{switchRoutes}</div>
-          </div>
-        ) : (
-          <div className={classes.map}>{switchRoutes}</div>
-        )}
-        {getRoute() ? <Footer /> : null}
-        <FixedPlugin
-          handleColorClick={handleColorClick}
-          bgColor={color}
-          handleFixedClick={handleFixedClick}
-          fixedClasses={fixedClasses}
         />
       </div>
     </div>
