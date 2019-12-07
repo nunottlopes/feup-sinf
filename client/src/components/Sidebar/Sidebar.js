@@ -45,30 +45,36 @@ export default function Sidebar(props) {
           [" " + classes.whiteFont]: activeRoute(prop.layout + prop.path)
         });
         return (
-          <ListItem button className={classes.itemLink + listItemClasses}>
-            {typeof prop.icon === "string" ? (
-              <Icon
-                className={classNames(classes.itemIcon, whiteFontClasses, {
-                  [classes.itemIconRTL]: props.rtlActive
+          <NavLink to={prop.layout + prop.path}
+            className={activePro + classes.item}
+            activeClassName="active"
+            key={key}
+          >
+            <ListItem button className={classes.itemLink + listItemClasses}>
+              {typeof prop.icon === "string" ? (
+                <Icon
+                  className={classNames(classes.itemIcon, whiteFontClasses, {
+                    [classes.itemIconRTL]: props.rtlActive
+                  })}
+                >
+                  {prop.icon}
+                </Icon>
+              ) : (
+                  <prop.icon
+                    className={classNames(classes.itemIcon, whiteFontClasses, {
+                      [classes.itemIconRTL]: props.rtlActive
+                    })}
+                  />
+                )}
+              <ListItemText
+                primary={props.rtlActive ? prop.rtlName : prop.name}
+                className={classNames(classes.itemText, whiteFontClasses, {
+                  [classes.itemTextRTL]: props.rtlActive
                 })}
-              >
-                {prop.icon}
-              </Icon>
-            ) : (
-              <prop.icon
-                className={classNames(classes.itemIcon, whiteFontClasses, {
-                  [classes.itemIconRTL]: props.rtlActive
-                })}
+                disableTypography={true}
               />
-            )}
-            <ListItemText
-              primary={props.rtlActive ? prop.rtlName : prop.name}
-              className={classNames(classes.itemText, whiteFontClasses, {
-                [classes.itemTextRTL]: props.rtlActive
-              })}
-              disableTypography={true}
-            />
-          </ListItem>
+            </ListItem>
+          </NavLink>
         );
       })}
     </List>
