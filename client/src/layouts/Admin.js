@@ -98,14 +98,16 @@ export default function Admin({ ...rest }) {
         color={color}
         {...rest}
       />
-      // classes.mainPanel é um problema, try
+
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
-          color="danger"
           routes={routes}
-          //handleDrawerToggle={handleDrawerToggle}
+          handleDrawerToggle={handleDrawerToggle}
           {...rest}
         />
+        {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
+
+        <div className={classes.map}>{switchRoutes}</div>
       </div>
     </div>
   );

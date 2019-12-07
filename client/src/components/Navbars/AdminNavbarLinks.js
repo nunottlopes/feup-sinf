@@ -10,10 +10,10 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Hidden from "@material-ui/core/Hidden";
 import Poppers from "@material-ui/core/Popper";
 import Divider from "@material-ui/core/Divider";
+//import DateRangePicker from "material-date-range-picker";
 // @material-ui/icons
 import Person from "@material-ui/icons/Person";
-import Notifications from "@material-ui/icons/Notifications";
-import Dashboard from "@material-ui/icons/Dashboard";
+import Calendar from "@material-ui/icons/CalendarToday";
 import Search from "@material-ui/icons/Search";
 // core components
 import CustomInput from "components/CustomInput/CustomInput.js";
@@ -49,23 +49,40 @@ export default function AdminNavbarLinks() {
   };
   return (
     <div>
-     
-        <Button
-          color={window.innerWidth > 959 ? "transparent" : "white"}
-          justIcon={window.innerWidth > 959}
-          simple={!(window.innerWidth > 959)}
-          aria-owns={openProfile ? "profile-menu-list-grow" : null}
-          aria-haspopup="true"
-          onClick={handleClickProfile}
-          className={classes.buttonLink}
-        >
-          <Person className={classes.icons} />
-          <Hidden mdUp implementation="css">
-            <p className={classes.linkText}>Profile</p>
-          </Hidden>
-        </Button>
-       
-     
+      <Button
+        color={window.innerWidth > 959 ? "transparent" : "white"}
+        justIcon={window.innerWidth > 959}
+        simple={!(window.innerWidth > 959)}
+        aria-label="Calendar"
+        className={classes.buttonLink}
+        /*onClick={
+          <DateRangePicker
+            fromDate={this.state.fromDate} //from date
+            toDate={this.state.toDate} //to Date
+            onChange={this._handleDateRangeChange}
+            closeDialogOnSelection //close date dialog after selecting both from and to date
+          />
+        }*/
+      >
+        <Calendar className={classes.icons} />
+        <Hidden mdUp implementation="css">
+          <p className={classes.linkText}>Dashboard</p>
+        </Hidden>
+      </Button>
+      <Button
+        color={window.innerWidth > 959 ? "transparent" : "white"}
+        justIcon={window.innerWidth > 959}
+        simple={!(window.innerWidth > 959)}
+        aria-owns={openProfile ? "profile-menu-list-grow" : null}
+        aria-haspopup="true"
+        onClick={handleClickProfile}
+        className={classes.buttonLink}
+      >
+        <Person className={classes.icons} />
+        <Hidden mdUp implementation="css">
+          <p className={classes.linkText}>Profile</p>
+        </Hidden>
+      </Button>
     </div>
   );
 }
