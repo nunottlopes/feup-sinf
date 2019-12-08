@@ -1,6 +1,5 @@
 var express = require("express");
 var router = express.Router();
-const jasmin = require("../config/jasmin");
 const getJasminAPI = require("../config/jasmin").getJasminAPI;
 const parseSaft = require("../parser/saft").parseSaft;
 
@@ -16,20 +15,9 @@ router.get("/", function(req, res) {
     });
 });
 
-router.get(`/testes`, function(req, res) {
-  jasmin
-    .getJasminAPI("/billing/invoices/")
-    .then(resp => {
-      res.send(resp);
-    })
-    .catch(err => {
-      res.send(err);
-    });
-});
-
 router.get("/parse/saft", function(req, res) {
-  console.log("PARSING SAF-T FILE");
-  parseSaft();
+  console.log("Parsing SAF-T file");
+  parseSaft(res);
 });
 
 module.exports = router;

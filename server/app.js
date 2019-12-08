@@ -5,14 +5,10 @@ const logger = require("./config/logger.js");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const { STARTED_LISTENING } = require("./utils/constants/logger-messages");
-var localStorage = require("./utils/local-storage");
+// var localStorage = require("./utils/local-storage");
 
 // Routes
 const indexRouter = require("./routes/index");
-// const userRouter = require('./routes/user');
-// const projectRouter = require('./routes/project');
-// const activityRouter = require('./routes/activity');
-// const patientRouter = require('./routes/patient');
 
 const app = express();
 
@@ -21,8 +17,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-
-// For MongoDB - https://www.npmjs.com/package/connect-mongo
 
 app.use("/api/", indexRouter);
 
