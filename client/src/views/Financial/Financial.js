@@ -67,6 +67,28 @@ const balance_sheet_table = () => {
     )
 }
 
+const revenue_from_sales_graph = () => {
+    const data = {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        series: [
+            {
+                className: 'revenue_from_sales',
+                data: [0, 20, 30, 40, 50, 20, 5, 70, 80, 50, 35]
+            },
+            {
+                className: 'cost_of_goods_sold',
+                data: [0, 20, 10, 5, 3, 30, 25, 30, 40, 64, 80]
+            },
+        ]
+    }
+
+    const options = {
+        height: 400
+    }
+
+    return <ChartistGraph type='Line' data={data} options={options}></ChartistGraph>
+}
+
 const Financial = () => {
     const classes = useStyles();
     console.log(classes)
@@ -80,16 +102,20 @@ const Financial = () => {
             </Grid>
 
 
-            <Grid item md={6} sm={12}>
+            <Grid item md={8} sm={12}>
                 <Paper>
-                    <Typography variant='h5' className={classes.graphs_title}>Assets in Stock</Typography>
-                    10 000€
+                    <Typography variant='h5' className={classes.graphs_title}>Revenue from sales and cost of goods sold</Typography>
+                    {revenue_from_sales_graph()}
                 </Paper>
             </Grid>
-            <Grid item md={6} sm={12}>
+            <Grid item md={4} sm={12}>
                 <Paper>
-                    <Typography variant='h5' className={classes.graphs_title}>Monthly Sales</Typography>
-                    5 days
+                    <Typography variant='h5' className={classes.graphs_title}>EBIT</Typography>
+                    € 25,078.00
+                </Paper>
+                <Paper className="financial_fix">
+                    <Typography variant='h5' className={classes.graphs_title}>EBITDA</Typography>
+                    € 25,078.00
                 </Paper>
             </Grid>
 
