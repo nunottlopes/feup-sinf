@@ -32,4 +32,27 @@ router.get("/parse/saft", function(req, res) {
   parseSaft();
 });
 
+
+router.get(`/billing`, function(req,res){
+   jasmin
+   .getJasminAPI("/billing/invoices/")
+   .then(resp => {
+     res.send(resp);
+   })
+   .catch(err => {
+     res.send(err);
+   });
+})
+
+
+
+
+/*
+
+  Purchases
+
+*/
+
+
+
 module.exports = router;
