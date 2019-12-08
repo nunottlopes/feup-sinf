@@ -7,9 +7,9 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { makeStyles } from "@material-ui/core/styles";
 // core components
 import Sidebar from "components/Sidebar/Sidebar.js";
+import Navbar from "components/Navbars/Navbar.js";
 
 import routes from "routes.js";
-
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
 let ps;
@@ -51,7 +51,7 @@ export default function Admin({ ...rest }) {
       setMobileOpen(false);
     }
   };
-  
+
   // initialize and destroy the PerfectScrollbar plugin
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
@@ -84,6 +84,11 @@ export default function Admin({ ...rest }) {
       />
 
       <div className={classes.mainPanel} ref={mainPanel}>
+        <Navbar
+          routes={routes}
+          handleDrawerToggle={handleDrawerToggle}
+          {...rest}
+        />
         <div className={classes.map}>{switchRoutes}</div>
       </div>
     </div>
