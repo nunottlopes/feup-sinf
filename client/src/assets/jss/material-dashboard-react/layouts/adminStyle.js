@@ -3,13 +3,12 @@ import {
   transition,
   container
 } from "assets/jss/material-dashboard-react.js";
-import { blue } from "@material-ui/core/colors";
-
 const appStyle = theme => ({
   wrapper: {
     position: "relative",
     top: "0",
-    height: "100vh"
+    height: "100vh",
+    textAlign: "center"
   },
   mainPanel: {
     [theme.breakpoints.up("md")]: {
