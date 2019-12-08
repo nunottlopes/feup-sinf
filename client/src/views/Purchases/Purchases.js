@@ -6,6 +6,9 @@ import ChartistGraph from 'react-chartist';
 import { Typography } from "@material-ui/core";
 import { Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core/';
 
+import { ReactComponent as Logo } from 'assets/img/apple-icon.png';
+
+
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 0,
@@ -20,13 +23,12 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const top_clients_table = () => {
-    const table_header = ['Product ID', 'Name', 'Quantity']
+const suppliers_table = () => {
+    const table_header = ['Name', 'Contact', 'Total Expenses']
     const table_rows = [
-        { product_id: 'PRODUCT_ID1', name: 'Product 1', quantity: 100 },
-        { product_id: 'PRODUCT_ID2', name: 'Product 2', quantity: 90 },
-        { product_id: 'PRODUCT_ID3', name: 'Product 3', quantity: 50 },
-        { product_id: 'PRODUCT_ID4', name: 'Product 4', quantity: 20 },
+        { name: 'Webber Group', contact: 'info@webber.com', total_expenses: 22 },
+        { name: 'Lynch', contact: 'info@lynch.com', total_expenses: 13 },
+        { name: 'Jacobs LLC', contact: 'info@jacobs.com', total_expenses: 5 }
     ]
 
     return (
@@ -38,10 +40,84 @@ const top_clients_table = () => {
             </TableHead>
             <TableBody>
                 {table_rows.map(product => (
-                    <TableRow key={product.product_id}>
-                        <TableCell>{product.product_id}</TableCell>
+                    <TableRow key={product.name}>
                         <TableCell>{product.name}</TableCell>
-                        <TableCell>{product.quantity}</TableCell>
+                        <TableCell>{product.contact}</TableCell>
+                        <TableCell>{product.total_expenses}k €</TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
+    )
+}
+
+const purchases_graph = () => {
+    const data = {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        series: [
+            {
+                className: 'series-expenses',
+                data: [10, 20, 30, 40, 50, 20, 5, 70, 80, 50, 35, 40]
+            },
+        ]
+    }
+
+    const options = {
+        height: 300
+    }
+
+    return <ChartistGraph type='Line' data={data} options={options}></ChartistGraph>
+}
+
+const pendent_bills_table = () => {
+    const table_header = ['Supplier', 'Debt', 'Due Date']
+    const table_rows = [
+        { supplier: 'Webber Group', debt: 1230, due_date: '10/11/2019' },
+        { supplier: 'Webber Group', debt: 492, due_date: '20/11/2019' },
+        { supplier: 'Webber Group', debt: 180, due_date: '21/11/2019' },
+        { supplier: 'Webber Group', debt: 5027, due_date: '05/12/2019' }
+    ]
+
+    return (
+        <Table>
+            <TableHead>
+                <TableRow>
+                    {table_header.map(header => <TableCell>{header}</TableCell>)}
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {table_rows.map(product => (
+                    <TableRow key={product.supplier}>
+                        <TableCell>{product.supplier}</TableCell>
+                        <TableCell>{product.debt} €</TableCell>
+                        <TableCell>{product.due_date}</TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
+    )
+}
+
+const orders_delivery_table = () => {
+    const table_header = ['Order ID', 'Delivery Date']
+    const table_rows = [
+        { order_id: 'ECF.2019.6', delivery_date: '25/11/2019' },
+        { order_id: 'ECF.2019.7', delivery_date: '04/12/2019' },
+        { order_id: 'ECF.2019.10', delivery_date: '13/12/2019' }
+    ]
+
+    return (
+        <Table>
+            <TableHead>
+                <TableRow>
+                    {table_header.map(header => <TableCell>{header}</TableCell>)}
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {table_rows.map(product => (
+                    <TableRow key={product.order_ide}>
+                        <TableCell>{product.order_id}</TableCell>
+                        <TableCell>{product.delivery_date}</TableCell>
                     </TableRow>
                 ))}
             </TableBody>
@@ -56,34 +132,26 @@ const Purchases = () => {
         <Grid className={classes.grid} container spacing={2}>
             <Grid item md={6} sm={12}>
                 <Paper>
-                    <Typography variant='h5' className={classes.graphs_title}>MacBook Pro</Typography>
-                    Description
+                    <Typography variant='h5' className={classes.graphs_title}>Suppliers</Typography>
+                    {suppliers_table()}
                 </Paper>
             </Grid>
             <Grid item md={6} sm={12}>
                 <Paper>
-                    <Typography variant='h5' className={classes.graphs_title}>Growth</Typography>
-                    43%
+                    <Typography variant='h5' className={classes.graphs_title}>Purchases</Typography>
+                    {purchases_graph()}
                 </Paper>
             </Grid>
             <Grid item md={6} sm={12}>
-                <Paper className="financial_fix">
-                    <Typography variant='h5' className={classes.graphs_title}>Units in Stock</Typography>
-                    536
-                </Paper>
-            </Grid>
-            <Grid item md={6} sm={12}>
-                <Paper className="financial_fix">
-                    <Typography variant='h5' className={classes.graphs_title}>Unist Sold</Typography>
-                    10k
-                </Paper>
-            </Grid>
-
-
-            <Grid item md={12} sm={12}>
                 <Paper>
-                    <Typography variant='h5' className={classes.graphs_title}>Top products</Typography>
-                    {top_clients_table()}
+                    <Typography variant='h5' className={classes.graphs_title}>Pendent Bills</Typography>
+                    {pendent_bills_table()}
+                </Paper>
+            </Grid>
+            <Grid item md={6} sm={12}>
+                <Paper>
+                    <Typography variant='h5' className={classes.graphs_title}>Orders Delivery</Typography>
+                    {orders_delivery_table()}
                 </Paper>
             </Grid>
         </Grid>
