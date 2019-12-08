@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import ChartistGraph from 'react-chartist';
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -11,6 +12,9 @@ const useStyles = makeStyles(theme => ({
     grid: {
         width: 'unset',
         margin: 0
+    },
+    graphs_title: {
+        fontWeight: 'lighter'
     }
 }));
 
@@ -60,13 +64,20 @@ const montly_sales_graph = () => {
 
 const Overview = () => {
     const classes = useStyles();
+    console.log(classes)
     return (
             <Grid className={classes.grid} container spacing={2}>
             <Grid item md={6} sm={12}>
-                <Paper>{global_finances_graph()}</Paper>
+                <Paper>
+                    <Typography variant='h5' className={classes.graphs_title}>Global finances</Typography>
+                    {global_finances_graph()}
+                </Paper>
             </Grid>
             <Grid item md={6} sm={12}>
-                <Paper>{montly_sales_graph()}</Paper>
+                <Paper>
+                    <Typography variant='h5' className={classes.graphs_title}>Monthly Sales</Typography>
+                    {montly_sales_graph()}
+                </Paper>
             </Grid>
             <Grid item md={4} sm={12}>
                 <Paper>1</Paper>
