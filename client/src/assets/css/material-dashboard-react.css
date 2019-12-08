@@ -13,7 +13,11 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
  */
+<<<<<<< HEAD
 .ct-grid {
+=======
+ .ct-grid {
+>>>>>>> other widgets added
   stroke: rgba(32, 32, 32, 0.2);
   stroke-width: 1px;
   stroke-dasharray: 2px;
@@ -26,13 +30,14 @@
   stroke: rgba(255, 255, 255, 0.8);
 }
 
-.ct-series.series-income {
+.ct-series.series-income, .ct-series.revenue_from_sales {
   stroke: rgb(69, 121, 84);
 }
 
-.ct-series.series-expenses {
+.ct-series.series-expenses, .ct-series.cost_of_goods_sold {
   stroke: rgb(179, 51, 0);
 }
+
 
 .ct-label.ct-horizontal.ct-end {
   -webkit-box-align: flex-start;
@@ -516,4 +521,8 @@ footer ul li a:hover {
 }
 * {
   letter-spacing: normal !important;
+}
+
+.financial_fix{
+  margin-top:16px;
 }
