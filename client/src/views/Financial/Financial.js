@@ -85,18 +85,7 @@ const revenue_from_sales_graph = () => {
 
     }
 
-
-
-    const options = {
-        height: 400,
-        plugins: [
-            Chartist.plugins.legend({
-                legendNames: ['Blue pill', 'Red pill'],
-            })
-        ]
-    }
-
-    return <ChartistGraph type='Line' data={data} options={options} ></ChartistGraph>
+    return <ChartistGraph type='Line' data={data} ></ChartistGraph>
 }
 
 const Financial = () => {
