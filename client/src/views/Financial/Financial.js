@@ -5,6 +5,8 @@ import Paper from '@material-ui/core/Paper';
 import ChartistGraph from 'react-chartist';
 import { Typography } from "@material-ui/core";
 import { Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core/';
+require('chartist-plugin-legend');
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -73,20 +75,28 @@ const revenue_from_sales_graph = () => {
         series: [
             {
                 className: 'revenue_from_sales',
-                data: [0, 20, 30, 40, 50, 20, 5, 70, 80, 50, 35]
+                data: [0, 20, 30, 40, 50, 20, 5, 70, 80, 50, 35, 50]
             },
             {
                 className: 'cost_of_goods_sold',
-                data: [0, 20, 10, 5, 3, 30, 25, 30, 40, 64, 80]
+                data: [0, 20, 10, 5, 3, 30, 25, 30, 40, 64, 80, 75]
             },
+        ],
+
+    }
+
+
+
+    const options = {
+        height: 400,
+        plugins: [
+            Chartist.plugins.legend({
+                legendNames: ['Blue pill', 'Red pill'],
+            })
         ]
     }
 
-    const options = {
-        height: 400
-    }
-
-    return <ChartistGraph type='Line' data={data} options={options}></ChartistGraph>
+    return <ChartistGraph type='Line' data={data} options={options} ></ChartistGraph>
 }
 
 const Financial = () => {
