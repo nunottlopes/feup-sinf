@@ -9,6 +9,8 @@ import Calendar from "@material-ui/icons/CalendarToday";
 // core components
 import Button from "components/CustomButtons/Button.js";
 
+import TextField from "@material-ui/core/TextField";
+
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 
 const useStyles = makeStyles(styles);
@@ -24,29 +26,30 @@ export default function AdminNavbarLinks() {
       setOpenProfile(event.currentTarget);
     }
   };
-  
+
   return (
     <div>
-      <Button
-        color={window.innerWidth > 959 ? "transparent" : "white"}
-        justIcon={window.innerWidth > 959}
-        simple={!(window.innerWidth > 959)}
-        aria-label="Calendar"
-        className={classes.buttonLink}
-        /*onClick={
-          <DateRangePicker
-            fromDate={this.state.fromDate} //from date
-            toDate={this.state.toDate} //to Date
-            onChange={this._handleDateRangeChange}
-            closeDialogOnSelection //close date dialog after selecting both from and to date
-          />
-        }*/
-      >
-        <Calendar className={classes.icons} />
-        <Hidden mdUp implementation="css">
-          <p className={classes.linkText}>Dashboard</p>
-        </Hidden>
-      </Button>
+      <TextField
+        id="date_from"
+        label="From"
+        type="date"
+        defaultValue="2017-05-24"
+        className={classes.textField}
+        InputLabelProps={{
+          shrink: true
+        }}
+      />
+      <TextField
+        id="date_to"
+        label="To"
+        type="date"
+        defaultValue="2017-06-30"
+        className={classes.textField}
+        InputLabelProps={{
+          shrink: true
+        }}
+      />
+
       <Button
         color={window.innerWidth > 959 ? "transparent" : "white"}
         justIcon={window.innerWidth > 959}
