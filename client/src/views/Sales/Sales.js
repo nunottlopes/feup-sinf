@@ -61,11 +61,52 @@ const sold_vs_projected_graph = () => {
     };
 
     const options = {
-        seriesBarDistance: 6
+        seriesBarDistance: 6,
+        height: 300
     };
 
     return <ChartistGraph type='Bar' data={data} options={options}></ChartistGraph>
 }
+
+const sales_volume_graph = () => {
+    const data = {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        series: [
+            {
+                className: 'series-expenses',
+                data: [10, 20, 30, 40, 50, 20, 5, 70, 80, 50, 35, 40]
+            },
+        ]
+    }
+
+    const options = {
+        height: 300
+    }
+
+    return <ChartistGraph type='Line' data={data} options={options}></ChartistGraph>
+}
+
+const cumulative_sales_graph = () => {
+    const data = {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        series: [
+            {
+                className: 'series-expenses',
+                data: [10, 15, 17, 35, 50, 51, 58, 60, 70, 75, 80, 82]
+            },
+
+        ]
+    }
+
+    const options = {
+        height: 300
+    }
+
+    return <ChartistGraph type='Line' data={data} options={options}></ChartistGraph>
+}
+
+
+
 
 const top_products_table = () => {
     const table_header = ['Product ID', 'Name', 'Quantity']
@@ -132,13 +173,13 @@ const Sales = () => {
             <Grid item md={4} sm={12}>
                 <Paper>
                     <Typography variant='h5' className={classes.graphs_title}>Sales Volume</Typography>
-                    {sold_vs_projected_graph()}
+                    {sales_volume_graph()}
                 </Paper>
             </Grid>
             <Grid item md={4} sm={12}>
                 <Paper>
                     <Typography variant='h5' className={classes.graphs_title}>Cumulative Sales</Typography>
-                    {sold_vs_projected_graph()}
+                    {cumulative_sales_graph()}
                 </Paper>
             </Grid>
             <Grid item md={12} sm={12}>
