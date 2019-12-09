@@ -64,6 +64,21 @@ const montly_sales_graph = () => {
     return <ChartistGraph type='Bar' data={data} options={options}></ChartistGraph>
 }
 
+const top_clients_graph = () => {
+    const data = {
+        labels: ['1', '2', '3'],
+        series: [20, 15, 40]
+    };
+
+    const options = {
+        labelInterpolationFnc: function (value) {
+            return value[0]
+        }
+    }
+
+    return <ChartistGraph type='Pie' data={data} options={options}></ChartistGraph>
+}
+
 const top_products_table = () => {
     const table_header = ['Product ID', 'Name', 'Quantity (sales)']
     const table_rows = [
@@ -93,6 +108,21 @@ const top_products_table = () => {
     )
 }
 
+const top_regions_graph = () => {
+    const data = {
+        labels: ['1', '2', '3'],
+        series: [20, 15, 40]
+    };
+
+    const options = {
+        labelInterpolationFnc: function (value) {
+            return value[0]
+        }
+    }
+
+    return <ChartistGraph type='Pie' data={data} options={options}></ChartistGraph>
+}
+
 const Overview = () => {
     const classes = useStyles();
     console.log(classes)
@@ -113,7 +143,7 @@ const Overview = () => {
             <Grid item md={4} sm={12}>
                 <Paper>
                     <Typography variant='h5' className={classes.graphs_title}>Top Clients</Typography>
-                    {top_products_table()}
+                    {top_clients_graph()}
                 </Paper>
             </Grid>
             <Grid item md={4} sm={12}>
@@ -125,7 +155,7 @@ const Overview = () => {
             <Grid item md={4} sm={12}>
                 <Paper>
                     <Typography variant='h5' className={classes.graphs_title}>Top Regions</Typography>
-                    {top_products_table()}
+                    {top_regions_graph()}
                 </Paper>
             </Grid>
         </Grid>
