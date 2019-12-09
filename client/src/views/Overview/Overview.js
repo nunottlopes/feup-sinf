@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import ChartistGraph from 'react-chartist';
 import { Typography } from "@material-ui/core";
-import {Table, TableHead, TableBody, TableRow, TableCell} from '@material-ui/core/';
+import { Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core/';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -67,29 +67,29 @@ const montly_sales_graph = () => {
 const top_products_table = () => {
     const table_header = ['Product ID', 'Name', 'Quantity (sales)']
     const table_rows = [
-        {product_id: 'PRODUCT_ID1', name: 'Product 1', quantity: 100},
-        {product_id: 'PRODUCT_ID2', name: 'Product 2', quantity: 90},
-        {product_id: 'PRODUCT_ID3', name: 'Product 3', quantity: 50},
-        {product_id: 'PRODUCT_ID4', name: 'Product 4', quantity: 20},
+        { product_id: 'PRODUCT_ID1', name: 'Product 1', quantity: 100 },
+        { product_id: 'PRODUCT_ID2', name: 'Product 2', quantity: 90 },
+        { product_id: 'PRODUCT_ID3', name: 'Product 3', quantity: 50 },
+        { product_id: 'PRODUCT_ID4', name: 'Product 4', quantity: 20 },
     ]
-    
+
     return (
         <Table>
             <TableHead>
                 <TableRow>
-                {table_header.map(header => <TableCell>{header}</TableCell>)}
+                    {table_header.map(header => <TableCell>{header}</TableCell>)}
                 </TableRow>
             </TableHead>
             <TableBody>
-            {table_rows.map(product => (
-                <TableRow key={product.product_id}>
-                <TableCell>{product.product_id}</TableCell>
-                <TableCell>{product.name}</TableCell>
-                <TableCell>{product.quantity}</TableCell>
-                </TableRow>
-            ))}
+                {table_rows.map(product => (
+                    <TableRow key={product.product_id}>
+                        <TableCell>{product.product_id}</TableCell>
+                        <TableCell>{product.name}</TableCell>
+                        <TableCell>{product.quantity}</TableCell>
+                    </TableRow>
+                ))}
             </TableBody>
-      </Table>
+        </Table>
     )
 }
 
@@ -97,7 +97,7 @@ const Overview = () => {
     const classes = useStyles();
     console.log(classes)
     return (
-            <Grid className={classes.grid} container spacing={2}>
+        <Grid className={classes.grid} container spacing={2}>
             <Grid item md={6} sm={12}>
                 <Paper>
                     <Typography variant='h5' className={classes.graphs_title}>Global finances</Typography>
@@ -111,16 +111,22 @@ const Overview = () => {
                 </Paper>
             </Grid>
             <Grid item md={4} sm={12}>
-                <Paper>1</Paper>
-            </Grid>
-            <Grid item md={4} sm={12}>
                 <Paper>
-                    <Typography variant='h5' className={classes.graphs_title}>Top products</Typography>
+                    <Typography variant='h5' className={classes.graphs_title}>Top Clients</Typography>
                     {top_products_table()}
                 </Paper>
             </Grid>
             <Grid item md={4} sm={12}>
-                <Paper>1</Paper>
+                <Paper>
+                    <Typography variant='h5' className={classes.graphs_title}>Top Products</Typography>
+                    {top_products_table()}
+                </Paper>
+            </Grid>
+            <Grid item md={4} sm={12}>
+                <Paper>
+                    <Typography variant='h5' className={classes.graphs_title}>Top Regions</Typography>
+                    {top_products_table()}
+                </Paper>
             </Grid>
         </Grid>
     )
