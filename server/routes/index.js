@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 const getJasminAPI = require("../config/jasmin").getJasminAPI;
 const parseSaft = require("../parser/saft").parseSaft;
-const {findDocumentsDB, findSuppliers} = require("../mongodb/actions");
+const {readDocuments} = require("../mongodb/actions");
 
 /* GET home page. */
 router.get("/", function(req, res) {
@@ -26,7 +26,6 @@ router.get(`/billing`, function(req,res){
    jasmin
    .getJasminAPI("/billing/invoices/")
    .then(resp => {
-     res.send
      res.send(resp);
    })
    .catch(err => {
@@ -37,7 +36,7 @@ router.get(`/billing`, function(req,res){
 router.get(`/accounts`, function(req, res){
 
   //res.send("Ok");
-  findDocumentsDB("GeneralLedgerEntries","",(response) => {
+  readDocuments("GeneralLedgerEntries","",(response) => {
     res.send(JSON.stringify(response[0].Journal)) 
   })
 })
@@ -47,7 +46,8 @@ router.get(`/accounts`, function(req, res){
 /* PURCHASES */
 router.get(`/purchases/suppliers`, function(req, res){
   
-  findDocumentsDB("MasterFiles","",(response) => {
+  readDocuments
+  readDocuments("MasterFiles","",(response) => {
     let suppliers = response.find((e) => {
       return e._id == 'Suppliers'
     }).Suppliers
@@ -85,6 +85,10 @@ router.get(`/purchases/orders-delivery`, function(req, res){
 
 
 /* FINANCIAL */
+
+
+//https://moodle.up.pt/pluginfile.php/93952/mod_resource/content/1/PL_Balance_Sheet_specification.pdf
+
 router.get(`/financial/balance`, function(req, res){
 
 })
@@ -104,7 +108,7 @@ router.get(`/financial/revenue`, function(req, res){
 /* PRODUCTS */
 router.get(`/product/:productCode`, function(req, res){
   
-  findDocumentsDB("MasterFiles","",(response) => {
+  readDocuments("MasterFiles","",(response) => {
     const products = response.find((type) => {
       return type._id == 'Products'
     }).Products;
@@ -120,7 +124,7 @@ router.get(`/product/:productCode`, function(req, res){
 router.get(`/product/:productCode/top-clients`, function(req, res){
   let code = req.params.productCode;
   //Top clients
-  findDocumentsDB("SourceDocuments","",(response, ...params) => {
+  readDocuments("SourceDocuments","",(response, ...params) => {
     let code = params.productCode;
     let topClients = response[0].Invoice.find((invoice) => {
       if(invoice.Line != undefined){
@@ -152,7 +156,7 @@ router.get(`/product/:productCode/top-clients`, function(req, res){
 
 /* INVENTORY */
 router.get(`/inventory/`, function(req, res){
-  findDocumentsDB("MasterFiles","",(response) => {
+  readDocuments("MasterFiles","",(response) => {
     let products = response.find((e) => {
       return e._id == 'Products'
     }).products

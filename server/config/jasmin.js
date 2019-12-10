@@ -1,19 +1,20 @@
 var localStorage = require("../utils/local-storage");
 var request = require("request-promise");
+var config = require("./config.js")["jasmin"];
 
 /* --------- AUTHENTICATION --------- */
 
 fetchToken = async () => {
   await request({
-    url: process.env.JASMIN_TOKEN_URL,
+    url: config.token_url,
     method: "POST",
     auth: {
-      user: process.env.JASMIN_TOKEN_CLIENT_ID,
-      pass: process.env.JASMIN_TOKEN_CLIENT_SECRET
+      user: config.token_client_id,
+      pass: config.token_client_secret
     },
     form: {
-      grant_type: process.env.JASMIN_TOKEN_GRANT_TYPE,
-      scope: process.env.JASMIN_TOKEN_SCOPE
+      grant_type: config.token_grant_type,
+      scope: config.token_scope
     }
   }).then(res => {
     var json = JSON.parse(res);
@@ -42,9 +43,9 @@ exports.getToken = async () => {
 
 /* --------- ENDPOINTS --------- */
 
-var url = process.env.JASMIN_URL;
-var tenant = process.env.JASMIN_TENANT;
-var organization = process.env.JASMIN_ORGANIZATION;
+var url = config.url;
+var tenant = config.tenant;
+var organization = config.organization;
 
 exports.getTaxTypeInfo = async () => {
   return await request({

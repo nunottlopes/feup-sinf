@@ -1,10 +1,12 @@
 var MongoClient = require("mongodb").MongoClient;
 var assert = require("assert");
 const { insertDocuments } = require("./actions");
+var {url, dbName, config} = require("../config/config.js")["mongodb"];
 
-var url = "mongodb://admin:admin@localhost:27017";
-const dbName = "sinf";
-const config = { useUnifiedTopology: true };
+
+// var url = "mongodb://admin:admin@localhost:27017";
+// const dbName = "sinf";
+// const config = { useUnifiedTopology: true };
 
 function handleAccountingSAFT(saftData, res) {
   saftData = saftData["AuditFile"];

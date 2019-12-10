@@ -4,10 +4,6 @@ const { handleAccountingSAFT } = require("../mongodb/saftHandler");
 
 const fs = require("fs");
 
-// function handleParsedSaft(jsonObj, res) {
-//   res.status(200).send(jsonObj);
-// }
-
 exports.parseSaft = res => {
   fs.readFile(
     path.resolve(
