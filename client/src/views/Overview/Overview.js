@@ -125,7 +125,6 @@ const top_regions_graph = () => {
 
 const Overview = () => {
     const classes = useStyles();
-    console.log(classes)
     return (
         <Grid className={classes.grid} container spacing={2}>
             <Grid item md={6} sm={12}>

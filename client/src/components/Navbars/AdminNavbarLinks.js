@@ -5,7 +5,6 @@ import Hidden from "@material-ui/core/Hidden";
 //import DateRangePicker from "material-date-range-picker";
 // @material-ui/icons
 import Person from "@material-ui/icons/Person";
-import Calendar from "@material-ui/icons/CalendarToday";
 // core components
 import Button from "components/CustomButtons/Button.js";
 

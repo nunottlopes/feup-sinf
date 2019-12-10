@@ -2,7 +2,6 @@ import React from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import ChartistGraph from 'react-chartist';
 import { Typography } from "@material-ui/core";
 import { Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core/';
 
@@ -52,7 +51,6 @@ const all_products_table = () => {
 
 const Inventory = () => {
     const classes = useStyles();
-    console.log(classes)
     return (
         <Grid className={classes.grid} container spacing={2}>
             <Grid item md={6} sm={12}>
