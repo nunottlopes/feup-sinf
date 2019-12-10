@@ -1,5 +1,5 @@
 var assert = require("assert");
-
+var MongoClient = require("mongodb").MongoClient;
 // Documentation
 // https://www.npmjs.com/package/mongodb
 // https://mongodb.github.io/node-mongodb-native/3.2/api/
@@ -27,11 +27,59 @@ function findDocuments(db, collectionName, query, callback) {
   // To add a query filter, e.g. query = {'a': 3}
   collection.find(query).toArray(function(err, docs) {
     assert.equal(err, null);
-    console.log("Found the following records");
-    console.log(docs);
+    //console.log("Found the following records");
+    //console.log(docs);
     callback(docs);
   });
 }
+
+
+function findDocumentsDB(collectionName,query, callback) {
+
+  const config = { useUnifiedTopology: true };
+  const dbName = "sinf"
+  MongoClient.connect("mongodb://admin:admin@localhost:27017", config, function(err, client) {
+    assert.equal(null, err);
+
+    const db = client.db(dbName);
+
+    const collection = db.collection(collectionName);
+
+    // To find all documents query = {}
+    // To add a query filter, e.g. query = {'a': 3}
+    collection.find(query).toArray(function(err, docs) {
+      assert.equal(err, null);
+     // console.log("Found the following records");
+     // console.log(docs);
+      callback(docs);
+    });
+  })
+}
+
+
+function findSuppliers(callback) {
+  
+  const config = { useUnifiedTopology: true };
+  const dbName = "sinf"
+  MongoClient.connect("mongodb://admin:admin@localhost:27017", config, function(err, client) {
+    assert.equal(null, err);
+
+    const db = client.db(dbName);
+
+    const collection = db.collection("MasterFiles");
+    const query = `{"_id":"Suppliers"}`
+    // To find all documents query = {}
+    // To add a query filter, e.g. query = {'a': 3}
+    collection.find(query).toArray(function(err, docs) {
+      assert.equal(err, null);
+      //console.log("Found the following records");
+     // console.log(docs);
+      callback(docs);
+    });
+  })
+}
+
+
 
 function updateDocument(db, collectionName, query, change, callback) {
   const collection = db.collection(collectionName);
@@ -63,5 +111,7 @@ module.exports = {
   insertDocuments,
   findDocuments,
   updateDocument,
-  removeDocument
+  removeDocument,
+  findDocumentsDB,
+  findSuppliers
 };

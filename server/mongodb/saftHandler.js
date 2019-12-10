@@ -10,8 +10,7 @@ function handleAccountingSAFT(saftData, res) {
   saftData = saftData["AuditFile"];
 
   MongoClient.connect(url, config, function(err, client) {
-    assert.equal(null, err);
-
+    
     const db = client.db(dbName);
 
     const masterFilesData = getMasterFilesData(saftData);

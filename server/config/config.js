@@ -11,5 +11,7 @@ module.exports = {
     organization: process.env.JASMIN_ORGANIZATION,
     url: process.env.JASMIN_URL
   },
-  mongodb: {}
+  mongodb: {
+  },
+  db:"mongodb://admin:admin@localhost:27017",
 };
