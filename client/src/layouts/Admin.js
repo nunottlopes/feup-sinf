@@ -7,7 +7,6 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { makeStyles } from "@material-ui/core/styles";
 // core components
 import Sidebar from "components/Sidebar/Sidebar.js";
-import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 import NNavbar from "components/Navbars/AdminNavbarLinks.js";
 
 import routes from "routes.js";
@@ -84,7 +83,10 @@ export default function Admin({ ...rest }) {
         {...rest}
       />
 
-      <NNavbar></NNavbar>
+      <div className={classes.mainPanel} ref={mainPanel}>
+        <NNavbar></NNavbar>
+        <div className={classes.map}>{switchRoutes}</div>
+      </div>
     </div>
   );
 }
