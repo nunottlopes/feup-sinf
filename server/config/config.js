@@ -12,6 +12,8 @@ module.exports = {
     url: process.env.JASMIN_URL
   },
   mongodb: {
+    url: "mongodb://admin:admin@localhost:27017",
+    dbName: "sinf",
+    config: { useUnifiedTopology: true }
   },
-  db:"mongodb://admin:admin@localhost:27017",
 };

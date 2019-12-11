@@ -7,9 +7,6 @@ const cookieParser = require("cookie-parser");
 const { STARTED_LISTENING } = require("./utils/constants/logger-messages");
 // var localStorage = require("./utils/local-storage");
 
-// Routes
-const indexRouter = require("./routes/index");
-
 const app = express();
 
 app.use(cors());
@@ -18,7 +15,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+// Routes
+const indexRouter = require("./routes/index");
+const financialRouter = require("./routes/financial");
+const inventoryRouter = require("./routes/inventory");
+const productsRouter = require("./routes/products");
+const purchasesRouter = require("./routes/purchases");
+
 app.use("/api/", indexRouter);
+app.use("/api/financial/", financialRouter);
+app.use("/api/inventory/", inventoryRouter);
+app.use("/api/product/", productsRouter);
+app.use("/api/purchases/", purchasesRouter);
 
 const PORT = process.env.PORT;
 
