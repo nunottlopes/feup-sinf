@@ -89,7 +89,6 @@ router.get(`/product/:productCode/info`, function(req, res){
           })
 
         }else {
-          console.log(invoice.Line)
           if(invoice.Line.ProductCode == code){
           
           if(info[company] != undefined){
