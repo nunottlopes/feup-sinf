@@ -82,56 +82,10 @@ function readDocuments(collectionName, query, callback) {
   });
 }
 
-// function findDocumentsDB(collectionName,query, callback) {
-
-//   const config = { useUnifiedTopology: true };
-//   const dbName = "sinf"
-//   MongoClient.connect("mongodb://admin:admin@localhost:27017", config, function(err, client) {
-//     assert.equal(null, err);
-
-//     const db = client.db(dbName);
-
-//     const collection = db.collection(collectionName);
-
-//     // To find all documents query = {}
-//     // To add a query filter, e.g. query = {'a': 3}
-//     collection.find(query).toArray(function(err, docs) {
-//       assert.equal(err, null);
-//      // console.log("Found the following records");
-//      // console.log(docs);
-//       callback(docs);
-//     });
-//   })
-// }
-
-// function findSuppliers(callback) {
-
-//   const config = { useUnifiedTopology: true };
-//   const dbName = "sinf"
-//   MongoClient.connect("mongodb://admin:admin@localhost:27017", config, function(err, client) {
-//     assert.equal(null, err);
-
-//     const db = client.db(dbName);
-
-//     const collection = db.collection("MasterFiles");
-//     const query = `{"_id":"Suppliers"}`
-//     // To find all documents query = {}
-//     // To add a query filter, e.g. query = {'a': 3}
-//     collection.find(query).toArray(function(err, docs) {
-//       assert.equal(err, null);
-//       //console.log("Found the following records");
-//      // console.log(docs);
-//       callback(docs);
-//     });
-//   })
-// }
-
 module.exports = {
   insertDocuments,
   findDocuments,
   updateDocument,
   removeDocument,
   readDocuments
-  // findDocumentsDB,
-  // findSuppliers
 };

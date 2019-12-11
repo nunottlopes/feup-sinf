@@ -7,6 +7,8 @@ function handleDemoSAFT(saftData, parseAccountingSaft, res) {
   saftData = saftData["AuditFile"];
 
   MongoClient.connect(url, config, function(err, client) {
+    assert.equal(err, null);
+
     const db = client.db(dbName);
 
     const masterFilesData = getMasterFilesData(saftData);
@@ -76,6 +78,8 @@ function handleAccountingSAFT(saftData, res) {
   saftData = saftData["AuditFile"];
 
   MongoClient.connect(url, config, function(err, client) {
+    assert.equal(err, null);
+
     const db = client.db(dbName);
 
     const accounts =

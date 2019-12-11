@@ -33,7 +33,6 @@ exports.parseSaft = res => {
       if (parser.validate(data.toString()) === true) {
         var jsonObj = parser.parse(data.toString());
         handleDemoSAFT(jsonObj, parseAccountingSaft, res);
-        // parseAccountingSaft(res);
       }
     }
   );
