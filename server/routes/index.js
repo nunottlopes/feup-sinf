@@ -51,7 +51,7 @@ router.get(`/purchases/suppliers`, function(req, res){
     let suppliers = response.find((e) => {
       return e._id == 'Suppliers'
     }).Suppliers
-    console.log(suppliers)
+    // console.log(suppliers)
     res.send(suppliers) 
   })
 })

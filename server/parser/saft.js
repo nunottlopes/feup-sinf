@@ -1,8 +1,25 @@
 var parser = require("fast-xml-parser");
 const path = require("path");
-const { handleAccountingSAFT } = require("../mongodb/saftHandler");
+const {
+  handleDemoSAFT,
+  handleAccountingSAFT
+} = require("../mongodb/saftHandler");
 
 const fs = require("fs");
+
+const parseAccountingSaft = res => {
+  fs.readFile(
+    path.resolve(__dirname, "../assets/SAFT_Sample_Accounting_2019.xml"),
+    (err, data) => {
+      if (err) throw err;
+
+      if (parser.validate(data.toString()) === true) {
+        var jsonObj = parser.parse(data.toString());
+        handleAccountingSAFT(jsonObj, res);
+      }
+    }
+  );
+};
 
 exports.parseSaft = res => {
   fs.readFile(
@@ -15,8 +32,8 @@ exports.parseSaft = res => {
 
       if (parser.validate(data.toString()) === true) {
         var jsonObj = parser.parse(data.toString());
-        // console.log(jsonObj);
-        handleAccountingSAFT(jsonObj, res);
+        handleDemoSAFT(jsonObj, parseAccountingSaft, res);
+        // parseAccountingSaft(res);
       }
     }
   );

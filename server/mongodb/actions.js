@@ -1,6 +1,6 @@
 var assert = require("assert");
 var MongoClient = require("mongodb").MongoClient;
-var {url, dbName, config} = require("../config/config.js")["mongodb"];
+var { url, dbName, config } = require("../config/config.js")["mongodb"];
 
 // Documentation
 // https://www.npmjs.com/package/mongodb
@@ -8,7 +8,7 @@ var {url, dbName, config} = require("../config/config.js")["mongodb"];
 
 /* ----------- Simple actions ----------- */
 
-function insertDocuments(db, collectionName, data, callback) {
+function insertDocuments(db, collectionName, data) {
   const collection = db.collection(collectionName);
 
   // If _id is not defined  in data it will generate one randomly
@@ -37,18 +37,22 @@ function findDocuments(db, collectionName, query, callback) {
   });
 }
 
-function updateDocument(db, collectionName, query, change, callback) {
+function updateDocument(db, collectionName, query, change) {
   const collection = db.collection(collectionName);
 
   // query = { a: 2 },  change ={ $set: { b: 1 } } -> Update document where a is 2, set b equal to 1
-  collection.updateOne(query, change, function(err, result) {
-    assert.equal(err, null);
-    assert.equal(1, result.result.n);
-    console.log(
-      `Updated the documents found with the query ${query} to ${change}`
-    );
-    callback(result);
-  });
+
+  return collection
+    .updateOne(query, change)
+    .then(result => {
+      console.log(`Successfully updated ${collectionName}`);
+      return result;
+    })
+    .catch(err => {
+      console.error(
+        `Failed to update collection ${collectionName}. Errors: ${err}`
+      );
+    });
 }
 
 function removeDocument(db, collectionName, query, callback) {
@@ -63,8 +67,6 @@ function removeDocument(db, collectionName, query, callback) {
   });
 }
 
-
-
 /* ----------- Connection and action ----------- */
 
 function readDocuments(collectionName, query, callback) {
@@ -77,9 +79,8 @@ function readDocuments(collectionName, query, callback) {
       client.close();
       callback(docs);
     });
-  })
+  });
 }
-
 
 // function findDocumentsDB(collectionName,query, callback) {
 
@@ -104,7 +105,7 @@ function readDocuments(collectionName, query, callback) {
 // }
 
 // function findSuppliers(callback) {
-  
+
 //   const config = { useUnifiedTopology: true };
 //   const dbName = "sinf"
 //   MongoClient.connect("mongodb://admin:admin@localhost:27017", config, function(err, client) {
