@@ -6,9 +6,6 @@ import ChartistGraph from 'react-chartist';
 import { Typography } from "@material-ui/core";
 import { Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core/';
 
-import { ReactComponent as Logo } from 'assets/img/apple-icon.png';
-
-
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 0,
@@ -127,7 +124,6 @@ const orders_delivery_table = () => {
 
 const Purchases = () => {
     const classes = useStyles();
-    console.log(classes)
     return (
         <Grid className={classes.grid} container spacing={2}>
             <Grid item md={6} sm={12}>

@@ -139,7 +139,6 @@ const top_products_table = () => {
 
 const Sales = () => {
     const classes = useStyles();
-    console.log(classes)
     return (
         <Grid className={classes.grid} container spacing={2}>
             <Grid item md={4} sm={12}>
