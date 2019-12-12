@@ -15,12 +15,12 @@ router.get(`/:productCode`, function(req, res) {
     res.send(product);
   });
 });
-/* 
-router.get(`/product/:productCode/top-clients2`, function(req, res){
+/*
+router.get(`/:productCode/top-clients2`, function(req, res){
   let code = req.params.productCode;
   //Top clients
   findDocumentsDB("SourceDocuments","",(response) => {
-    
+
    // res.send(response)
     let topClients = response[0].Invoice.find((invoice) => {
       let code = req.params.productCode
@@ -31,8 +31,8 @@ router.get(`/product/:productCode/top-clients2`, function(req, res){
             return line.ProductCode == code
           })
           if(invoicesWithTheProduct != undefined){
-            return true; 
-          } 
+            return true;
+          }
           return false ;
         }else{
           return invoice.Line.ProductCode == code
@@ -48,72 +48,111 @@ router.get(`/product/:productCode/top-clients2`, function(req, res){
  */
 
 //Como sacar production cost/units in stock?
-router.get(`/product/:productCode/info`, function(req, res){
+router.get(`/:productCode/info`, function(req, res) {
   let code = req.params.productCode;
   //Top clients
-  findDocumentsDB("SourceDocuments","",(response) => {
-    let info = {};
-    let minimum = Number.MAX_VALUE;
-    let name;
-    let unitsSold = 0;
+  readDocuments(
+    "SourceDocuments",
+    "",
+    response => {
+      let info = {};
+      let minimum = Number.MAX_VALUE;
+      let name;
+      let unitsSold = 0;
 
-    response[0].Invoice.forEach((invoice) => {
+      response[0].Invoice.forEach(invoice => {
+        let code = req.params.productCode;
+        let company = invoice.SourceID;
 
-      let code = req.params.productCode
-      let company = invoice.SourceID;
-    
-      if(invoice.Line != undefined){
-        if(Array.isArray(invoice.Line))
-        {
-          invoice.Line.forEach( (line) =>{  
-            if(line.ProductCode == code){
-              if(info[company] != undefined){
-                info[company] = {
-                  units: info[company].units + 1, 
-                  amount: info[company].amount + line.UnitPrice
+        if (invoice.Line != undefined) {
+          if (Array.isArray(invoice.Line)) {
+            invoice.Line.forEach(line => {
+              if (line.ProductCode == code) {
+                if (info[company] != undefined) {
+                  info[company] = {
+                    units: info[company].units + 1,
+                    amount: info[company].amount + line.UnitPrice,
+                  };
+                } else {
+                  info[company] = { units: 1, amount: line.UnitPrice };
                 }
-              } 
-              else {
-                info[company] = {units:1, amount: line.UnitPrice}
-              }  
 
-              if(line.UnitPrice < minimum)
-                minimum = line.UnitPrice;
-              
+                if (line.UnitPrice < minimum) minimum = line.UnitPrice;
 
-              if(name == undefined)
-                name = line.ProductDescription
+                if (name == undefined) name = line.ProductDescription;
 
+                unitsSold++;
+              }
+            });
+          } else {
+            if (invoice.Line.ProductCode == code) {
+              if (info[company] != undefined) {
+                info[company] = {
+                  units: info[company].value + 1,
+                  amount: info[company].amount + invoice.Line.UnitPrice,
+                };
+              } else {
+                info[company] = { units: 1, amount: invoice.Line.UnitPrice };
+              }
+
+              if (invoice.Line.UnitPrice < minimum)
+                minimum = invoice.Line.UnitPrice;
+
+              if (name == undefined) name = invoice.Line.ProductDescription;
               unitsSold++;
             }
-          })
-
-        }else {
-          if(invoice.Line.ProductCode == code){
-          
-          if(info[company] != undefined){
-            info[company] = {
-              units: info[company].value + 1,
-              amount: info[company].amount + invoice.Line.UnitPrice
-            }
-          } 
-          else {
-            info[company] = {units:1, amount: invoice.Line.UnitPrice}
           }
+        }
+      });
+      res.send({ info, minimum, name, unitsSold });
+    },
+    code
+  );
+});
 
-          if(invoice.Line.UnitPrice < minimum)
-            minimum = invoice.Line.UnitPrice;
+// KPI_01
+router.get("/units-sold/:product", (req, res) => {
+  let startDate =
+    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+  let endDate =
+    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
 
-          if(name == undefined)
-            name = invoice.Line.ProductDescription
-          unitsSold++;
-        }}
+  let code = req.params.product;
+  let units = 0;
+
+  readDocuments("SourceDocuments", { _id: "SalesInvoices" }, resp => {
+    const salesInvoices = resp[0]["Invoice"];
+    salesInvoices.forEach(invoice => {
+      const type = invoice.InvoiceType;
+      if (
+        !(
+          invoice.Line.length &&
+          (type == "FT" || type == "FS" || type == "FR" || type == "VD")
+        )
+      )
+        return;
+
+      let invoiceDate = new Date(invoice.InvoiceDate);
+      if (
+        (startDate == null || startDate <= invoiceDate) &&
+        (endDate == null || invoiceDate <= endDate)
+      ) {
+        invoice.Line.forEach(line => {
+          const { ProductCode, Quantity } = line;
+
+          if (ProductCode === code) units += parseInt(Quantity);
+        });
       }
-    })
-    res.send({info,minimum,name,unitsSold})
-  },code)
-})
+    });
 
+    res.json(units);
+  });
+});
 
+// TODO: IMG_01 (prolly delete this)
+
+// TODO: INF_02
+
+// TODO: TABLE_01
 
 module.exports = router;
