@@ -48,10 +48,10 @@ router.get(`/product/:productCode/top-clients2`, function(req, res){
  */
 
 //Como sacar production cost/units in stock?
-router.get(`/product/:productCode/info`, function(req, res){
+router.get(`/:productCode/info`, function(req, res){
   let code = req.params.productCode;
   //Top clients
-  findDocumentsDB("SourceDocuments","",(response) => {
+  readDocuments("SourceDocuments","",(response) => {
     let info = {};
     let minimum = Number.MAX_VALUE;
     let name;
