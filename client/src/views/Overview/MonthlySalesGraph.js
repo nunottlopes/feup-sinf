@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ChartistGraph from 'react-chartist';
-import { isProperty } from '@babel/types';
 
 const MonthlySalesGraph = (props) => {
   const { sales } = props;
