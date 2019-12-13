@@ -123,6 +123,55 @@ function accountsSum(account, startDate, endDate, callback) {
   });
 }
 
+function accountsSumMontlhy(account, callback) {
+  readDocuments("GeneralLedgerEntries", "", response => {
+    let journals = response[0];
+    let accountSumMontlhy = {};
+    let fiscalYear = 2016;
+
+    for (let i = 1; i <= 12; i++) {
+      let startDate = new Date(fiscalYear + "-" + i + "-01");
+      let endDate = new Date(fiscalYear + "-" + i + "-31");
+
+      let credit = 0;
+      let debit = 0;
+
+      journals.Journal.forEach(journal => {
+        if (journal.Transaction != undefined) {
+          if (Array.isArray(journal.Transaction)) {
+            journal.Transaction.forEach(transaction => {
+              let result = processTransaction(
+                transaction,
+                account,
+                startDate,
+                endDate
+              );
+              debit += result.debit;
+              credit += result.credit;
+            });
+          } else {
+            let result = processTransaction(
+              journal.Transaction,
+              account,
+              startDate,
+              endDate
+            );
+            credit += result.credit;
+            debit += result.debit;
+          }
+        }
+      });
+
+      accountSumMontlhy[i] = {
+        totalCredit: credit,
+        totalDebit: debit
+      };
+    }
+
+    callback(null, accountSumMontlhy);
+  });
+}
+
 processTransaction = (transaction, account, startDate, endDate) => {
   function processLine(line, type) {
     //Não é fornecedores
@@ -172,5 +221,6 @@ module.exports = {
   updateDocument,
   removeDocument,
   readDocuments,
-  accountsSum
+  accountsSum,
+  accountsSumMontlhy
 };

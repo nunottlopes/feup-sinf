@@ -305,6 +305,66 @@ router.get("/profit", async (req, res) => {
   );
 });
 
+// Add top clients table/pie chart i guess
+router.get("/top-clients", (req, res) => {
+  let startDate =
+    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+  let endDate =
+    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+
+  let clients = {};
+
+  readDocuments("SourceDocuments", { _id: "SalesInvoices" }, resp => {
+    const salesInvoices = resp[0]["Invoice"];
+    salesInvoices.forEach(invoice => {
+      const type = invoice.InvoiceType;
+      if (
+        !(
+          invoice.Line.length &&
+          (type == "FT" || type == "FS" || type == "FR" || type == "VD")
+        )
+      )
+        return;
+
+      let invoiceDate = new Date(invoice.InvoiceDate);
+      if (
+        (startDate == null || startDate <= invoiceDate) &&
+        (endDate == null || invoiceDate <= endDate)
+      ) {
+        const customer = invoice.CustomerID;
+
+        let purchased = 0;
+
+        invoice.Line.forEach(line => {
+          const { UnitPrice, Quantity } = line;
+
+          purchased += UnitPrice * Quantity;
+        });
+
+        if (clients.hasOwnProperty(customer)) {
+          clients[customer].totalPurchased += purchased;
+          clients[customer].nPurchases++;
+        } else {
+          clients[customer] = {
+            totalPurchased: purchased,
+            nPurchases: 1
+          };
+        }
+      }
+    });
+
+    clients = Object.keys(clients)
+      .sort((a, b) => clients[b].totalPurchased - clients[a].totalPurchased)
+      .map(elem => ({
+        client: elem,
+        totalPurchased: clients[elem].totalPurchased,
+        nPurchases: clients[elem].nPurchases
+      }));
+
+    res.json(clients);
+  });
+});
+
 // TODO: PIE_1 (remover)
 
 // TODO: INF_01 (remover)

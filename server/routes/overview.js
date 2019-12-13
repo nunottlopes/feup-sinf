@@ -1,7 +1,8 @@
 var express = require("express");
 var router = express.Router();
 const getJasminAPI = require("../config/jasmin").getJasminAPI;
-const { readDocuments } = require("../mongodb/actions");
+const { readDocuments, accountsSumMontlhy } = require("../mongodb/actions");
+var async = require("async");
 
 // TABLE_01
 router.get(`/top-products`, function(req, res) {
@@ -38,7 +39,7 @@ router.get(`/top-products`, function(req, res) {
             products[ProductCode] = {
               ProductDescription,
               UnitPrice: parseFloat(UnitPrice),
-              Quantity: parseInt(Quantity),
+              Quantity: parseInt(Quantity)
             };
           }
         });
@@ -51,7 +52,7 @@ router.get(`/top-products`, function(req, res) {
         ProductCode: elem,
         ProductDescription: products[elem].ProductDescription,
         UnitPrice: products[elem].UnitPrice,
-        Quantity: products[elem].Quantity,
+        Quantity: products[elem].Quantity
       }));
 
     res.json(products);
@@ -100,7 +101,7 @@ router.get("/top-clients", (req, res) => {
         } else {
           clients[customer] = {
             totalPurchased: purchased,
-            nPurchases: 1,
+            nPurchases: 1
           };
         }
       }
@@ -111,7 +112,7 @@ router.get("/top-clients", (req, res) => {
       .map(elem => ({
         client: elem,
         totalPurchased: clients[elem].totalPurchased,
-        nPurchases: clients[elem].nPurchases,
+        nPurchases: clients[elem].nPurchases
       }));
 
     res.json(clients);
@@ -154,7 +155,7 @@ router.get("/top-regions", (req, res) => {
         } else {
           countries[country] = {
             quantity: 1,
-            netTotal: parseInt(invoice.DocumentTotals.NetTotal),
+            netTotal: parseInt(invoice.DocumentTotals.NetTotal)
           };
         }
       }
@@ -165,7 +166,7 @@ router.get("/top-regions", (req, res) => {
       .map(elem => ({
         id: elem,
         value: countries[elem].quantity,
-        netTotal: countries[elem].netTotal,
+        netTotal: countries[elem].netTotal
       }));
 
     res.json(countries);
@@ -206,12 +207,45 @@ router.get("/month-sales", (req, res) => {
     res.json([
       {
         data: monthly,
-        label: "Monthly Sales",
-      },
+        label: "Monthly Sales"
+      }
     ]);
   });
 });
 
-// TODO: LINE_01
+// LINE_01
+router.get("/global-finances", (req, res) => {
+  let costs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  let sales = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+  async.series(
+    {
+      account61: function(callback) {
+        accountsSumMontlhy(61, callback);
+      },
+      account71: function(callback) {
+        accountsSumMontlhy(71, callback);
+      }
+    },
+    function(err, results) {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      let costsData = results.account61;
+      let salesData = results.account71;
+
+      for (let i = 1; i <= 12; i++) {
+        costs[i] = costsData[i].totalDebit;
+        sales[i] = salesData[i].totalCredit;
+      }
+
+      res.json({
+        revenue: { data: sales, label: "Revenue from Sales" },
+        cost: { data: costs, label: "Cost of Goods Sold" }
+      });
+    }
+  );
+});
 
 module.exports = router;
