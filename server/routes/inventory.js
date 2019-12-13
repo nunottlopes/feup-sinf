@@ -33,7 +33,7 @@ router.get(`/products`, function(req, res) {
             products[ProductCode] = {
               ProductDescription,
               UnitPrice: parseFloat(UnitPrice),
-              Quantity: parseInt(Quantity),
+              Quantity: parseInt(Quantity)
             };
           }
         });
@@ -44,12 +44,46 @@ router.get(`/products`, function(req, res) {
   });
 });
 
-// TODO: KP1_01
+// KP1_01
+router.get(`/stock-balance`, function(req, res) {
+  getJasminAPI("/materialscore/materialsitems")
+    .then(response => {
+      let warehouses = JSON.parse(response)[0]["materialsItemWarehouses"];
 
-//https://github.com/literallysofia/feup-sinf/blob/0929544913cdf4b156130c44661a3c87963d54d5/sinf/src/app/inventory/components/assets-in-stock/assets-in-stock.component.ts
+      let amount = 0;
+      for (let i = 0; i < warehouses.length; i++) {
+        amount += warehouses[i].inventoryBalance.amount;
+      }
+      res.send({ stockTotalBalance: amount });
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
 
-// TODO: KPI_02
+// Stock units per warehouse (from erp)
+router.get(`/warehouse-units`, function(req, res) {
+  getJasminAPI("/materialscore/materialsitems")
+    .then(response => {
+      let warehouses = JSON.parse(response)[0]["materialsItemWarehouses"];
 
-//https://github.com/literallysofia/feup-sinf/blob/0929544913cdf4b156130c44661a3c87963d54d5/sinf/src/app/inventory/components/merchandise-delay/merchandise-delay.component.ts
+      let data = [];
+
+      for (let i = 0; i < warehouses.length; i++) {
+        data.push({
+          warehouse: warehouses[i].warehouse,
+          warehouseDescription: warehouses[i].warehouseDescription,
+          stockBalance: warehouses[i].stockBalance,
+          inventoryBalance: warehouses[i].inventoryBalance.amount
+        });
+      }
+      res.send(data);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
+
+// KPI_02 (remover)
 
 module.exports = router;
