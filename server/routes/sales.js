@@ -272,7 +272,7 @@ router.get("/cumulative-month-gross", (req, res) => {
   });
 });
 
-// INF_02
+// INF_02 (fazer um card para profit, outro para revenue e outro para cost)
 router.get("/profit", async (req, res) => {
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
@@ -305,10 +305,10 @@ router.get("/profit", async (req, res) => {
   );
 });
 
-// TODO: PIE_1
+// TODO: PIE_1 (remover)
 
-// TODO: INF_01
+// TODO: INF_01 (remover)
 
-// TODO: BAR_01
+// TODO: BAR_01 (remover)
 
 module.exports = router;
