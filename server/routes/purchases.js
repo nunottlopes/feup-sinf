@@ -26,35 +26,7 @@ router.get(`/`, function(req, res) {
       res.send(err);
     });
 });
-  router.get(`/AccountsSum/:account`, function(req, res) {
-    readDocuments("GeneralLedgerEntries","",(response) => {
-      let journals = response[0]
-      let credit = 0;
-      let debit = 0;
-      let startDate = 'start-date' in req.query ? new Date(req.query['start-date']) : null;
-      let endDate = 'end-date' in req.query ? new Date(req.query['end-date']) : null;
-      let account = req.params.account;
-      
-      journals.Journal.forEach((journal) => {
-        if(journal.Transaction != undefined){
-          if(Array.isArray(journal.Transaction)){
-            journal.Transaction.forEach((transaction) => {
-              let result = processTransaction(transaction,account,startDate,endDate)
-              debit+=result.debit;
-              credit+=result.credit;
-            })
-          } else{
-              let result = processTransaction(journal.Transaction, account, startDate, endDate);
-              credit += result.credit;
-              debit += result.debit;
-          }
-         
-        }
-      })
-    res.send({credit,debit})
-  })
 
-}); 
 
 router.get(`/pendent-bills/:account`, function(req, res) {
   readDocuments("GeneralLedgerEntries","",(response) => {

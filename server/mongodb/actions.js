@@ -82,10 +82,42 @@ function readDocuments(collectionName, query, callback) {
   });
 }
 
+function accountsSum(account,start_date,end_date){
+  readDocuments("GeneralLedgerEntries","",(response) => {
+    let journals = response[0]
+    let credit = 0;
+    let debit = 0;
+    let startDate = 'start-date' in req.query ? new Date(req.query['start-date']) : null;
+    let endDate = 'end-date' in req.query ? new Date(req.query['end-date']) : null;
+    let account = req.params.account;
+    
+    journals.Journal.forEach((journal) => {
+      if(journal.Transaction != undefined){
+        if(Array.isArray(journal.Transaction)){
+          journal.Transaction.forEach((transaction) => {
+            let result = processTransaction(transaction,account,startDate,endDate)
+            debit+=result.debit;
+            credit+=result.credit;
+          })
+        } else{
+            let result = processTransaction(journal.Transaction, account, startDate, endDate);
+            credit += result.credit;
+            debit += result.debit;
+        }
+       
+      }
+    })
+  return {credit,debit}
+})
+
+}; 
+
+
 module.exports = {
   insertDocuments,
   findDocuments,
   updateDocument,
   removeDocument,
-  readDocuments
+  readDocuments,
+  accountsSum
 };
