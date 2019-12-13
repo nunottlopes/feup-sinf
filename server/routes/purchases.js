@@ -27,7 +27,6 @@ router.get(`/`, function(req, res) {
     });
 });
 
-
 router.get(`/pendent-bills/:account`, function(req, res) {
   readDocuments("GeneralLedgerEntries","",(response) => {
     let journals = response[0]

@@ -118,7 +118,7 @@ function accountsSum(account, startDate, endDate, callback) {
         }
       }
     });
-    callback(null, { credit, debit });
+    callback(null, credit-debit);
     // return { credit, debit };
   });
 }
