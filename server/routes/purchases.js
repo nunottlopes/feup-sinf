@@ -33,7 +33,7 @@ router.get(`/pendent-bills/:account`, function(req, res) {
     let journals = response[0]
     let credit = {};
     let debit = {};
-    let startDate =new Date('December 17, 3000 03:24:00');// 'start-date' in req.query ? new Date(req.query['start-date']) : null;
+    let startDate ='start-date' in req.query ? new Date(req.query['start-date']) : null;
     let endDate = 'end-date' in req.query ? new Date(req.query['end-date']) : null;
     let account = req.params.account;
     let topSuppliers = {};
@@ -44,30 +44,36 @@ router.get(`/pendent-bills/:account`, function(req, res) {
         if(Array.isArray(journal.Transaction)){
           journal.Transaction.forEach((transaction) => {
             let result = processTransaction(transaction,account,startDate,endDate)
-            for (const [company, value] of Object.entries(result.companies)) {
-              if(value.debit> 0 || value.credit > 0){
-                if(topSuppliers[company] == undefined){
-                  topSuppliers[company] = {debit: value.debit, credit:value.credit};
-                }else{
-                  topSuppliers[company].debit += value.debit;
-                  topSuppliers[company].credit += value.credit;
+            if(result.companies != undefined){
+              for (const [company, value] of Object.entries(result.companies)) {
+                if(value.debit> 0 || value.credit > 0){
+                  if(topSuppliers[company] == undefined){
+                    topSuppliers[company] = {debit: value.debit, credit:value.credit};
+                  }else{
+                    topSuppliers[company].debit += value.debit;
+                    topSuppliers[company].credit += value.credit;
+                  }
                 }
+  
               }
-
             }
+            
           })
         } else{
             let result = processTransaction(journal.Transaction, account, startDate, endDate);
-            for (const [company, value] of Object.entries(result.companies)) {
-              if(value> 0){
-                if(topSuppliers[company] == undefined){
-                  topSuppliers[company] = {debit: value.debit, credit: value.credit};
-                }else{
-                  topSuppliers[company].debit += value.debit;
-                  topSuppliers[company].credit += value.credit;
+            if(result.companies!= undefined){
+              for (const [company, value] of Object.entries(result.companies)) {
+                if(value> 0){
+                  if(topSuppliers[company] == undefined){
+                    topSuppliers[company] = {debit: value.debit, credit: value.credit};
+                  }else{
+                    topSuppliers[company].debit += value.debit;
+                    topSuppliers[company].credit += value.credit;
+                  }
                 }
               }
             }
+            
         }
        
       }
@@ -160,7 +166,7 @@ processTransaction = (transaction,account,startDate,endDate) => {
     }
   }
   /* console.log(companies, lines) */
-  return {credit,debit,companies }
+  return {credit,debit,companies } 
 }
 
 /* processTransaction = (transaction,account,startDate,endDate) => {

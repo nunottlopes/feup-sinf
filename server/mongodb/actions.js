@@ -113,6 +113,50 @@ function accountsSum(account,start_date,end_date){
 }; 
 
 
+processTransaction = (transaction,account,startDate,endDate) => {
+
+  function processLine(line,type){
+    //Não é fornecedores
+    if((line.AccountID + " ").indexOf(account) != 0)
+      return 0
+    return type == "credit" ? line.CreditAmount : line.DebitAmount;
+  }
+
+  let date = new Date(transaction.TransactionDate);
+  
+  if((startDate != null && date < startDate) || (endDate != undefined && date > endDate)){
+    return {credit:0,debit:0}
+  }
+
+  let credit = 0;
+  let debit = 0;
+
+  let lines = transaction.Lines;
+
+
+  if(lines.CreditLine){
+    if(Array.isArray(lines.CreditLine)){
+      credit+= lines.CreditLine.map(line => {
+        return processLine(line,"credit");
+      }).reduce((n1,n2) => n1+n2);
+    }else{
+      credit+=processLine(lines.CreditLine,"credit");
+    }
+  }
+
+  if(lines.DebitLine){
+    if(Array.isArray(lines.DebitLine)){
+      debit+= lines.DebitLine.map(line => {
+        return processLine(line,"debit");
+      }).reduce((n1,n2) => n1+n2);
+    }else{
+      debit+=processLine(lines.DebitLine,"debit");
+    }
+  }
+  return {credit,debit }
+}
+
+
 module.exports = {
   insertDocuments,
   findDocuments,
