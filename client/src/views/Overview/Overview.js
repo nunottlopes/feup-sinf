@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import ChartistGraph from 'react-chartist';
 import { Typography } from "@material-ui/core";
 
 import TopProductsTable from './TopProductsTable';
 import TopClientsGraph from './TopClientsGraph';
 import TopRegionsGraph from './TopRegionsGraph';
 import MonthlySalesGraph from './MonthlySalesGraph';
+import FinancesGraph from './FinancesGraph';
 
 const axios = require('axios');
 
@@ -26,28 +26,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const global_finances_graph = () => {
-  const data = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    series: [
-      {
-        className: 'series-expenses',
-        data: [10, 20, 30, 40, 50, 20, 5, 70, 80, 50, 35]
-      },
-      {
-        className: 'series-income',
-        data: [5, 20, 10, 5, 3, 30, 25, 30, 40, 64, 80]
-      },
-    ]
-  }
-
-  const options = {
-    height: 400
-  }
-
-  return <ChartistGraph type='Line' data={data} options={options}></ChartistGraph>
-}
-
 const Overview = () => {
   // styling classes
   const classes = useStyles();
@@ -58,6 +36,14 @@ const Overview = () => {
   const [top_regions, set_top_regions] = useState([]);
   const [top_products, set_top_products] = useState([]);
   const [monthly_sales, set_monthly_sales] = useState([]);
+  const [finances, set_finances] = useState({
+    revenue: {
+      data: []
+    },
+    cost: {
+      data: []
+    }
+  });
   // Perform all API calls for this page
   useEffect(() => {
     // Get the top clients
@@ -96,6 +82,14 @@ const Overview = () => {
         console.log(error);
       })
 
+    // Get the financial data (income and expenses)
+    axios.get(`${api_endpoint_base}/global-finances`)
+      .then(function (response) {
+        set_finances(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
   }, [])
 
   return (
@@ -103,7 +97,7 @@ const Overview = () => {
       <Grid item md={6} sm={12}>
         <Paper>
           <Typography variant='h5' className={classes.graphs_title}>Global finances</Typography>
-          {global_finances_graph()}
+          <FinancesGraph income={finances.revenue.data} expenses={finances.cost.data} />
         </Paper>
       </Grid>
       <Grid item md={6} sm={12}>
