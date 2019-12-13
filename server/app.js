@@ -21,12 +21,16 @@ const financialRouter = require("./routes/financial");
 const inventoryRouter = require("./routes/inventory");
 const productsRouter = require("./routes/products");
 const purchasesRouter = require("./routes/purchases");
+const salesRouter = require("./routes/sales");
+const overviewRouter = require("./routes/overview");
 
 app.use("/api/", indexRouter);
 app.use("/api/financial/", financialRouter);
 app.use("/api/inventory/", inventoryRouter);
 app.use("/api/product/", productsRouter);
 app.use("/api/purchases/", purchasesRouter);
+app.use("/api/sales/", salesRouter);
+app.use("/api/overview/", overviewRouter);
 
 const PORT = process.env.PORT;
 

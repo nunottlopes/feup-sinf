@@ -90,7 +90,6 @@ const revenue_from_sales_graph = () => {
 
 const Financial = () => {
     const classes = useStyles();
-    console.log(classes)
     return (
         <Grid className={classes.grid} container spacing={2}>
             <Grid item sm={12}>
