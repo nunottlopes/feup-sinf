@@ -1,7 +1,8 @@
 var express = require("express");
 var router = express.Router();
 const getJasminAPI = require("../config/jasmin").getJasminAPI;
-const { readDocuments } = require("../mongodb/actions");
+const { readDocuments, accountsSum } = require("../mongodb/actions");
+var async = require("async");
 
 // TABLE_01
 router.get(`/top-products`, function(req, res) {
@@ -38,7 +39,7 @@ router.get(`/top-products`, function(req, res) {
             products[ProductCode] = {
               ProductDescription,
               UnitPrice: parseFloat(UnitPrice),
-              Quantity: parseInt(Quantity),
+              Quantity: parseInt(Quantity)
             };
           }
         });
@@ -51,7 +52,7 @@ router.get(`/top-products`, function(req, res) {
         ProductCode: elem,
         ProductDescription: products[elem].ProductDescription,
         UnitPrice: products[elem].UnitPrice,
-        Quantity: products[elem].Quantity,
+        Quantity: products[elem].Quantity
       }));
 
     res.json(products);
@@ -95,7 +96,7 @@ router.get("/top-regions", (req, res) => {
         } else {
           countries[country] = {
             quantity: 1,
-            netTotal: parseInt(invoice.DocumentTotals.NetTotal),
+            netTotal: parseInt(invoice.DocumentTotals.NetTotal)
           };
         }
       }
@@ -104,7 +105,7 @@ router.get("/top-regions", (req, res) => {
     countries = Object.keys(countries).map(elem => ({
       id: elem,
       value: countries[elem].quantity,
-      netTotal: countries[elem].netTotal,
+      netTotal: countries[elem].netTotal
     }));
 
     res.json(countries);
@@ -137,7 +138,7 @@ router.get("/daily-volume", (req, res) => {
         dailySales[invoice.InvoiceDate] = {
           Day: day,
           Period: parseInt(invoice.Period),
-          NetTotal: parseFloat(invoice.DocumentTotals.NetTotal),
+          NetTotal: parseFloat(invoice.DocumentTotals.NetTotal)
         };
       }
     });
@@ -152,7 +153,7 @@ router.get("/daily-volume", (req, res) => {
   });
 });
 
-// INF_02 (not profit but instead is total net sales)
+// (not profit but instead is total net sales)
 router.get("/total-net-sales", (req, res) => {
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
@@ -182,7 +183,7 @@ router.get("/total-net-sales", (req, res) => {
     });
 
     res.json({
-      totalNetSales: totalSales,
+      totalNetSales: totalSales
     });
   });
 });
@@ -216,7 +217,7 @@ router.get("/total-gross-sales", (req, res) => {
     });
 
     res.json({
-      totalGrossSales: totalSales,
+      totalGrossSales: totalSales
     });
   });
 });
@@ -261,14 +262,47 @@ router.get("/cumulative-month-gross", (req, res) => {
     res.json([
       {
         data: cumulative,
-        label: "Cumulative Sales",
+        label: "Cumulative Sales"
       },
       {
         data: monthly,
-        label: "Monthly Sales",
-      },
+        label: "Monthly Sales"
+      }
     ]);
   });
+});
+
+// INF_02
+router.get("/profit", async (req, res) => {
+  let startDate =
+    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+  let endDate =
+    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+
+  async.series(
+    {
+      account61: function(callback) {
+        accountsSum(61, startDate, endDate, callback);
+      },
+      account71: function(callback) {
+        accountsSum(71, startDate, endDate, callback);
+      }
+    },
+    function(err, results) {
+      if (err) {
+        console.log(err);
+        return;
+      }
+
+      let costOfGoodsSold = results.account61.debit - results.account61.credit;
+      let revenueFromSales = results.account71.credit - results.account71.debit;
+      res.json({
+        profit: revenueFromSales - costOfGoodsSold,
+        revenueFromSales: revenueFromSales,
+        costOfGoodsSold: costOfGoodsSold
+      });
+    }
+  );
 });
 
 // TODO: PIE_1
