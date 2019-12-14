@@ -204,12 +204,10 @@ router.get("/month-sales", (req, res) => {
         );
     });
 
-    res.json([
-      {
-        data: monthly,
-        label: "Monthly Sales"
-      }
-    ]);
+    res.json({
+      data: monthly,
+      label: "Monthly Sales",
+    });
   });
 });
 
