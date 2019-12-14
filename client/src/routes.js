@@ -8,7 +8,7 @@ import {
 } from "@material-ui/icons";
 
 // core components/views for Admin layout
-import { Overview, Financial, Sales, Inventory, Purchases } from "./views/";
+import { Overview, Financial, Sales, Inventory, Purchases, Product } from "./views/";
 
 const dashboardRoutes = [
   {
@@ -44,6 +44,13 @@ const dashboardRoutes = [
     name: "Purchases",
     icon: ShoppingCart,
     component: Purchases,
+    layout: "/admin"
+  },
+  {
+    path: "/product",
+    name: "Product",
+    icon: ShoppingCart,
+    component: Product,
     layout: "/admin"
   }
 ];
