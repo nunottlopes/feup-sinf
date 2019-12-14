@@ -92,21 +92,34 @@ router.get(`/pendent-bills/:account`, function(req, res) {
   });
 });
 
-router.get(`/orders-delivered`, function(req, res) {
-  getJasminAPI("/shipping/deliveries")
+// All orders
+router.get(`/all-orders`, function(req, res) {
+  getJasminAPI("/purchases/orders")
     .then(response => {
       let orders = [];
       response = JSON.parse(response);
       for (let i = 0; i < response.length; i++) {
         if (!response[i].isDeleted) {
+          let items = [];
+
+          response[i].documentLines.forEach(element => {
+            items.push({
+              quantity: element.quantity,
+              totalAmount: element.lineExtensionAmount.amount,
+              warehouse: element.warehouse,
+              itemId: element.purchasesItem,
+              itemDescription: element.purchasesItemDescription,
+              deliveryDate: element.deliveryDate
+            });
+          });
+
           orders.push({
             name: response[i].accountingPartyDescription,
             date: response[i].exchangeRateDate,
-            id: response[i].naturalKey,
-            entity: response[i].accountingParty,
+            orderId: response[i].naturalKey,
+            supplierId: response[i].accountingParty,
             payableAmout: response[i].payableAmount.amount,
-            salesItem: response[i].documentLines[0].item
-            // deleted: response[i].isDeleted
+            items: items
           });
         }
       }
@@ -117,25 +130,75 @@ router.get(`/orders-delivered`, function(req, res) {
     });
 });
 
-// TODO: REMOVE ORDERS ALREADY DELIVERED
-router.get(`/orders-to-deliver`, function(req, res) {
-  getJasminAPI("/shipping/shippingRequests")
+// TABLE_03 Waiting orders
+router.get(`/orders-to-receive`, function(req, res) {
+  getJasminAPI("/goodsReceipt/processOrders/1/10?company=")
     .then(response => {
       let orders = [];
       response = JSON.parse(response);
+      // res.send(response);
       for (let i = 0; i < response.length; i++) {
         if (!response[i].isDeleted) {
-          orders.push(response[i]);
-          // orders.push({
-          //   name: response[i].accountingPartyDescription,
-          //   date: response[i].exchangeRateDate,
-          //   id: response[i].naturalKey,
-          //   entity: response[i].accountingParty,
-          //   payableAmout: response[i].payableAmount.amount
-          // });
+          orders.push({
+            item: response[i].item,
+            itemDescription: response[i].itemDescription,
+            quantity: response[i].quantity,
+            deliveryDate: response[i].deliveryDate,
+            sourceDocKey: response[i].sourceDocKey
+          });
         }
       }
       res.send(orders);
+    })
+    .catch(err => {
+      res.send(err);
+    });
+});
+
+// Expenses
+router.get(`/expenses`, function(req, res) {
+  getJasminAPI("/invoiceReceipt/expenses")
+    .then(response => {
+      let orders = [];
+      response = JSON.parse(response);
+      res.send(response);
+      // for (let i = 0; i < response.length; i++) {
+      //   if (!response[i].isDeleted) {
+      //     orders.push({
+      //       item: response[i].item,
+      //       itemDescription: response[i].itemDescription,
+      //       quantity: response[i].quantity,
+      //       deliveryDate: response[i].deliveryDate,
+      //       sourceDocKey: response[i].sourceDocKey
+      //     });
+      //   }
+      // }
+      // res.send(orders);
+    })
+    .catch(err => {
+      res.send(err);
+    });
+});
+
+// Invoices
+router.get(`/invoices`, function(req, res) {
+  getJasminAPI("/invoiceReceipt/invoices")
+    .then(response => {
+      let orders = [];
+      response = JSON.parse(response);
+      res.send(response);
+      // for (let i = 0; i < response.length; i++) {
+      //   if (!response[i].isDeleted) {
+      //     orders.push({
+      //       item: response[i].item,
+      //       itemDescription: response[i].itemDescription,
+      //       quantity: response[i].quantity,
+      //       deliveryDate: response[i].deliveryDate,
+      //       sourceDocKey: response[i].sourceDocKey
+      //     });
+      //   }
+      // }
+      // res.send(orders);
     })
     .catch(err => {
       res.send(err);
