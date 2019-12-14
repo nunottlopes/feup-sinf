@@ -88,7 +88,7 @@ function handleAccountingSAFT(saftData, res) {
       db,
       "MasterFiles",
       { _id: "GeneralLedgerAccounts" },
-      { $push: { Account: accounts } }
+      { $push: { Account: { $each: accounts } } }
     );
 
     const costumers = saftData["MasterFiles"]["Customer"];
@@ -96,7 +96,7 @@ function handleAccountingSAFT(saftData, res) {
       db,
       "MasterFiles",
       { _id: "Customer" },
-      { $push: { Customers: costumers } }
+      { $push: { Customers: { $each: costumers } } }
     );
 
     const suppliers = saftData["MasterFiles"]["Supplier"];
@@ -104,7 +104,7 @@ function handleAccountingSAFT(saftData, res) {
       db,
       "MasterFiles",
       { _id: "Suppliers" },
-      { $push: { Suppliers: suppliers } }
+      { $push: { Suppliers: { $each: suppliers } } }
     );
 
     const taxTableEntries =
@@ -113,7 +113,7 @@ function handleAccountingSAFT(saftData, res) {
       db,
       "MasterFiles",
       { _id: "TaxTables" },
-      { $push: { TaxTableEntry: taxTableEntries } }
+      { $push: { TaxTableEntry: { $each: taxTableEntries } } }
     );
 
     const journals = saftData["GeneralLedgerEntries"]["Journal"];
@@ -125,7 +125,7 @@ function handleAccountingSAFT(saftData, res) {
       "GeneralLedgerEntries",
       { _id: "GeneralLedgerEntries" },
       {
-        $push: { Journal: journals },
+        $push: { Journal: { $each: journals } },
         $inc: {
           NumberOfEntries: numberOfEntries,
           TotalDebit: totalDebit,
