@@ -282,9 +282,15 @@ processTransaction = (transaction, account, startDate, endDate) => {
       }
     }
   }
+<<<<<<< HEAD
+  
+  return {credit,debit,companies } 
+} */
+=======
   /* console.log(companies, lines) */
   return { credit, debit, companies };
 };
+>>>>>>> 79803e2cae1f49484442f5876138fc5ebc59ade9
 
 /* processTransaction = (transaction,account,startDate,endDate) => {
 
