@@ -35,7 +35,7 @@ export default function AdminNavbarLinks() {
     <div className={classes.root}>
       <AppBar position="static" className={classes.appBar}>
         <Toolbar className={classes.exp}>
-          <Typography variant="p" className={classes.title}>
+          <Typography variant="body1" className={classes.title}>
             From
           </Typography>
           <TextField
@@ -47,7 +47,7 @@ export default function AdminNavbarLinks() {
               shrink: true
             }}
           />
-          <Typography variant="p" className={classes.title}>
+          <Typography variant="body1" className={classes.title}>
             To
           </Typography>
           <TextField
