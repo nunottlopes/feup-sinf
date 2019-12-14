@@ -3,7 +3,7 @@ var async = require("async");
 var express = require("express");
 var router = express.Router();
 const getJasminAPI = require("../config/jasmin").getJasminAPI;
-const { readDocuments, accountsSum } = require("../mongodb/actions");
+const { readDocuments, accountsSum, accountsSumMontlhy } = require("../mongodb/actions");
 
 
 //https://moodle.up.pt/pluginfile.php/93952/mod_resource/content/1/PL_Balance_Sheet_specification.pdf
@@ -55,10 +55,10 @@ router.get(`/ebit`, function(req, res) {
         console.log(err);
         return;
       }
-
+      res.send(results)
       const ebit = results.earnings - (results.expensesCOGS + results.expensesServices + results.expensesPersonnel + results.expensesDepreciationAndAmortization)
       
-      res.send({ebit})
+      /* res.send({ebit}) */
     }
   );
 });
@@ -106,6 +106,38 @@ async.series(
 
 // TODO: GRAPH_01
 //https://github.com/literallysofia/feup-sinf/blob/0929544913cdf4b156130c44661a3c87963d54d5/sinf/src/app/financial/components/sales-graph/sales-graph.component.ts
-router.get(`/revenue`, function(req, res) {});
+router.get(`/revenue`, function(req, res) {
+  let costs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  let sales = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+  async.series(
+    {
+      account61: function(callback) {
+        accountsSumMontlhy(61, callback);
+      },
+      account71: function(callback) {
+        accountsSumMontlhy(71, callback);
+      }
+    },
+    function(err, results) {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      let costsData = results.account61;
+      let salesData = results.account71;
+
+      for (let i = 1; i <= 12; i++) {
+        costs[i] = costsData[i].totalDebit;
+        sales[i] = salesData[i].totalCredit;
+      }
+
+      res.json({
+        revenue: { data: sales, label: "Revenue from Sales" },
+        cost: { data: costs, label: "Cost of Goods Sold" }
+      });
+    }
+  );
+});
 
 module.exports = router;

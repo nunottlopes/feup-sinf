@@ -175,12 +175,12 @@ function accountsSumMontlhy(account, callback) {
 processTransaction = (transaction, account, startDate, endDate) => {
   function processLine(line, type) {
     //Não é fornecedores
+    console.log(line.AccountID)
     if ((line.AccountID + " ").indexOf(account) != 0) return 0;
     return type == "credit" ? line.CreditAmount : line.DebitAmount;
   }
 
   let date = new Date(transaction.TransactionDate);
-
   if (
     (startDate != null && date < startDate) ||
     (endDate != undefined && date > endDate)
@@ -192,6 +192,7 @@ processTransaction = (transaction, account, startDate, endDate) => {
   let debit = 0;
 
   let lines = transaction.Lines;
+  
 
   if (lines.CreditLine) {
     if (Array.isArray(lines.CreditLine)) {

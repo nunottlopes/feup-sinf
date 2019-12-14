@@ -92,7 +92,7 @@ router.get(`/orders-delivery`, function(req, res) {
     });
 });
 
-
+/* 
 processTransaction = (transaction,account,startDate,endDate) => {
 
   function processLine(line,type){
@@ -164,9 +164,9 @@ processTransaction = (transaction,account,startDate,endDate) => {
 
     }
   }
-  /* console.log(companies, lines) */
+  
   return {credit,debit,companies } 
-}
+} */
 
 /* processTransaction = (transaction,account,startDate,endDate) => {
 
