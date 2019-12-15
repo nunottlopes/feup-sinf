@@ -6,6 +6,9 @@ import ChartistGraph from 'react-chartist';
 import { Typography, Modal } from "@material-ui/core";
 import { Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core/';
 
+import { euroCurrency, nFormatter } from '../../utils';
+
+
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 0,
@@ -23,10 +26,8 @@ const useStyles = makeStyles(theme => ({
 const top_clients_table = () => {
     const table_header = ['Client', 'Units', 'Amount']
     const table_rows = [
-        { client: 'PRODUCT_ID1', units: 'Product 1', amount: 100 },
-        { client: 'PRODUCT_ID2', units: 'Product 2', amount: 100 },
-        { client: 'PRODUCT_ID3', units: 'Product 3', amount: 100 },
-        { client: 'PRODUCT_ID4', units: 'Product 4', amount: 100 }
+        { client: 'Administrador', units: 171, amount: euroCurrency(16205) },
+        { client: 'EUGENIO.VEIGA', units: 1, amount: euroCurrency(94.77) }
     ]
 
     return (
@@ -61,26 +62,21 @@ const Product = ({ isOpen, close, data }) => {
                 <Grid className={classes.grid} container spacing={2}>
                     <Grid item md={12} sm={12}>
                         <Paper >
-                            <Typography align="center" variant='h5' className={classes.graphs_title}>MacBook Pro</Typography>
+                            <Typography align="center" variant='h5' className={classes.graphs_title}>Hand Scanner -TR89</Typography>
                             <Typography className="product_description" align='left' >
-                                Lorem Ipsum <br />
-                                Item ID: <b> MACKBOOK_PRO <br /></b>
-                                Production cost: <b>2099€ <br /> </b>
-                                Minimum selling price: <b>2500€ <br /> </b>
+                                Product Group: <b> Scanners <br /></b>
+                                Product Code: <b> C0003 <br /></b>
+                                Product Type: <b> P <br /> </b>
+                                Minimum selling price: <b> {euroCurrency(94.77)} <br /> </b>
                             </Typography>
 
                         </Paper>
                     </Grid>
-                    <Grid item md={6} sm={12}>
+
+                    <Grid item md={12} sm={12}>
                         <Paper align="center" className="financial_fix">
-                            <Typography variant='h5' className={classes.graphs_title}>Units in Stock</Typography>
-                            536
-                </Paper>
-                    </Grid>
-                    <Grid item md={6} sm={12}>
-                        <Paper align="center" className="financial_fix">
-                            <Typography variant='h5' className={classes.graphs_title}>Unist Sold</Typography>
-                            10k
+                            <Typography variant='h5' className={classes.graphs_title}>Units Sold</Typography>
+                            172
                         </Paper>
                     </Grid>
 
