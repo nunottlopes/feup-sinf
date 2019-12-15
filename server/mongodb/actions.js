@@ -31,8 +31,6 @@ function findDocuments(db, collectionName, query, callback) {
   // To add a query filter, e.g. query = {'a': 3}
   collection.find(query).toArray(function(err, docs) {
     assert.equal(err, null);
-    //console.log("Found the following records");
-    //console.log(docs);
     callback(docs);
   });
 }

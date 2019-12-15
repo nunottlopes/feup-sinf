@@ -79,7 +79,6 @@ router.get("/top-regions", (req, res) => {
   readDocuments("SourceDocuments", { _id: "SalesInvoices" }, resp => {
     const salesInvoices = resp[0]["Invoice"];
     salesInvoices.forEach(invoice => {
-      console.log(invoice);
       const type = invoice.InvoiceType;
       if (
         !(

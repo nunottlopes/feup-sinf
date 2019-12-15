@@ -1,31 +1,31 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Skeleton from '@material-ui/lab/Skeleton';
-import ChartistGraph from 'react-chartist';
+import PropTypes from "prop-types";
+import { makeStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import Skeleton from "@material-ui/lab/Skeleton";
+import ChartistGraph from "react-chartist";
 import { Typography } from "@material-ui/core";
 
-import TopRegionsGraph from './TopRegionsGraph';
-import TopProductsTable from './TopProductsTable';
-import TopClientsTable from './TopClientsTable';
+import TopRegionsGraph from "./TopRegionsGraph";
+import TopProductsTable from "./TopProductsTable";
+import TopClientsTable from "./TopClientsTable";
 
-import { euroCurrency, nFormatter } from '../../utils';
+import { euroCurrency, nFormatter } from "../../utils";
 
-const axios = require('axios');
+const axios = require("axios");
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 0,
+    flexGrow: 0
   },
   grid: {
-    width: 'unset',
+    width: "unset",
     margin: 0
   },
   graphs_title: {
-    fontWeight: 'lighter',
-    marginBottom: '1rem',
+    fontWeight: "lighter",
+    marginBottom: "1rem"
   }
 }));
 
@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
  * Returns total net sales for each month
  * @param {Array} daily_sales The response from '/daily-volume' endpoint
  */
-const __group_sales_by_month = (daily_sales) => {
+const __group_sales_by_month = daily_sales => {
   let grouped_sales = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   for (let m = 1; m <= 12; m++) {
     if (m in daily_sales) {
@@ -45,95 +45,120 @@ const __group_sales_by_month = (daily_sales) => {
   }
 
   return grouped_sales;
-}
+};
 
 /**
  * Linear graph that shows both net and gross sales by month
- * @param {*} props 
+ * @param {*} props
  */
-const SalesVolumes = (props) => {
+const SalesVolumes = props => {
   const { net_sales, gross_sales } = props;
 
   const data = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    series: [
-      net_sales,
-      gross_sales
-    ]
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    series: [net_sales, gross_sales]
   };
 
   const options = {
     height: 400,
     axisY: {
-      labelInterpolationFnc: (label) => nFormatter(label, 3)
+      labelInterpolationFnc: label => nFormatter(label, 3)
     }
-  }
+  };
 
-  return <ChartistGraph type='Line' data={data} options={options} />
-}
+  return <ChartistGraph type="Line" data={data} options={options} />;
+};
 
 SalesVolumes.propTypes = {
   net_sales: PropTypes.arrayOf(PropTypes.number).isRequired,
   gross_sales: PropTypes.arrayOf(PropTypes.number).isRequired
-}
+};
 
 /**
  * Linear graph showing cumulative gross sales by each month
- * @param {*} props 
+ * @param {*} props
  */
-const CumulativeSalesVolumes = (props) => {
+const CumulativeSalesVolumes = props => {
   const { cumulative_gross_sales } = props;
 
   const data = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    series: [
-      cumulative_gross_sales
-    ]
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    series: [cumulative_gross_sales]
   };
 
   const options = {
     height: 400,
     axisY: {
-      labelInterpolationFnc: (label) => nFormatter(label, 3)
+      labelInterpolationFnc: label => nFormatter(label, 3)
     }
-  }
+  };
 
-  return <ChartistGraph type='Line' data={data} options={options} />
-}
+  return <ChartistGraph type="Line" data={data} options={options} />;
+};
 
 CumulativeSalesVolumes.propTypes = {
   cumulative_gross_sales: PropTypes.arrayOf(PropTypes.number).isRequired
-}
+};
 
 /**
  * Simple card to show numeric information such as total profits, total revenues, etc
- * @param {*} props 
+ * @param {*} props
  */
-const InformationCard = (props) => {
+const InformationCard = props => {
   const { title, value, classes } = props;
 
   return (
     <Paper>
-      <Typography variant='h5' className={classes.graphs_title}>{title}</Typography>
+      <Typography variant="h5" className={classes.graphs_title}>
+        {title}
+      </Typography>
       {value ? (
-        <Typography variant='body1' className={classes.graphs_title}>{euroCurrency(value)}</Typography>
+        <Typography variant="body1" className={classes.graphs_title}>
+          {euroCurrency(value)}
+        </Typography>
       ) : (
-          <Skeleton variant="text" />
-        )}
+        <Skeleton variant="text" />
+      )}
     </Paper>
-  )
-}
+  );
+};
 
 InformationCard.propTypes = {
   title: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
   classes: PropTypes.object
-}
+};
 
 const Sales = () => {
   const classes = useStyles();
   // constant for the overview API endpoint
-  const api_endpoint_base = 'http://localhost:3001/api/sales';
+  const api_endpoint_base = "http://localhost:3001/api/sales";
   // hooks for data/state
   // list of the top regions that purchase more products
   const [top_regions, set_top_regions] = useState([]);
@@ -160,130 +185,178 @@ const Sales = () => {
   // Perform all API calls for this page
   useEffect(() => {
     // Get the top regions
-    axios.get(`${api_endpoint_base}/top-regions`)
-      .then(function (response) {
+    axios
+      .get(`${api_endpoint_base}/top-regions`)
+      .then(function(response) {
         set_top_regions(response.data);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
-      })
+      });
 
     // Get the top products
-    axios.get(`${api_endpoint_base}/top-products`)
-      .then(function (response) {
+    axios
+      .get(`${api_endpoint_base}/top-products`)
+      .then(function(response) {
         set_top_products(response.data);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
-      })
+      });
 
     // Get the top clients
-    axios.get(`${api_endpoint_base}/top-clients`)
-      .then(function (response) {
+    axios
+      .get(`${api_endpoint_base}/top-clients`)
+      .then(function(response) {
         set_top_clients(response.data);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
-      })
+      });
 
     // Get the daily volume sales for every month
-    axios.get(`${api_endpoint_base}/daily-volume`)
-      .then(function (response) {
+    axios
+      .get(`${api_endpoint_base}/daily-volume`)
+      .then(function(response) {
         set_net_sales_volumes(__group_sales_by_month(response.data));
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
-      })
+      });
 
     // Get gross sales for every month and cumulative gross sales
-    axios.get(`${api_endpoint_base}/cumulative-month-gross`)
-      .then(function (response) {
+    axios
+      .get(`${api_endpoint_base}/cumulative-month-gross`)
+      .then(function(response) {
         const [cumulative, per_month] = response.data;
         set_gross_cumulative_sales(cumulative.data);
         set_gross_sales_volumes(per_month.data);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
-      })
+      });
 
     // Get profit, revenues and cost of goods sold
-    axios.get(`${api_endpoint_base}/profit`)
-      .then(function (response) {
+    axios
+      .get(`${api_endpoint_base}/profit`)
+      .then(function(response) {
         set_profits(response.data);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
-      })
-
+      });
 
     // Get the total net sales
-    axios.get(`${api_endpoint_base}/total-net-sales`)
-      .then(function (response) {
+    axios
+      .get(`${api_endpoint_base}/total-net-sales`)
+      .then(function(response) {
         set_total_net_sales(response.data.totalNetSales);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
-      })
+      });
 
     // Get the total gross (net + taxes) sales
-    axios.get(`${api_endpoint_base}/total-gross-sales`)
-      .then(function (response) {
+    axios
+      .get(`${api_endpoint_base}/total-gross-sales`)
+      .then(function(response) {
         set_total_gross_sales(response.data.totalGrossSales);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
-      })
-  }, [])
+      });
+  }, []);
 
   return (
-    <Grid className={classes.grid} container spacing={2} justify="center" alignItems="center">
+    <Grid
+      className={classes.grid}
+      container
+      spacing={3}
+      justify="center"
+      alignItems="center"
+    >
       <Grid item xs={6} sm={4} md={3} lg>
-        <InformationCard title="Profit" value={profits.profit} classes={classes} />
+        <InformationCard
+          title="Profit"
+          value={profits.profit}
+          classes={classes}
+        />
       </Grid>
       <Grid item xs={6} sm={4} md={3} lg>
-        <InformationCard title="Revenue from sales" value={profits.revenueFromSales} classes={classes} />
+        <InformationCard
+          title="Revenue from sales"
+          value={profits.revenueFromSales}
+          classes={classes}
+        />
       </Grid>
       <Grid item xs={6} sm={4} md={3} lg>
-        <InformationCard title="Costs of good solds" value={profits.costOfGoodsSold} classes={classes} />
+        <InformationCard
+          title="Costs of good solds"
+          value={profits.costOfGoodsSold}
+          classes={classes}
+        />
       </Grid>
       <Grid item xs={6} sm={4} md={3} lg>
-        <InformationCard title="Total Net Sales" value={total_net_sales} classes={classes} />
+        <InformationCard
+          title="Total Net Sales"
+          value={total_net_sales}
+          classes={classes}
+        />
       </Grid>
       <Grid item xs={6} sm={4} md={3} lg>
-        <InformationCard title="Total Gross Sales" value={total_gross_sales} classes={classes} />
+        <InformationCard
+          title="Total Gross Sales"
+          value={total_gross_sales}
+          classes={classes}
+        />
       </Grid>
       <Grid item xs={12}>
         <Paper>
-          <Typography variant='h5' className={classes.graphs_title}>Sales Per Region</Typography>
+          <Typography variant="h5" className={classes.graphs_title}>
+            Sales Per Region
+          </Typography>
           <TopRegionsGraph regions={top_regions} />
         </Paper>
       </Grid>
       <Grid item xs={12} lg={6}>
         <Paper>
-          <Typography variant='h5' className={classes.graphs_title}>Sales Volume (net &amp; gross)</Typography>
-          <SalesVolumes net_sales={net_sales_volumes} gross_sales={gross_sales_volumes} />
+          <Typography variant="h5" className={classes.graphs_title}>
+            Sales Volume (net &amp; gross)
+          </Typography>
+          <SalesVolumes
+            net_sales={net_sales_volumes}
+            gross_sales={gross_sales_volumes}
+          />
         </Paper>
       </Grid>
       <Grid item xs={12} lg={6}>
         <Paper>
-          <Typography variant='h5' className={classes.graphs_title}>Cumulative Sales Volume (gross)</Typography>
-          <CumulativeSalesVolumes cumulative_gross_sales={gross_cumulative_sales} />
+          <Typography variant="h5" className={classes.graphs_title}>
+            Cumulative Sales Volume (gross)
+          </Typography>
+          <CumulativeSalesVolumes
+            cumulative_gross_sales={gross_cumulative_sales}
+          />
         </Paper>
       </Grid>
       <Grid item xs={12}>
         <Paper>
-          <Typography variant='h5' className={classes.graphs_title}>Top Products</Typography>
+          <Typography variant="h5" className={classes.graphs_title}>
+            Top Products
+          </Typography>
           <TopProductsTable products={top_products.slice(0, 10)} />
         </Paper>
       </Grid>
       <Grid item xs={12}>
         <Paper>
-          <Typography variant='h5' className={classes.graphs_title}>Top Clients</Typography>
+          <Typography variant="h5" className={classes.graphs_title}>
+            Top Clients
+          </Typography>
           <TopClientsTable clients={top_clients.slice(0, 10)} />
         </Paper>
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
 export default Sales;
