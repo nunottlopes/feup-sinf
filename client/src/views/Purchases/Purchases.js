@@ -12,6 +12,8 @@ import {
   TableCell
 } from "@material-ui/core/";
 
+import { euroCurrency, nFormatter, formatDate } from '../../utils';
+
 const axios = require('axios');
 
 const useStyles = makeStyles(theme => ({
@@ -25,16 +27,15 @@ const useStyles = makeStyles(theme => ({
   graphs_title: {
     fontWeight: 'lighter',
     marginBottom: '1rem',
+  },
+  card: {
+    height: '100%'
   }
 }));
 
-const suppliers_table = () => {
-  const table_header = ['Name', 'Contact', 'Total Expenses']
-  const table_rows = [
-    { name: 'Webber Group', contact: 'info@webber.com', total_expenses: 22 },
-    { name: 'Lynch', contact: 'info@lynch.com', total_expenses: 13 },
-    { name: 'Jacobs LLC', contact: 'info@jacobs.com', total_expenses: 5 }
-  ]
+const SuppliersTable = (props) => {
+  const {suppliers} = props;
+  const table_header = ['Name', 'Total Expenses']
 
   return (
     <Table>
@@ -44,11 +45,10 @@ const suppliers_table = () => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {table_rows.map(product => (
-          <TableRow key={product.name}>
-            <TableCell>{product.name}</TableCell>
-            <TableCell>{product.contact}</TableCell>
-            <TableCell>{product.total_expenses}k €</TableCell>
+        {suppliers.map(supplier => (
+          <TableRow key={supplier.id}>
+            <TableCell>{supplier.name}</TableCell>
+            <TableCell>{euroCurrency(supplier.totalExpenses)}</TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -56,32 +56,31 @@ const suppliers_table = () => {
   )
 }
 
-const purchases_graph = () => {
+const ExpensesLineGraph = (props) => {
+  const {monthly_expenses} = props;
   const data = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     series: [
       {
         className: 'series-expenses',
-        data: [10, 20, 30, 40, 50, 20, 5, 70, 80, 50, 35, 40]
+        data: monthly_expenses
       },
     ]
   }
 
   const options = {
-    height: 300
+    height: 400,
+    axisY: {
+      labelInterpolationFnc: (label) => nFormatter(label, 3)
+    }
   }
 
   return <ChartistGraph type='Line' data={data} options={options}></ChartistGraph>
 }
 
-const pendent_bills_table = () => {
-  const table_header = ['Supplier', 'Debt', 'Due Date']
-  const table_rows = [
-    { supplier: 'Webber Group', debt: 1230, due_date: '10/11/2019' },
-    { supplier: 'Webber Group', debt: 492, due_date: '20/11/2019' },
-    { supplier: 'Webber Group', debt: 180, due_date: '21/11/2019' },
-    { supplier: 'Webber Group', debt: 5027, due_date: '05/12/2019' }
-  ]
+const PendentBillsTable = (props) => {
+  const { pendent_bills } = props;
+  const table_header = ['Order ID', 'Supplier', 'Debt', 'Due Date']
 
   return (
     <Table>
@@ -91,11 +90,12 @@ const pendent_bills_table = () => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {table_rows.map(product => (
-          <TableRow key={product.supplier}>
-            <TableCell>{product.supplier}</TableCell>
-            <TableCell>{product.debt} €</TableCell>
-            <TableCell>{product.due_date}</TableCell>
+        {pendent_bills.map(bill => (
+          <TableRow key={bill.orderId}>
+            <TableCell>{bill.orderId}</TableCell>
+            <TableCell>{bill.supplier}</TableCell>
+            <TableCell>{euroCurrency(bill.amount)}</TableCell>
+            <TableCell>{formatDate(bill.dueDate)}</TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -103,13 +103,9 @@ const pendent_bills_table = () => {
   )
 }
 
-const orders_delivery_table = () => {
-  const table_header = ['Order ID', 'Delivery Date']
-  const table_rows = [
-    { order_id: 'ECF.2019.6', delivery_date: '25/11/2019' },
-    { order_id: 'ECF.2019.7', delivery_date: '04/12/2019' },
-    { order_id: 'ECF.2019.10', delivery_date: '13/12/2019' }
-  ]
+const PendentOrdersDeliveryTable = (props) => {
+  const { pendent_orders } = props;
+  const table_header = ['Order ID', 'Item', 'Description', 'Delivery Date']
 
   return (
     <Table>
@@ -119,10 +115,12 @@ const orders_delivery_table = () => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {table_rows.map(product => (
-          <TableRow key={product.order_ide}>
-            <TableCell>{product.order_id}</TableCell>
-            <TableCell>{product.delivery_date}</TableCell>
+        {pendent_orders.map(order => (
+          <TableRow key={order.sourceDocKey}>
+            <TableCell>{order.sourceDocKey}</TableCell>
+            <TableCell>{order.item}</TableCell>
+            <TableCell>{order.itemDescription}</TableCell>
+            <TableCell>{formatDate(order.deliveryDate)}</TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -138,7 +136,7 @@ const Purchases = () => {
   // list of pendent orders, i.e. orders that weren't loaded in company inventory
   const [pendent_orders, set_pendent_orders] = useState([]);
   // total expenses in purchases
-  const [expenses, set_expenses] = useState([]);
+  const [expenses, set_expenses] = useState({data: []});
   // pendent bills, i.e., orders that weren't paid yet
   const [pendent_bills, set_pendent_bills] = useState([]);
   // list of suppliers
@@ -183,28 +181,28 @@ const Purchases = () => {
   }, [])
   return (
     <Grid className={classes.grid} container spacing={2}>
-      <Grid item md={6} sm={12}>
-        <Paper>
+      <Grid item md={3} sm={12}>
+        <Paper className={classes.card}>
           <Typography variant='h5' className={classes.graphs_title}>Suppliers</Typography>
-          {suppliers_table()}
+          <SuppliersTable suppliers={suppliers} />
+        </Paper>
+      </Grid>
+      <Grid item md={9} sm={12}>
+        <Paper>
+          <Typography variant='h5' className={classes.graphs_title}>Monthly Expenses</Typography>
+          <ExpensesLineGraph monthly_expenses={expenses.data} />
         </Paper>
       </Grid>
       <Grid item md={6} sm={12}>
-        <Paper>
-          <Typography variant='h5' className={classes.graphs_title}>Purchases</Typography>
-          {purchases_graph()}
-        </Paper>
-      </Grid>
-      <Grid item md={6} sm={12}>
-        <Paper>
+        <Paper className={classes.card}>
           <Typography variant='h5' className={classes.graphs_title}>Pendent Bills</Typography>
-          {pendent_bills_table()}
+          <PendentBillsTable pendent_bills={pendent_bills} />
         </Paper>
       </Grid>
       <Grid item md={6} sm={12}>
-        <Paper>
-          <Typography variant='h5' className={classes.graphs_title}>Orders Delivery</Typography>
-          {orders_delivery_table()}
+        <Paper className={classes.card}>
+          <Typography variant='h5' className={classes.graphs_title}>Pendent Orders Delivery</Typography>
+          <PendentOrdersDeliveryTable pendent_orders={pendent_orders} />
         </Paper>
       </Grid>
     </Grid>
