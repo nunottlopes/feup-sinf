@@ -397,10 +397,4 @@ router.get("/top-clients", (req, res) => {
   });
 });
 
-// TODO: PIE_1 (remover)
-
-// TODO: INF_01 (remover)
-
-// TODO: BAR_01 (remover)
-
 module.exports = router;
