@@ -1,19 +1,21 @@
 var async = require("async");
-
 var express = require("express");
 var router = express.Router();
 const getJasminAPI = require("../config/jasmin").getJasminAPI;
-const { readDocuments, accountsSum, accountsSumMontlhy } = require("../mongodb/actions");
-
-
-//https://moodle.up.pt/pluginfile.php/93952/mod_resource/content/1/PL_Balance_Sheet_specification.pdf
+const {
+  readDocuments,
+  accountsSum,
+  accountsSumMontlhy
+} = require("../mongodb/actions");
 
 // SHEET_01
 // TODO:
-
-//https://github.com/literallysofia/feup-sinf/blob/0929544913cdf4b156130c44661a3c87963d54d5/sinf/src/app/financial/components/balance-sheet/balance-sheet.component.ts
-
 router.get(`/balance`, function(req, res) {
+  // if (!req.isLogged) {
+  //   res.status(401).send({ error: "Request unauthorized" });
+  //   return;
+  // }
+
   readDocuments("MasterFiles", { _id: "GeneralLedgerAccounts" }, response => {
     if (response.length !== 0) {
       res.send([]);
@@ -24,13 +26,16 @@ router.get(`/balance`, function(req, res) {
 });
 
 // TODO: INFO_01
-//https://github.com/literallysofia/feup-sinf/blob/0929544913cdf4b156130c44661a3c87963d54d5/sinf/src/app/financial/components/ebit/ebit.component.ts
 router.get(`/ebit`, function(req, res) {
+  // if (!req.isLogged) {
+  //   res.status(401).send({ error: "Request unauthorized" });
+  //   return;
+  // }
 
-    let startDate ="start-date" in req.query ? new Date(req.query["start-date"]) : null;
-    let endDate = "end-date" in req.query ? new Date(req.query["end-date"]) : null;
-    
-
+  let startDate =
+    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+  let endDate =
+    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
 
   async.series(
     {
@@ -66,32 +71,36 @@ router.get(`/ebit`, function(req, res) {
 });
 
 // TODO: INFO_02
-//https://github.com/literallysofia/feup-sinf/blob/0929544913cdf4b156130c44661a3c87963d54d5/sinf/src/app/financial/components/ebitda/ebitda.component.ts
 router.get(`/ebitda`, function(req, res) {
+  // if (!req.isLogged) {
+  //   res.status(401).send({ error: "Request unauthorized" });
+  //   return;
+  // }
+  let startDate =
+    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+  let endDate =
+    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
 
-  let startDate ="start-date" in req.query ? new Date(req.query["start-date"]) : null;
-  let endDate = "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+  async.series(
+    {
+      earningsSales: function(callback) {
+        accountsSum(71, startDate, endDate, callback);
+      },
+      earningsServices: function(callback) {
+        accountsSum(72, startDate, endDate, callback);
+      },
+      expensesCOGS: function(callback) {
+        accountsSum(61, startDate, endDate, callback);
+      },
+      expensesServices: function(callback) {
+        accountsSum(62, startDate, endDate, callback);
+      },
+      expensesPersonnel: function(callback) {
+        accountsSum(63, startDate, endDate, callback);
+      },
+    },
   
-
-
-async.series(
-  {
-    earningsSales: function(callback) {
-      accountsSum(71, startDate, endDate, callback);
-    },
-    earningsServices: function(callback) {
-      accountsSum(72, startDate, endDate, callback);
-    },
-    expensesCOGS: function(callback) {
-      accountsSum(61, startDate, endDate, callback);
-    },
-    expensesServices: function(callback) {
-      accountsSum(62, startDate, endDate, callback);
-    },
-    expensesPersonnel: function(callback) {
-      accountsSum(63, startDate, endDate, callback);
-    }
-  },
+    
   function(err, results) {
     if (err) {
       console.log(err);
@@ -100,16 +109,18 @@ async.series(
    // res.send({1: results.earningsSales, 2:results.earningsServices, 3:results.expensesCOGS, 4:results.expensesServices, 5:results.expensesPersonnel})
       
     const ebitda = ((results.earningsSales + results.earningsServices) - (results.expensesCOGS + results.expensesServices + results.expensesPersonnel))
-    
-    res.send({ebitda})
-  }
-);
+  
 
+      res.send({ ebitda });
+  })
 });
 
 // TODO: GRAPH_01
-//https://github.com/literallysofia/feup-sinf/blob/0929544913cdf4b156130c44661a3c87963d54d5/sinf/src/app/financial/components/sales-graph/sales-graph.component.ts
 router.get(`/revenue`, function(req, res) {
+  // if (!req.isLogged) {
+  //   res.status(401).send({ error: "Request unauthorized" });
+  //   return;
+  // }
   let costs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let sales = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 

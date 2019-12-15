@@ -19,12 +19,6 @@
   stroke-dasharray: 2px;
 }
 
-.ct-series-a .ct-point,
-.ct-series-a .ct-line,
-.ct-series-a .ct-slice-donut {
-  stroke: rgba(255, 255, 255, 0.8);
-}
-
 .ct-series.series-income, .ct-series.revenue_from_sales, .ct-series-a .ct-bar {
   stroke: rgb(69, 121, 84);
 }
@@ -519,4 +513,16 @@ footer ul li a:hover {
 
 .financial_fix{
   margin-top:16px;
+}
+
+.modal_css{
+  border-radius: 4px;
+  padding: 15px;
+  background-color:rgb(196, 196, 196, 0.5);
+  margin: 40px;
+}
+
+.product_description{
+  padding-left: 20px;
+  padding-bottom: 20px;
 }

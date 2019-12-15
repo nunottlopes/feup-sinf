@@ -31,8 +31,6 @@ function findDocuments(db, collectionName, query, callback) {
   // To add a query filter, e.g. query = {'a': 3}
   collection.find(query).toArray(function(err, docs) {
     assert.equal(err, null);
-    //console.log("Found the following records");
-    //console.log(docs);
     callback(docs);
   });
 }
@@ -118,7 +116,7 @@ function accountsSum(account, startDate, endDate, callback) {
         }
       }
     });
-    callback(null, credit-debit);
+    callback(null, credit - debit);
     // return { credit, debit };
   });
 }
@@ -192,7 +190,6 @@ processTransaction = (transaction, account, startDate, endDate) => {
   let debit = 0;
 
   let lines = transaction.Lines;
-  
 
   if (lines.CreditLine) {
     if (Array.isArray(lines.CreditLine)) {

@@ -5,6 +5,15 @@ const { readDocuments } = require("../mongodb/actions");
 
 // LIST_01
 router.get(`/products`, function(req, res) {
+  // if (!req.isLogged) {
+  //   res.status(401).send({ error: "Request unauthorized" });
+  //   return;
+  // }
+  let startDate =
+    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+  let endDate =
+    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+
   let products = {};
 
   readDocuments("SourceDocuments", { _id: "SalesInvoices" }, resp => {
@@ -40,12 +49,27 @@ router.get(`/products`, function(req, res) {
       }
     });
 
-    res.json(products);
+    let productsList = [];
+
+    for (var key in products) {
+      productsList.push({
+        product_id: key,
+        name: products[key].ProductDescription,
+        quantity: products[key].Quantity,
+        base_price: products[key].UnitPrice
+      });
+    }
+
+    res.json(productsList);
   });
 });
 
 // KP1_01
 router.get(`/stock-balance`, function(req, res) {
+  // if (!req.isLogged) {
+  //   res.status(401).send({ error: "Request unauthorized" });
+  //   return;
+  // }
   getJasminAPI("/materialscore/materialsitems")
     .then(response => {
       let warehouses = JSON.parse(response)[0]["materialsItemWarehouses"];
@@ -63,6 +87,10 @@ router.get(`/stock-balance`, function(req, res) {
 
 // Stock units per warehouse (from erp)
 router.get(`/warehouse-units`, function(req, res) {
+  // if (!req.isLogged) {
+  //   res.status(401).send({ error: "Request unauthorized" });
+  //   return;
+  // }
   getJasminAPI("/materialscore/materialsitems")
     .then(response => {
       let warehouses = JSON.parse(response)[0]["materialsItemWarehouses"];

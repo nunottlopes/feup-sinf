@@ -6,6 +6,10 @@ var async = require("async");
 
 // TABLE_01
 router.get(`/top-products`, function(req, res) {
+  // if (!req.isLogged) {
+  //   res.status(401).send({ error: "Request unauthorized" });
+  //   return;
+  // }
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
   let endDate =
@@ -61,6 +65,10 @@ router.get(`/top-products`, function(req, res) {
 
 // PIE_01
 router.get("/top-clients", (req, res) => {
+  // if (!req.isLogged) {
+  //   res.status(401).send({ error: "Request unauthorized" });
+  //   return;
+  // }
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
   let endDate =
@@ -121,6 +129,10 @@ router.get("/top-clients", (req, res) => {
 
 // PIE_02
 router.get("/top-regions", (req, res) => {
+  // if (!req.isLogged) {
+  //   res.status(401).send({ error: "Request unauthorized" });
+  //   return;
+  // }
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
   let endDate =
@@ -175,6 +187,10 @@ router.get("/top-regions", (req, res) => {
 
 // BAR_01
 router.get("/month-sales", (req, res) => {
+  // if (!req.isLogged) {
+  //   res.status(401).send({ error: "Request unauthorized" });
+  //   return;
+  // }
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
   let endDate =
@@ -206,13 +222,17 @@ router.get("/month-sales", (req, res) => {
 
     res.json({
       data: monthly,
-      label: "Monthly Sales",
+      label: "Monthly Sales"
     });
   });
 });
 
 // LINE_01
 router.get("/global-finances", (req, res) => {
+  // if (!req.isLogged) {
+  //   res.status(401).send({ error: "Request unauthorized" });
+  //   return;
+  // }
   let costs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let sales = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
