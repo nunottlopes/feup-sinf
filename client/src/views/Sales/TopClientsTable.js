@@ -6,7 +6,7 @@ import { euroCurrency } from '../../utils';
 
 const TopClientsTable = (props) => {
   const { clients } = props;
-  const table_header = ['Client ID', 'Number of Purchases', 'Total Income']
+  const table_header = ['Client ID', 'Number of Purchases', 'Profit from sales']
 
   return (
     <Table>

@@ -241,10 +241,10 @@ const Sales = () => {
         <InformationCard title="Profit" value={profits.profit} classes={classes} />
       </Grid>
       <Grid item xs={6} sm={4} md={3} lg>
-        <InformationCard title="Revenue" value={profits.revenueFromSales} classes={classes} />
+        <InformationCard title="Revenue from sales" value={profits.revenueFromSales} classes={classes} />
       </Grid>
       <Grid item xs={6} sm={4} md={3} lg>
-        <InformationCard title="Costs" value={profits.costOfGoodsSold} classes={classes} />
+        <InformationCard title="Costs of good solds" value={profits.costOfGoodsSold} classes={classes} />
       </Grid>
       <Grid item xs={6} sm={4} md={3} lg>
         <InformationCard title="Total Net Sales" value={total_net_sales} classes={classes} />
