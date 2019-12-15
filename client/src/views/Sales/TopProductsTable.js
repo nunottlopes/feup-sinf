@@ -4,7 +4,7 @@ import { Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/c
 
 const TopProductsTable = (props) => {
   const { products } = props;
-  const table_header = ['Product ID', 'Name', 'Quantity (sales)']
+  const table_header = ['Product ID', 'Name', 'Quantity (sold)']
 
   return (
     <Table>
