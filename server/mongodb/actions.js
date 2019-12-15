@@ -210,7 +210,6 @@ processTransaction = (transaction, account, startDate, endDate) => {
       debit += processLine(lines.DebitLine, "debit");
     }
   }
-  if(credit!= 0 || debit != 0)console.log(credit,debit)
   return { credit, debit };
 };
 

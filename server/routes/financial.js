@@ -16,13 +16,112 @@ router.get(`/balance`, function(req, res) {
   //   return;
   // }
 
-  readDocuments("MasterFiles", { _id: "GeneralLedgerAccounts" }, response => {
-    if (response.length !== 0) {
-      res.send([]);
-    } else {
-      res.status(400).send({ message: "Error getting balance data" });
+
+  let startDate =
+    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+  let endDate =
+    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+
+
+  let accountNames = [
+    {id: 11, name: "Caixa"},
+    {id: 12, name: "Depósitos à Ordem"},
+    {id: 21, name: "Contas a Receber de Clientes"},
+    {id: 22, name: "Contas a Pagar a Fornecedores"},
+    {id: 24, name: "Estado e Outros Entes Públicos"},
+    {id: 31, name: "Compras"},
+    {id: 32, name: "Mercadorias em Armazém / Trânsito"},
+    {id: 36, name: "Produtos e Trabalhos em Curso"},
+    {id: 61, name: "Custo das Mercadorias Vendidas"},
+    {id: 62, name: "Fornecimentos e Serviços Externos"},
+    {id: 71, name: "Vendas"},
+    {id: 72, name: "Prestações de Serviços"}
+  ];
+
+  async.series(
+    {
+      caixa: function(callback) {
+        accountsSum(11, startDate, endDate, callback);
+      },
+      depositos: function(callback) {
+        accountsSum(12, startDate, endDate, callback);
+      },
+      contasReceberClientes: function(callback) {
+        accountsSum(21, startDate, endDate, callback);
+      },
+      contasPagarFornecedores: function(callback) {
+        accountsSum(22, startDate, endDate, callback);
+      },
+      estado: function(callback) {
+        accountsSum(24, startDate, endDate, callback);
+      },
+      compras: function(callback) {
+        accountsSum(31, startDate, endDate, callback);
+      },
+      mercadoriasTransito: function(callback) {
+        accountsSum(32, startDate, endDate, callback);
+      },
+      produtosTrabalho: function(callback) {
+        accountsSum(36, startDate, endDate, callback);
+      },
+      custoMercadoriasVendidas: function(callback) {
+        accountsSum(61, startDate, endDate, callback);
+      },
+      fornecimentosServicosExternos: function(callback) {
+        accountsSum(62, startDate, endDate, callback);
+      },
+      vendas: function(callback) {
+        accountsSum(71, startDate, endDate, callback);
+      },
+      prestacaoServicos: function(callback) {
+        accountsSum(72, startDate, endDate, callback);
+      }
+    },
+    function(err, results) {
+      if (err) {
+        console.log(err);
+        return;
+      }
+
+      accountNames[0].value = results.caixa;
+      accountNames[1].value = results.depositos;
+      accountNames[2].value = results.contasReceberClientes;
+      accountNames[3].value = results.contasPagarFornecedores;
+      accountNames[4].value = results.estado;
+      accountNames[5].value = results.compras;
+      accountNames[6].value = results.mercadoriasTransito;
+      accountNames[7].value = results.produtosTrabalho;
+      accountNames[8].value = results.custoMercadoriasVendidas;
+      accountNames[9].value = results.fornecimentosServicosExternos;
+      accountNames[10].value = results.vendas;
+      accountNames[11].value = results.prestacaoServicos;
+
+
+    res.send(accountNames)
+
     }
-  });
+  );
+
+/* 
+  for (let i = 11; i <= 81; i++) {
+
+    let id = i.toString()
+    let accountSum = data['debit'] - data['credit'];
+    if (accountSum != 0) {
+      this.accounts.push({
+        id: id,
+        name: this.accountNames.has(id) ? this.accountNames.get(id) : ' - ',
+        debit: accountSum > 0 ? accountSum : 0,
+        credit: accountSum < 0 ? -accountSum : 0
+      })
+
+      this.totalDebit += data['debit']
+      this.totalCredit += data['credit']
+    } 
+  }*/
+
+
+    
 });
 
 // TODO: INFO_01
