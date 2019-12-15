@@ -24,3 +24,9 @@ export function euroCurrency(number) {
     currency: 'EUR'
   }).format(number);
 }
+
+export function formatDate(date) {
+  let date_obj = new Date(date);
+  const options = { year: 'numeric', month: 'long', day: '2-digit' };
+  return date_obj.toLocaleDateString("pt-PT", options);
+}
