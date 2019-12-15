@@ -11,7 +11,7 @@ import TopRegionsGraph from './TopRegionsGraph';
 import TopProductsTable from './TopProductsTable';
 import TopClientsTable from './TopClientsTable';
 
-import { euroCurrency } from '../../utils';
+import { euroCurrency, nFormatter } from '../../utils';
 
 const axios = require('axios');
 
@@ -64,6 +64,9 @@ const SalesVolumes = (props) => {
 
   const options = {
     height: 400,
+    axisY: {
+      labelInterpolationFnc: (label) => nFormatter(label, 3)
+    }
   }
 
   return <ChartistGraph type='Line' data={data} options={options} />
@@ -90,6 +93,9 @@ const CumulativeSalesVolumes = (props) => {
 
   const options = {
     height: 400,
+    axisY: {
+      labelInterpolationFnc: (label) => nFormatter(label, 3)
+    }
   }
 
   return <ChartistGraph type='Line' data={data} options={options} />
