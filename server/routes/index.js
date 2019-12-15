@@ -1,10 +1,12 @@
 var express = require("express");
 var router = express.Router();
-const getJasminAPI = require("../config/jasmin").getJasminAPI;
 const parseSaft = require("../parser/saft").parseSaft;
-const { readDocuments } = require("../mongodb/actions");
 
 router.get("/parse/saft", function(req, res) {
+  // if (!req.isLogged) {
+  //   res.status(401).send({ error: "Request unauthorized" });
+  //   return;
+  // }
   console.log("Parsing SAF-T file");
   parseSaft(res);
 });

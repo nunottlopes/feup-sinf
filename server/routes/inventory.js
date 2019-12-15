@@ -5,6 +5,10 @@ const { readDocuments } = require("../mongodb/actions");
 
 // LIST_01
 router.get(`/products`, function(req, res) {
+  // if (!req.isLogged) {
+  //   res.status(401).send({ error: "Request unauthorized" });
+  //   return;
+  // }
   let products = {};
 
   readDocuments("SourceDocuments", { _id: "SalesInvoices" }, resp => {
@@ -46,6 +50,10 @@ router.get(`/products`, function(req, res) {
 
 // KP1_01
 router.get(`/stock-balance`, function(req, res) {
+  // if (!req.isLogged) {
+  //   res.status(401).send({ error: "Request unauthorized" });
+  //   return;
+  // }
   getJasminAPI("/materialscore/materialsitems")
     .then(response => {
       let warehouses = JSON.parse(response)[0]["materialsItemWarehouses"];
@@ -63,6 +71,10 @@ router.get(`/stock-balance`, function(req, res) {
 
 // Stock units per warehouse (from erp)
 router.get(`/warehouse-units`, function(req, res) {
+  // if (!req.isLogged) {
+  //   res.status(401).send({ error: "Request unauthorized" });
+  //   return;
+  // }
   getJasminAPI("/materialscore/materialsitems")
     .then(response => {
       let warehouses = JSON.parse(response)[0]["materialsItemWarehouses"];
