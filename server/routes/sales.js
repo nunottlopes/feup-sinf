@@ -322,8 +322,8 @@ router.get("/profit", async (req, res) => {
         return;
       }
 
-      let costOfGoodsSold = results.account61.debit - results.account61.credit;
-      let revenueFromSales = results.account71.credit - results.account71.debit;
+      let costOfGoodsSold = -results.account61;
+      let revenueFromSales = results.account71;
       res.json({
         profit: revenueFromSales - costOfGoodsSold,
         revenueFromSales: revenueFromSales,
