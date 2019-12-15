@@ -44,13 +44,17 @@ const __group_sales_by_month = (daily_sales) => {
   return grouped_sales;
 }
 
+/**
+ * Linear graph that shows both net and gross sales by month
+ * @param {*} props 
+ */
 const SalesVolumes = (props) => {
   const { net_sales, gross_sales } = props;
 
   const data = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     series: [
-      net_sales, 
+      net_sales,
       gross_sales
     ]
   };
@@ -62,6 +66,15 @@ const SalesVolumes = (props) => {
   return <ChartistGraph type='Line' data={data} options={options} />
 }
 
+SalesVolumes.propTypes = {
+  net_sales: PropTypes.arrayOf(PropTypes.number).isRequired,
+  gross_sales: PropTypes.arrayOf(PropTypes.number).isRequired
+}
+
+/**
+ * Linear graph showing cumulative gross sales by each month
+ * @param {*} props 
+ */
 const CumulativeSalesVolumes = (props) => {
   const { cumulative_gross_sales } = props;
 
@@ -77,6 +90,35 @@ const CumulativeSalesVolumes = (props) => {
   }
 
   return <ChartistGraph type='Line' data={data} options={options} />
+}
+
+CumulativeSalesVolumes.propTypes = {
+  cumulative_gross_sales: PropTypes.arrayOf(PropTypes.number).isRequired
+}
+
+/**
+ * Simple card to show numeric information such as total profits, total revenues, etc
+ * @param {*} props 
+ */
+const InformationCard = (props) => {
+  const { title, value, classes } = props;
+
+  return (
+    <Paper>
+      <Typography variant='h5' className={classes.graphs_title}>{title}</Typography>
+      {value ? (
+        <Typography variant='body1' className={classes.graphs_title}>€ {value}</Typography>
+      ) : (
+          <Skeleton variant="text" />
+        )}
+    </Paper>
+  )
+}
+
+InformationCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
+  classes: PropTypes.object
 }
 
 const Sales = () => {
@@ -178,76 +220,41 @@ const Sales = () => {
   }, [])
 
   return (
-    <Grid className={classes.grid} container spacing={2}>
-      <Grid item md={9} sm={12}>
+    <Grid className={classes.grid} container spacing={2} justify="center" alignItems="center">
+      <Grid item xs={6} sm={4} md={3} lg>
+        <InformationCard title="Profit" value={profits.profit} classes={classes} />
+      </Grid>
+      <Grid item xs={6} sm={4} md={3} lg>
+        <InformationCard title="Revenue" value={profits.revenueFromSales} classes={classes} />
+      </Grid>
+      <Grid item xs={6} sm={4} md={3} lg>
+        <InformationCard title="Costs" value={profits.costOfGoodsSold} classes={classes} />
+      </Grid>
+      <Grid item xs={6} sm={4} md={3} lg>
+        <InformationCard title="Total Net Sales" value={total_net_sales} classes={classes} />
+      </Grid>
+      <Grid item xs={6} sm={4} md={3} lg>
+        <InformationCard title="Total Gross Sales" value={total_gross_sales} classes={classes} />
+      </Grid>
+      <Grid item xs={12}>
         <Paper>
           <Typography variant='h5' className={classes.graphs_title}>Sales Per Region</Typography>
           <TopRegionsGraph regions={top_regions} />
         </Paper>
       </Grid>
-      <Grid item sm={4}>
-        <Paper>
-          <Typography variant='h5' className={classes.graphs_title}>Profit</Typography>
-          {profits.profit ? (
-            <Typography variant='body1' className={classes.graphs_title}>€ {profits.profit}</Typography>
-          ) : (
-              <Skeleton variant="text" />
-            )}
-        </Paper>
-      </Grid>
-      <Grid item sm={4}>
-        <Paper>
-          <Typography variant='h5' className={classes.graphs_title}>Revenue</Typography>
-          {profits.revenueFromSales ? (
-            <Typography variant='body1' className={classes.graphs_title}>€ {profits.revenueFromSales}</Typography>
-          ) : (
-              <Skeleton variant="text" />
-            )}
-        </Paper>
-      </Grid>
-      <Grid item sm={4}>
-        <Paper>
-          <Typography variant='h5' className={classes.graphs_title}>Costs</Typography>
-          {profits.costOfGoodsSold ? (
-            <Typography variant='body1' className={classes.graphs_title}>€ {profits.costOfGoodsSold}</Typography>
-          ) : (
-              <Skeleton variant="text" />
-            )}
-        </Paper>
-      </Grid>
-      <Grid item sm={4}>
-        <Paper>
-          <Typography variant='h5' className={classes.graphs_title}>Total Net Sales</Typography>
-          {profits.costOfGoodsSold ? (
-            <Typography variant='body1' className={classes.graphs_title}>€ {total_net_sales}</Typography>
-          ) : (
-              <Skeleton variant="text" />
-            )}
-        </Paper>
-      </Grid>
-      <Grid item sm={4}>
-        <Paper>
-          <Typography variant='h5' className={classes.graphs_title}>Total Gross Sales</Typography>
-          {profits.costOfGoodsSold ? (
-            <Typography variant='body1' className={classes.graphs_title}>€ {total_gross_sales}</Typography>
-          ) : (
-              <Skeleton variant="text" />
-            )}
-        </Paper>
-      </Grid>
-      <Grid item sm={12}>
+      <Grid item xs={12} lg={6}>
         <Paper>
           <Typography variant='h5' className={classes.graphs_title}>Sales Volume (net &amp; gross)</Typography>
           <SalesVolumes net_sales={net_sales_volumes} gross_sales={gross_sales_volumes} />
         </Paper>
       </Grid>
-      <Grid item sm={12}>
+      <Grid item xs={12} lg={6}>
         <Paper>
           <Typography variant='h5' className={classes.graphs_title}>Cumulative Sales Volume (gross)</Typography>
           <CumulativeSalesVolumes cumulative_gross_sales={gross_cumulative_sales} />
         </Paper>
       </Grid>
-      <Grid item md={12} sm={12}>
+      <Grid item xs={12}>
         <Paper>
           <Typography variant='h5' className={classes.graphs_title}>Top products</Typography>
           <TopProductsTable products={top_products.slice(0, 10)} />
@@ -255,15 +262,6 @@ const Sales = () => {
       </Grid>
     </Grid>
   )
-}
-
-SalesVolumes.propTypes = {
-  net_sales: PropTypes.arrayOf(PropTypes.number).isRequired,
-  gross_sales: PropTypes.arrayOf(PropTypes.number).isRequired
-}
-
-CumulativeSalesVolumes.propTypes = {
-  cumulative_gross_sales: PropTypes.arrayOf(PropTypes.number).isRequired
 }
 
 export default Sales;
