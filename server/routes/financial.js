@@ -16,7 +16,7 @@ const { readDocuments, accountsSum, accountsSumMontlhy } = require("../mongodb/a
 router.get(`/balance`, function(req, res) {
   readDocuments("MasterFiles", { _id: "GeneralLedgerAccounts" }, response => {
     if (response.length !== 0) {
-      res.send(response[0].Account);
+      res.send([]);
     } else {
       res.status(400).send({ message: "Error getting balance data" });
     }
@@ -55,10 +55,12 @@ router.get(`/ebit`, function(req, res) {
         console.log(err);
         return;
       }
-      res.send(results)
+
+     // res.send({1: results.earnings, 2:results.expensesCOGS, 3:results.expensesServices, 4:results.expensesPersonnel, 5:results.expensesDepreciationAndAmortization})
+      
       const ebit = results.earnings - (results.expensesCOGS + results.expensesServices + results.expensesPersonnel + results.expensesDepreciationAndAmortization)
       
-      /* res.send({ebit}) */
+      res.send({ebit})
     }
   );
 });
@@ -95,7 +97,8 @@ async.series(
       console.log(err);
       return;
     }
-
+   // res.send({1: results.earningsSales, 2:results.earningsServices, 3:results.expensesCOGS, 4:results.expensesServices, 5:results.expensesPersonnel})
+      
     const ebitda = ((results.earningsSales + results.earningsServices) - (results.expensesCOGS + results.expensesServices + results.expensesPersonnel))
     
     res.send({ebitda})

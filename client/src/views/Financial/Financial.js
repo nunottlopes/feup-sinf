@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -7,6 +7,7 @@ import { Typography } from "@material-ui/core";
 import { Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core/';
 require('chartist-plugin-legend');
 
+const axios = require('axios');
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -25,22 +26,31 @@ const useStyles = makeStyles(theme => ({
 const reducer_debit = (acc_1, product) => acc_1 + product.debit;
 const reducer_credit = (acc_2, product) => acc_2 + product.credit;
 
-const balance_sheet_table = () => {
-    const table_header = ['Account', 'Description', 'Debit', 'Credit']
-    const table_rows = [
-        { account: '1', description: 'Depósitos à ordem', debit: 0.00, credit: 1500 },
-        { account: '2', description: 'Dividas de clientes', debit: 250, credit: 0 },
-        { account: '3', description: 'Vendas', debit: 0, credit: 4000 },
-        { account: '4', description: 'Prestação de serviços', debit: 0, credit: 5000 },
-        { account: '5', description: 'Compras', debit: 2000, credit: 0 },
-        { account: '6', description: 'Caixa', debit: 240, credit: 0 },
-        { account: '7', description: 'Contas a pagar ao estado', debit: 0, credit: 500 },
-        { account: '8', description: 'Trabalhos em curso', debit: 200, credit: 0 },
-        { account: '9', description: 'Serviços Externos', debit: 500, credit: 0 },
-    ]
 
-    const total_debit = table_rows.reduce(reducer_debit, 0)
-    const total_credit = table_rows.reduce(reducer_credit, 0)
+const Balance = () => {
+
+    const table_header = ['Account', 'Description', 'Debit', 'Credit']  
+
+  // styling classes
+  const classes = useStyles();
+  // constant for the overview API endpoint
+  const api_endpoint_base = 'http://localhost:3001/api/financial';
+  // hooks for data/state
+  const [balance, set_balance] = useState([]);
+  
+
+ // Perform all API calls for this page
+ useEffect(() => {
+
+    // Get the balance sheet
+    axios.get(`${api_endpoint_base}/balance`)
+      .then(function (response) {
+        set_balance(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+      }, [])
 
     return (
         <Table>
@@ -50,7 +60,7 @@ const balance_sheet_table = () => {
                 </TableRow>
             </TableHead>
             <TableBody>
-                {table_rows.map(product => (
+                {balance.map(product => (
                     <TableRow key={product.account}>
                         <TableCell>{product.account}</TableCell>
                         <TableCell>{product.description}</TableCell>
@@ -61,8 +71,8 @@ const balance_sheet_table = () => {
                 <TableRow>
                     <TableCell> - </TableCell>
                     <TableCell>Total</TableCell>
-                    <TableCell> {total_debit} €</TableCell>
-                    <TableCell> {total_credit} €</TableCell>
+{/*                     <TableCell> {total_debit} €</TableCell>
+                    <TableCell> {total_credit} €</TableCell> */}
                 </TableRow>
             </TableBody>
         </Table>
@@ -90,12 +100,49 @@ const revenue_from_sales_graph = () => {
 
 const Financial = () => {
     const classes = useStyles();
+    const api_endpoint_base = 'http://localhost:3001/api/financial';
+
+    const [ebit, set_ebit] = useState([]);
+    const [ebitda, set_ebitda] = useState([]);
+    const [revenue, set_revenue] = useState([]);
+
+    useEffect(() => {
+
+    // Get the revenue vs cost of goods sold
+    axios.get(`${api_endpoint_base}/revenue`)
+      .then(function (response) {
+        set_revenue(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+
+    // Get the ebit
+    axios.get(`${api_endpoint_base}/ebit`)
+        .then(function (response) {
+        set_ebit(response.data);
+        })
+        .catch(function (error) {
+        console.log(error);
+        })
+
+    // Get the ebitda
+    axios.get(`${api_endpoint_base}/ebitda`)
+        .then(function (response) {
+        set_ebitda(response.data);
+        })
+        .catch(function (error) {
+        console.log(error);
+        })
+
+    },[])
+
     return (
         <Grid className={classes.grid} container spacing={2}>
             <Grid item sm={12}>
                 <Paper>
                     <Typography variant='h5' className={classes.graphs_title}>Balance Sheet</Typography>
-                    {balance_sheet_table()}
+                    {Balance()}
                 </Paper>
             </Grid>
 
@@ -109,11 +156,11 @@ const Financial = () => {
             <Grid item md={4} sm={12}>
                 <Paper>
                     <Typography variant='h5' className={classes.graphs_title}>EBIT</Typography>
-                    € 25,078.00
+                    € {ebit.ebit}
                 </Paper>
                 <Paper className="financial_fix">
                     <Typography variant='h5' className={classes.graphs_title}>EBITDA</Typography>
-                    € 25,078.00
+                    € {ebitda.ebitda}
                 </Paper>
             </Grid>
 
