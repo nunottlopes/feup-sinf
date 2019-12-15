@@ -9,6 +9,9 @@ import { Typography } from "@material-ui/core";
 
 import TopRegionsGraph from './TopRegionsGraph';
 import TopProductsTable from './TopProductsTable';
+import TopClientsTable from './TopClientsTable';
+
+import { euroCurrency } from '../../utils';
 
 const axios = require('axios');
 
@@ -107,7 +110,7 @@ const InformationCard = (props) => {
     <Paper>
       <Typography variant='h5' className={classes.graphs_title}>{title}</Typography>
       {value ? (
-        <Typography variant='body1' className={classes.graphs_title}>€ {value}</Typography>
+        <Typography variant='body1' className={classes.graphs_title}>{euroCurrency(value)}</Typography>
       ) : (
           <Skeleton variant="text" />
         )}
@@ -130,6 +133,8 @@ const Sales = () => {
   const [top_regions, set_top_regions] = useState([]);
   // list of most sold products
   const [top_products, set_top_products] = useState([]);
+  // list of top clients
+  const [top_clients, set_top_clients] = useState([]);
   // information about sales for every day of every month (net values)
   const [net_sales_volumes, set_net_sales_volumes] = useState([]);
   // gross sales for every month
@@ -166,6 +171,15 @@ const Sales = () => {
         console.log(error);
       })
 
+    // Get the top clients
+    axios.get(`${api_endpoint_base}/top-clients`)
+      .then(function (response) {
+        set_top_clients(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+
     // Get the daily volume sales for every month
     axios.get(`${api_endpoint_base}/daily-volume`)
       .then(function (response) {
@@ -189,11 +203,7 @@ const Sales = () => {
     // Get profit, revenues and cost of goods sold
     axios.get(`${api_endpoint_base}/profit`)
       .then(function (response) {
-        let obj = response.data;
-        for (const key of Object.keys(obj)) {
-          obj[key] = obj[key].toFixed(2)
-        }
-        set_profits(obj);
+        set_profits(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -203,7 +213,7 @@ const Sales = () => {
     // Get the total net sales
     axios.get(`${api_endpoint_base}/total-net-sales`)
       .then(function (response) {
-        set_total_net_sales(response.data.totalNetSales.toFixed(2));
+        set_total_net_sales(response.data.totalNetSales);
       })
       .catch(function (error) {
         console.log(error);
@@ -212,7 +222,7 @@ const Sales = () => {
     // Get the total gross (net + taxes) sales
     axios.get(`${api_endpoint_base}/total-gross-sales`)
       .then(function (response) {
-        set_total_gross_sales(response.data.totalGrossSales.toFixed(2));
+        set_total_gross_sales(response.data.totalGrossSales);
       })
       .catch(function (error) {
         console.log(error);
@@ -256,8 +266,14 @@ const Sales = () => {
       </Grid>
       <Grid item xs={12}>
         <Paper>
-          <Typography variant='h5' className={classes.graphs_title}>Top products</Typography>
+          <Typography variant='h5' className={classes.graphs_title}>Top Products</Typography>
           <TopProductsTable products={top_products.slice(0, 10)} />
+        </Paper>
+      </Grid>
+      <Grid item xs={12}>
+        <Paper>
+          <Typography variant='h5' className={classes.graphs_title}>Top Clients</Typography>
+          <TopClientsTable clients={top_clients.slice(0, 10)} />
         </Paper>
       </Grid>
     </Grid>
