@@ -19,12 +19,6 @@
   stroke-dasharray: 2px;
 }
 
-.ct-series-a .ct-point,
-.ct-series-a .ct-line,
-.ct-series-a .ct-slice-donut {
-  stroke: rgba(255, 255, 255, 0.8);
-}
-
 .ct-series.series-income, .ct-series.revenue_from_sales, .ct-series-a .ct-bar {
   stroke: rgb(69, 121, 84);
 }
