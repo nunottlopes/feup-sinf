@@ -1,4 +1,4 @@
-export function nFormatter(num, digits) {
+export function formatNumber(num, digits) {
   var si = [
     { value: 1, symbol: "" },
     { value: 1E3, symbol: "k" },
@@ -18,7 +18,7 @@ export function nFormatter(num, digits) {
   return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
 }
 
-export function euroCurrency(number) {
+export function formatCurrency(number) {
   return new Intl.NumberFormat('pt-PT', { 
     style: 'currency', 
     currency: 'EUR'

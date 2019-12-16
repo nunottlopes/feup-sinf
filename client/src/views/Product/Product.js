@@ -12,7 +12,7 @@ import {
   TableCell
 } from "@material-ui/core/";
 
-import { euroCurrency, nFormatter } from "../../utils";
+import { formatCurrency, formatNumber } from "../../utils";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,8 +31,8 @@ const useStyles = makeStyles(theme => ({
 const top_clients_table = () => {
   const table_header = ["Client", "Units", "Amount"];
   const table_rows = [
-    { client: "Administrador", units: 171, amount: euroCurrency(16205) },
-    { client: "EUGENIO.VEIGA", units: 1, amount: euroCurrency(94.77) }
+    { client: "Administrador", units: 171, amount: formatCurrency(16205) },
+    { client: "EUGENIO.VEIGA", units: 1, amount: formatCurrency(94.77) }
   ];
 
   return (
@@ -91,7 +91,7 @@ const Product = ({ isOpen, close, data }) => {
                 Minimum selling price:{" "}
                 <b>
                   {" "}
-                  {euroCurrency(94.77)} <br />{" "}
+                  {formatCurrency(94.77)} <br />{" "}
                 </b>
               </Typography>
             </Paper>

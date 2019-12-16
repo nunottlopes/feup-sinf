@@ -12,7 +12,7 @@ import {
   TableCell
 } from "@material-ui/core/";
 
-import { euroCurrency, nFormatter, formatDate } from '../../utils';
+import { formatCurrency, formatNumber, formatDate } from '../../utils';
 
 const axios = require('axios');
 
@@ -48,7 +48,7 @@ const SuppliersTable = (props) => {
         {suppliers.map(supplier => (
           <TableRow key={supplier.id}>
             <TableCell>{supplier.name}</TableCell>
-            <TableCell>{euroCurrency(supplier.totalExpenses)}</TableCell>
+            <TableCell>{formatCurrency(supplier.totalExpenses)}</TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -71,7 +71,7 @@ const ExpensesLineGraph = (props) => {
   const options = {
     height: 400,
     axisY: {
-      labelInterpolationFnc: (label) => nFormatter(label, 3)
+      labelInterpolationFnc: (label) => formatNumber(label, 3)
     }
   }
 
@@ -94,7 +94,7 @@ const PendentBillsTable = (props) => {
           <TableRow key={bill.orderId}>
             <TableCell>{bill.orderId}</TableCell>
             <TableCell>{bill.supplier}</TableCell>
-            <TableCell>{euroCurrency(bill.amount)}</TableCell>
+            <TableCell>{formatCurrency(bill.amount)}</TableCell>
             <TableCell>{formatDate(bill.dueDate)}</TableCell>
           </TableRow>
         ))}

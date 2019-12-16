@@ -11,7 +11,7 @@ import {
   TableCell
 } from "@material-ui/core/";
 import Product from "views/Product/Product";
-import { euroCurrency } from "../../utils";
+import { formatCurrency } from "../../utils";
 
 const axios = require("axios");
 
@@ -101,7 +101,7 @@ const Inventory = () => {
           <Typography variant="h5" className={classes.graphs_title}>
             Assets in Stock
           </Typography>
-          {assets && euroCurrency(assets)}
+          {assets && formatCurrency(assets)}
         </Paper>
       </Grid>
       <Grid item sm={12}>
@@ -129,7 +129,7 @@ const Inventory = () => {
                     <TableCell>{warehouse.warehouseDescription}</TableCell>
                     <TableCell>{warehouse.stockBalance}</TableCell>
                     <TableCell>
-                      {euroCurrency(warehouse.inventoryBalance)}
+                      {formatCurrency(warehouse.inventoryBalance)}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -162,7 +162,7 @@ const Inventory = () => {
                     <TableCell>{product.product_id}</TableCell>
                     <TableCell>{product.name}</TableCell>
                     <TableCell>{product.quantity}</TableCell>
-                    <TableCell>{euroCurrency(product.base_price)}</TableCell>
+                    <TableCell>{formatCurrency(product.base_price)}</TableCell>
                   </TableRow>
                 ))}
             </TableBody>

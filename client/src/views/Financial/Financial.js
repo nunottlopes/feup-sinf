@@ -5,7 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import ChartistGraph from 'react-chartist';
 import { Typography } from "@material-ui/core";
 import { Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core/';
-import {euroCurrency} from '../../utils';
+import {formatCurrency} from '../../utils';
 require('chartist-plugin-legend');
 
 const axios = require('axios');
@@ -65,7 +65,7 @@ const Balance = () => {
                     <TableRow key={product.id}>
                         <TableCell>{product.id}</TableCell>
                         <TableCell>{product.name}</TableCell>
-                        <TableCell>{euroCurrency(product.value)}</TableCell>
+                        <TableCell>{formatCurrency(product.value)}</TableCell>
                     </TableRow>
                 ))}
                 <TableRow>
@@ -192,11 +192,11 @@ const Financial = () => {
             <Grid item md={4} sm={12}>
                 <Paper>
                     <Typography variant='h5' className={classes.graphs_title}>EBIT</Typography>
-                     {!isNaN(parseFloat(ebit.ebit)) ? euroCurrency(ebit.ebit) : " "}
+                     {!isNaN(parseFloat(ebit.ebit)) ? formatCurrency(ebit.ebit) : " "}
                 </Paper>
                 <Paper className="financial_fix">
                     <Typography variant='h5' className={classes.graphs_title}>EBITDA</Typography>
-                     {!isNaN(parseFloat(ebitda.ebitda)) ? euroCurrency(ebitda.ebitda) : " "}
+                     {!isNaN(parseFloat(ebitda.ebitda)) ? formatCurrency(ebitda.ebitda) : " "}
                 </Paper>
             </Grid>
 

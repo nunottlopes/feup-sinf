@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core/';
 
-import { euroCurrency } from '../../utils';
+import { formatCurrency } from '../../utils';
 
 const TopClientsTable = (props) => {
   const { clients } = props;
@@ -22,7 +22,7 @@ const TopClientsTable = (props) => {
           <TableRow key={client.client}>
             <TableCell>{client.client}</TableCell>
             <TableCell>{client.nPurchases}</TableCell>
-            <TableCell>{euroCurrency(client.totalPurchased)}</TableCell>
+            <TableCell>{formatCurrency(client.totalPurchased)}</TableCell>
           </TableRow>
         ))}
       </TableBody>

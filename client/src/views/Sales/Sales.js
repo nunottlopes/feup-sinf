@@ -11,7 +11,7 @@ import TopRegionsGraph from "./TopRegionsGraph";
 import TopProductsTable from "./TopProductsTable";
 import TopClientsTable from "./TopClientsTable";
 
-import { euroCurrency, nFormatter } from "../../utils";
+import { formatCurrency, formatNumber } from "../../utils";
 
 const axios = require("axios");
 
@@ -75,7 +75,7 @@ const SalesVolumes = props => {
   const options = {
     height: 400,
     axisY: {
-      labelInterpolationFnc: label => nFormatter(label, 3)
+      labelInterpolationFnc: label => formatNumber(label, 3)
     }
   };
 
@@ -115,7 +115,7 @@ const CumulativeSalesVolumes = props => {
   const options = {
     height: 400,
     axisY: {
-      labelInterpolationFnc: label => nFormatter(label, 3)
+      labelInterpolationFnc: label => formatNumber(label, 3)
     }
   };
 
@@ -140,7 +140,7 @@ const InformationCard = props => {
       </Typography>
       {value ? (
         <Typography variant="body1" className={classes.graphs_title}>
-          {euroCurrency(value)}
+          {formatCurrency(value)}
         </Typography>
       ) : (
         <Skeleton variant="text" />
