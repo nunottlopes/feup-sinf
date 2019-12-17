@@ -1,25 +1,27 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import ChartistGraph from 'react-chartist';
+import React from 'react';
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 const MonthlySalesGraph = (props) => {
   const { sales } = props;
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  let data = sales.map((value, index) => ({
+    month: months[index],
+    sales: value
+  }));
 
-  const data = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    series: [
-      {
-        className: 'series-income',
-        data: sales
-      }
-    ]
-  };
-
-  const options = {
-    height: 400
-  }
-
-  return <ChartistGraph type='Bar' data={data} options={options} />
+  return (
+    <ResponsiveContainer width="100%" height={400}>
+      <BarChart data={data} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="month" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="sales" fill="green" />
+      </BarChart>
+    </ResponsiveContainer>
+  )
 }
 
 MonthlySalesGraph.propTypes = {

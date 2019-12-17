@@ -8,8 +8,6 @@ import FinancesGraph from "./FinancesGraph";
 import MonthlySalesGraph from "./MonthlySalesGraph";
 import TopProductsTable from "./TopProductsTable";
 
-
-
 const axios = require("axios");
 
 const useStyles = makeStyles(theme => ({
@@ -80,7 +78,7 @@ const Overview = () => {
     axios
       .get(`${api_endpoint_base}/month-sales`)
       .then(function (response) {
-        set_monthly_sales(response.data);
+        set_monthly_sales(response.data.data);
       })
       .catch(function (error) {
         console.log(error);
