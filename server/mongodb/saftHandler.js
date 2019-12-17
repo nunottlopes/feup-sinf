@@ -1,11 +1,15 @@
 var MongoClient = require("mongodb").MongoClient;
 var assert = require("assert");
-const { insertDocuments, updateDocument } = require("./actions");
+const { insertDocuments, updateDocument, emptyDatabase } = require("./actions");
 var { url, dbName, config } = require("../config/config.js")["mongodb"];
 
 function handleDemoSAFT(saftData, parseAccountingSaft, res) {
   saftData = saftData["AuditFile"];
 
+  emptyDatabase(parseDemoSAFT, saftData, parseAccountingSaft, res);
+}
+
+function parseDemoSAFT(saftData, parseAccountingSaft, res) {
   MongoClient.connect(url, config, function(err, client) {
     assert.equal(err, null);
 

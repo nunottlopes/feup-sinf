@@ -7,8 +7,8 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { makeStyles } from "@material-ui/core/styles";
 // core components
 import Sidebar from "components/Sidebar/Sidebar.js";
-import NNavbar from "components/Navbars/AdminNavbarLinks.js";
-
+import Navbar from "components/Navbars/AdminNavbarLinks.js";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import routes from "routes.js";
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
@@ -28,7 +28,7 @@ const switchRoutes = (
       }
       return null;
     })}
-    <Redirect from="/admin" to="/admin/dashboard" />
+    <Redirect from="/admin" to="/admin/overview" />
   </Switch>
 );
 
@@ -41,6 +41,8 @@ export default function Admin({ ...rest }) {
   const mainPanel = React.createRef();
   // states and functions
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const [parsing, setParsing] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -84,8 +86,14 @@ export default function Admin({ ...rest }) {
       />
 
       <div className={classes.mainPanel} ref={mainPanel}>
-        <NNavbar></NNavbar>
-        <div className={classes.map}>{switchRoutes}</div>
+        <Navbar setParsing={setParsing}></Navbar>
+        {!parsing && <div className={classes.map}>{switchRoutes}</div>}
+        {parsing && (
+          <div className={classes.parsing}>
+            <CircularProgress />
+            <h3>Parsing information...</h3>
+          </div>
+        )}
       </div>
     </div>
   );

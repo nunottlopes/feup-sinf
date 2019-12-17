@@ -7,6 +7,7 @@ router.get("/parse/saft", function(req, res) {
   //   res.status(401).send({ error: "Request unauthorized" });
   //   return;
   // }
+
   console.log("Parsing SAF-T file");
   parseSaft(res);
 });

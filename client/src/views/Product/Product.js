@@ -2,7 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import ChartistGraph from "react-chartist";
+// import ChartistGraph from "react-chartist";
 import { Typography, Modal } from "@material-ui/core";
 import {
   Table,
@@ -12,7 +12,7 @@ import {
   TableCell
 } from "@material-ui/core/";
 
-import { formatCurrency, formatNumber } from "../../utils";
+import { formatCurrency } from "../../utils";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,8 +31,8 @@ const useStyles = makeStyles(theme => ({
 const top_clients_table = () => {
   const table_header = ["Client", "Units", "Amount"];
   const table_rows = [
-    { client: "Administrador", units: 171, amount: formatCurrency(16205) },
-    { client: "EUGENIO.VEIGA", units: 1, amount: formatCurrency(94.77) }
+    { client: "Administrador", units: 171, amount: 16205 },
+    { client: "EUGENIO.VEIGA", units: 1, amount: 94.77 }
   ];
 
   return (
@@ -49,7 +49,7 @@ const top_clients_table = () => {
           <TableRow key={product.client}>
             <TableCell>{product.client}</TableCell>
             <TableCell>{product.units}</TableCell>
-            <TableCell>{product.amount}</TableCell>
+            <TableCell>{formatCurrency(product.amount)}</TableCell>
           </TableRow>
         ))}
       </TableBody>

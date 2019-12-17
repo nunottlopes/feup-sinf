@@ -67,6 +67,18 @@ function removeDocument(db, collectionName, query, callback) {
 
 /* ----------- Connection and action ----------- */
 
+function emptyDatabase(callback, saftData, parseAccountingSaft, res) {
+  MongoClient.connect(url, config, async function(err, client) {
+    assert.equal(null, err);
+
+    const db = client.db(dbName);
+
+    await db.dropDatabase();
+
+    callback(saftData, parseAccountingSaft, res);
+  });
+}
+
 function readDocuments(collectionName, query, callback) {
   MongoClient.connect(url, config, function(err, client) {
     assert.equal(null, err);
@@ -220,5 +232,6 @@ module.exports = {
   removeDocument,
   readDocuments,
   accountsSum,
-  accountsSumMontlhy
+  accountsSumMontlhy,
+  emptyDatabase
 };

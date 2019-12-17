@@ -16,26 +16,24 @@ router.get(`/balance`, function(req, res) {
   //   return;
   // }
 
-
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
   let endDate =
     "end-date" in req.query ? new Date(req.query["end-date"]) : null;
 
-
   let accountNames = [
-    {id: 11, name: "Caixa"},
-    {id: 12, name: "Depósitos à Ordem"},
-    {id: 21, name: "Contas a Receber de Clientes"},
-    {id: 22, name: "Contas a Pagar a Fornecedores"},
-    {id: 24, name: "Estado e Outros Entes Públicos"},
-    {id: 31, name: "Compras"},
-    {id: 32, name: "Mercadorias em Armazém / Trânsito"},
-    {id: 36, name: "Produtos e Trabalhos em Curso"},
-    {id: 61, name: "Custo das Mercadorias Vendidas"},
-    {id: 62, name: "Fornecimentos e Serviços Externos"},
-    {id: 71, name: "Vendas"},
-    {id: 72, name: "Prestações de Serviços"}
+    { id: 11, name: "Caixa" },
+    { id: 12, name: "Depósitos à Ordem" },
+    { id: 21, name: "Contas a Receber de Clientes" },
+    { id: 22, name: "Contas a Pagar a Fornecedores" },
+    { id: 24, name: "Estado e Outros Entes Públicos" },
+    { id: 31, name: "Compras" },
+    { id: 32, name: "Mercadorias em Armazém / Trânsito" },
+    { id: 36, name: "Produtos e Trabalhos em Curso" },
+    { id: 61, name: "Custo das Mercadorias Vendidas" },
+    { id: 62, name: "Fornecimentos e Serviços Externos" },
+    { id: 71, name: "Vendas" },
+    { id: 72, name: "Prestações de Serviços" }
   ];
 
   async.series(
@@ -96,13 +94,11 @@ router.get(`/balance`, function(req, res) {
       accountNames[10].value = results.vendas;
       accountNames[11].value = results.prestacaoServicos;
 
-
-    res.send(accountNames)
-
+      res.send(accountNames);
     }
   );
 
-/* 
+  /*
   for (let i = 11; i <= 81; i++) {
 
     let id = i.toString()
@@ -117,14 +113,11 @@ router.get(`/balance`, function(req, res) {
 
       this.totalDebit += data['debit']
       this.totalCredit += data['credit']
-    } 
+    }
   }*/
-
-
-    
 });
 
-// TODO: INFO_01
+// INFO_01
 router.get(`/ebit`, function(req, res) {
   // if (!req.isLogged) {
   //   res.status(401).send({ error: "Request unauthorized" });
@@ -160,16 +153,21 @@ router.get(`/ebit`, function(req, res) {
         return;
       }
 
-     // res.send({1: results.earnings, 2:results.expensesCOGS, 3:results.expensesServices, 4:results.expensesPersonnel, 5:results.expensesDepreciationAndAmortization})
-      
-      const ebit = results.earnings - (results.expensesCOGS + results.expensesServices + results.expensesPersonnel + results.expensesDepreciationAndAmortization)
-      
-      res.send({ebit})
+      // res.send({1: results.earnings, 2:results.expensesCOGS, 3:results.expensesServices, 4:results.expensesPersonnel, 5:results.expensesDepreciationAndAmortization})
+
+      const ebit =
+        results.earnings -
+        (results.expensesCOGS +
+          results.expensesServices +
+          results.expensesPersonnel +
+          results.expensesDepreciationAndAmortization);
+
+      res.send({ ebit });
     }
   );
 });
 
-// TODO: INFO_02
+// INFO_02
 router.get(`/ebitda`, function(req, res) {
   // if (!req.isLogged) {
   //   res.status(401).send({ error: "Request unauthorized" });
@@ -196,25 +194,29 @@ router.get(`/ebitda`, function(req, res) {
       },
       expensesPersonnel: function(callback) {
         accountsSum(63, startDate, endDate, callback);
-      },
+      }
     },
-  
-    
-  function(err, results) {
-    if (err) {
-      console.log(err);
-      return;
-    }
-   // res.send({1: results.earningsSales, 2:results.earningsServices, 3:results.expensesCOGS, 4:results.expensesServices, 5:results.expensesPersonnel})
-      
-    const ebitda = ((results.earningsSales + results.earningsServices) - (results.expensesCOGS + results.expensesServices + results.expensesPersonnel))
-  
+
+    function(err, results) {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      // res.send({1: results.earningsSales, 2:results.earningsServices, 3:results.expensesCOGS, 4:results.expensesServices, 5:results.expensesPersonnel})
+
+      const ebitda =
+        results.earningsSales +
+        results.earningsServices -
+        (results.expensesCOGS +
+          results.expensesServices +
+          results.expensesPersonnel);
 
       res.send({ ebitda });
-  })
+    }
+  );
 });
 
-// TODO: GRAPH_01
+// GRAPH_01
 router.get(`/revenue`, function(req, res) {
   // if (!req.isLogged) {
   //   res.status(401).send({ error: "Request unauthorized" });
