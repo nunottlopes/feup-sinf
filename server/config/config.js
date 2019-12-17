@@ -11,5 +11,14 @@ module.exports = {
     organization: process.env.JASMIN_ORGANIZATION,
     url: process.env.JASMIN_URL
   },
-  mongodb: {}
+  mongodb: {
+    url: process.env.MONGODB_URL,
+    dbName: process.env.MONGODB_DATABASE_NAME,
+    config: { useUnifiedTopology: true }
+  },
+  authentication: {
+    username: process.env.ADMIN_USERNAME,
+    password: process.env.ADMIN_PASSWORD,
+    tokenSecret: process.env.TOKEN_SECRET
+  }
 };

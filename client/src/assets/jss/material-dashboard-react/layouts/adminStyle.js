@@ -29,7 +29,10 @@ const appStyle = theme => ({
   },
   container,
   map: {
-    marginTop: "70px"
+    margin: "2em"
+  },
+  parsing: {
+    marginTop: "10em"
   }
 });
 

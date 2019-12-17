@@ -1,195 +1,396 @@
-import React from "react";
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import ChartistGraph from 'react-chartist';
 import { Typography } from "@material-ui/core";
-import { Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core/';
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "@material-ui/core/styles";
+import Skeleton from "@material-ui/lab/Skeleton";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
+} from "recharts";
+import { formatCurrency, formatNumber } from "../../utils";
+import { MyPieChart } from "./../../components";
+import TopClientsTable from "./TopClientsTable";
+import TopProductsTable from "../../components/TopProductsTable/TopProductsTable";
+
+const axios = require("axios");
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 0,
-    },
-    grid: {
-        width: 'unset',
-        margin: 0
-    },
-    graphs_title: {
-        fontWeight: 'lighter',
-        marginBottom: '1rem',
-    }
+  root: {
+    flexGrow: 0
+  },
+  grid: {
+    width: "unset",
+    margin: 0
+  },
+  graphs_title: {
+    fontWeight: "lighter",
+    marginBottom: "1rem"
+  }
 }));
 
-const sales_per_store_graph = () => {
-    const data = {
-        labels: ['1', '2', '3'],
-        series: [20, 15, 40]
-    };
-
-    const options = {
-        labelInterpolationFnc: function (value) {
-            return value[0]
-        }
+/**
+ * Returns total net sales for each month
+ * @param {Array} daily_sales The response from '/daily-volume' endpoint
+ */
+const __group_sales_by_month = daily_sales => {
+  let grouped_sales = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  for (let m = 1; m <= 12; m++) {
+    if (m in daily_sales) {
+      let month_sales = daily_sales[m];
+      for (const day of month_sales) {
+        grouped_sales[m - 1] += day.NetTotal;
+      }
     }
+  }
 
-    return <ChartistGraph type='Pie' data={data} options={options}></ChartistGraph>
-}
+  return grouped_sales;
+};
 
-const sales_per_region_graph = () => {
-    const data = {
-        labels: ['4', '5', '6'],
-        series: [30, 15, 75]
-    };
+/**
+ * Linear graph that shows both net and gross sales by month
+ * @param {*} props
+ */
+const SalesVolumes = props => {
+  const { net_sales, gross_sales } = props;
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ];
 
-    const options = {
-        labelInterpolationFnc: function (value) {
-            return value[0]
-        }
-    }
+  const data = months.map((month, index) => ({
+    month: month,
+    net_sales: net_sales[index],
+    gross_sales: gross_sales[index]
+  }));
 
-    return <ChartistGraph type='Pie' data={data} options={options}></ChartistGraph>
-}
+  return (
+    <ResponsiveContainer width="100%" height={400}>
+      <BarChart data={data} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="month" />
+        <YAxis tickFormatter={value => formatNumber(value)} />
+        <Tooltip formatter={value => formatCurrency(value)} />
+        <Legend />
+        <Bar type="monotone" dataKey="net_sales" fill="red" />
+        <Bar type="monotone" dataKey="gross_sales" fill="green" />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+};
 
-const sold_vs_projected_graph = () => {
+SalesVolumes.propTypes = {
+  net_sales: PropTypes.arrayOf(PropTypes.number).isRequired,
+  gross_sales: PropTypes.arrayOf(PropTypes.number).isRequired
+};
 
-    const data = {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        series: [
-            [5, 4, 3, 7, 5, 10, 3, 4, 8, 10, 6, 8],
-            [3, 2, 9, 5, 4, 6, 4, 6, 7, 8, 7, 4]
-        ]
-    };
+/**
+ * Linear graph showing cumulative gross sales by each month
+ * @param {*} props
+ */
+const CumulativeSalesVolumes = props => {
+  const { cumulative_gross_sales } = props;
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ];
 
-    const options = {
-        seriesBarDistance: 6,
-        height: 300
-    };
+  const data = months.map((month, index) => ({
+    month: month,
+    cumulative_gross_sale: cumulative_gross_sales[index]
+  }));
 
-    return <ChartistGraph type='Bar' data={data} options={options}></ChartistGraph>
-}
+  return (
+    <ResponsiveContainer width="100%" height={400}>
+      <LineChart
+        data={data}
+        margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="month" />
+        <YAxis tickFormatter={value => formatNumber(value)} />
+        <Tooltip formatter={value => formatCurrency(value)} />
+        <Legend />
+        <Line
+          type="monotone"
+          dataKey="cumulative_gross_sale"
+          stroke="red"
+          strokeWidth={2}
+        />
+      </LineChart>
+    </ResponsiveContainer>
+  );
+};
 
-const sales_volume_graph = () => {
-    const data = {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        series: [
-            {
-                className: 'series-expenses',
-                data: [10, 20, 30, 40, 50, 20, 5, 70, 80, 50, 35, 40]
-            },
-        ]
-    }
+CumulativeSalesVolumes.propTypes = {
+  cumulative_gross_sales: PropTypes.arrayOf(PropTypes.number).isRequired
+};
 
-    const options = {
-        height: 300
-    }
+/**
+ * Simple card to show numeric information such as total profits, total revenues, etc
+ * @param {*} props
+ */
+const InformationCard = props => {
+  const { title, value, classes } = props;
 
-    return <ChartistGraph type='Line' data={data} options={options}></ChartistGraph>
-}
+  return (
+    <Paper>
+      <Typography variant="h5" className={classes.graphs_title}>
+        {title}
+      </Typography>
+      {value ? (
+        <Typography variant="body1" className={classes.graphs_title}>
+          {formatCurrency(value)}
+        </Typography>
+      ) : (
+        <Skeleton variant="text" />
+      )}
+    </Paper>
+  );
+};
 
-const cumulative_sales_graph = () => {
-    const data = {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        series: [
-            {
-                className: 'series-expenses',
-                data: [10, 15, 17, 35, 50, 51, 58, 60, 70, 75, 80, 82]
-            },
-
-        ]
-    }
-
-    const options = {
-        height: 300
-    }
-
-    return <ChartistGraph type='Line' data={data} options={options}></ChartistGraph>
-}
-
-
-
-
-const top_products_table = () => {
-    const table_header = ['Product ID', 'Name', 'Quantity']
-    const table_rows = [
-        { product_id: 'PRODUCT_ID1', name: 'Product 1', quantity: 100 },
-        { product_id: 'PRODUCT_ID2', name: 'Product 2', quantity: 90 },
-        { product_id: 'PRODUCT_ID3', name: 'Product 3', quantity: 50 },
-        { product_id: 'PRODUCT_ID4', name: 'Product 4', quantity: 20 },
-    ]
-
-    return (
-        <Table>
-            <TableHead>
-                <TableRow>
-                    {table_header.map(header => <TableCell>{header}</TableCell>)}
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {table_rows.map(product => (
-                    <TableRow key={product.product_id}>
-                        <TableCell>{product.product_id}</TableCell>
-                        <TableCell>{product.name}</TableCell>
-                        <TableCell>{product.quantity}</TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
-    )
-}
+InformationCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
+  classes: PropTypes.object
+};
 
 const Sales = () => {
-    const classes = useStyles();
-    console.log(classes)
-    return (
-        <Grid className={classes.grid} container spacing={2}>
-            <Grid item md={4} sm={12}>
-                <Paper>
-                    <Typography variant='h5' className={classes.graphs_title}>Sales Per Store</Typography>
-                    {sales_per_store_graph()}
-                </Paper>
-            </Grid>
-            <Grid item md={4} sm={12}>
-                <Paper>
-                    <Typography variant='h5' className={classes.graphs_title}>Sales Per Region</Typography>
-                    {sales_per_region_graph()}
-                </Paper>
-            </Grid>
-            <Grid item md={4} sm={12}>
-                <Paper>
-                    <Typography variant='h5' className={classes.graphs_title}>Growth</Typography>
-                    43%
-                </Paper>
-                <Paper className="financial_fix">
-                    <Typography variant='h5' className={classes.graphs_title}>Profit</Typography>
-                    € 7367
-                </Paper>
-            </Grid>
-            <Grid item md={4} sm={12}>
-                <Paper>
-                    <Typography variant='h5' className={classes.graphs_title}>Solded vs Projected</Typography>
-                    {sold_vs_projected_graph()}
-                </Paper>
-            </Grid>
-            <Grid item md={4} sm={12}>
-                <Paper>
-                    <Typography variant='h5' className={classes.graphs_title}>Sales Volume</Typography>
-                    {sales_volume_graph()}
-                </Paper>
-            </Grid>
-            <Grid item md={4} sm={12}>
-                <Paper>
-                    <Typography variant='h5' className={classes.graphs_title}>Cumulative Sales</Typography>
-                    {cumulative_sales_graph()}
-                </Paper>
-            </Grid>
-            <Grid item md={12} sm={12}>
-                <Paper>
-                    <Typography variant='h5' className={classes.graphs_title}>Top products</Typography>
-                    {top_products_table()}
-                </Paper>
-            </Grid>
-        </Grid>
-    )
-}
+  const classes = useStyles();
+  // constant for the overview API endpoint
+  const api_endpoint_base = "http://localhost:3001/api/sales";
+  // hooks for data/state
+  // list of the top regions that purchase more products
+  const [top_regions, set_top_regions] = useState([]);
+  // list of most sold products
+  const [top_products, set_top_products] = useState([]);
+  // list of top clients
+  const [top_clients, set_top_clients] = useState([]);
+  // information about sales for every day of every month (net values)
+  const [net_sales_volumes, set_net_sales_volumes] = useState([]);
+  // gross sales for every month
+  const [gross_sales_volumes, set_gross_sales_volumes] = useState([]);
+  // cumulative gross sales over a year
+  const [gross_cumulative_sales, set_gross_cumulative_sales] = useState([]);
+  // total value of profit, revenues from sales, and production costs
+  const [profits, set_profits] = useState({
+    profit: undefined,
+    revenueFromSales: undefined,
+    costOfGoodsSold: undefined
+  });
+  // total net sales value
+  const [total_net_sales, set_total_net_sales] = useState();
+  // total gross sales value
+  const [total_gross_sales, set_total_gross_sales] = useState();
+  // Perform all API calls for this page
+  useEffect(() => {
+    // Get the top regions
+    axios
+      .get(`${api_endpoint_base}/top-regions`)
+      .then(function(response) {
+        set_top_regions(response.data);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+    // Get the top products
+    axios
+      .get(`${api_endpoint_base}/top-products`)
+      .then(function(response) {
+        set_top_products(response.data);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+    // Get the top clients
+    axios
+      .get(`${api_endpoint_base}/top-clients`)
+      .then(function(response) {
+        set_top_clients(response.data);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+    // Get the daily volume sales for every month
+    axios
+      .get(`${api_endpoint_base}/daily-volume`)
+      .then(function(response) {
+        set_net_sales_volumes(__group_sales_by_month(response.data));
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+    // Get gross sales for every month and cumulative gross sales
+    axios
+      .get(`${api_endpoint_base}/cumulative-month-gross`)
+      .then(function(response) {
+        const [cumulative, per_month] = response.data;
+        set_gross_cumulative_sales(cumulative.data);
+        set_gross_sales_volumes(per_month.data);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+    // Get profit, revenues and cost of goods sold
+    axios
+      .get(`${api_endpoint_base}/profit`)
+      .then(function(response) {
+        set_profits(response.data);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+    // Get the total net sales
+    axios
+      .get(`${api_endpoint_base}/total-net-sales`)
+      .then(function(response) {
+        set_total_net_sales(response.data.totalNetSales);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+    // Get the total gross (net + taxes) sales
+    axios
+      .get(`${api_endpoint_base}/total-gross-sales`)
+      .then(function(response) {
+        set_total_gross_sales(response.data.totalGrossSales);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }, []);
+
+  return (
+    <Grid
+      className={classes.grid}
+      container
+      spacing={3}
+      justify="center"
+      alignItems="center"
+    >
+      <Grid item xs={6} sm={4} md={3} lg>
+        <InformationCard
+          title="Profit"
+          value={profits.profit}
+          classes={classes}
+        />
+      </Grid>
+      <Grid item xs={6} sm={4} md={3} lg>
+        <InformationCard
+          title="Revenue from sales"
+          value={profits.revenueFromSales}
+          classes={classes}
+        />
+      </Grid>
+      <Grid item xs={6} sm={4} md={3} lg>
+        <InformationCard
+          title="Costs of good solds"
+          value={profits.costOfGoodsSold}
+          classes={classes}
+        />
+      </Grid>
+      <Grid item xs={6} sm={4} md={3} lg>
+        <InformationCard
+          title="Total Net Sales"
+          value={total_net_sales}
+          classes={classes}
+        />
+      </Grid>
+      <Grid item xs={6} sm={4} md={3} lg>
+        <InformationCard
+          title="Total Gross Sales"
+          value={total_gross_sales}
+          classes={classes}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <Paper>
+          <Typography variant="h5" className={classes.graphs_title}>
+            Sales Per Region
+          </Typography>
+          <MyPieChart
+            data={top_regions.slice(0, 5)}
+            colors={["#bf211e", "#e82f2c", "#f95f5c", "#f99593", "#a06968"]}
+            pieProps={{ nameKey: "id", dataKey: "netTotal" }}
+            cellProps={{ stroke: "#7f1614" }}
+          />
+        </Paper>
+      </Grid>
+      <Grid item xs={12} lg={6}>
+        <Paper>
+          <Typography variant="h5" className={classes.graphs_title}>
+            Sales Volume (net &amp; gross)
+          </Typography>
+          <SalesVolumes
+            net_sales={net_sales_volumes}
+            gross_sales={gross_sales_volumes}
+          />
+        </Paper>
+      </Grid>
+      <Grid item xs={12} lg={6}>
+        <Paper>
+          <Typography variant="h5" className={classes.graphs_title}>
+            Cumulative Sales Volume (gross)
+          </Typography>
+          <CumulativeSalesVolumes
+            cumulative_gross_sales={gross_cumulative_sales}
+          />
+        </Paper>
+      </Grid>
+      <Grid item xs={12}>
+        <Paper>
+          <Typography variant="h5" className={classes.graphs_title}>
+            Top Products
+          </Typography>
+          <TopProductsTable products={top_products.slice(0, 10)} />
+        </Paper>
+      </Grid>
+      <Grid item xs={12}>
+        <Paper>
+          <Typography variant="h5" className={classes.graphs_title}>
+            Top Clients
+          </Typography>
+          <TopClientsTable clients={top_clients.slice(0, 10)} />
+        </Paper>
+      </Grid>
+    </Grid>
+  );
+};
 
 export default Sales;
