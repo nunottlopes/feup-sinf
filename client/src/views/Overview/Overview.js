@@ -97,7 +97,7 @@ const Overview = () => {
 
   return (
     <Grid className={classes.grid} container spacing={3}>
-      <Grid item md={6} xs={12}>
+      <Grid item lg={6} xs={12}>
         <Paper>
           <Typography variant="h5" className={classes.graphs_title}>
             Global finances
@@ -108,7 +108,7 @@ const Overview = () => {
           />
         </Paper>
       </Grid>
-      <Grid item md={6} xs={12}>
+      <Grid item lg={6} xs={12}>
         <Paper>
           <Typography variant="h5" className={classes.graphs_title}>
             Monthly Sales
