@@ -5,10 +5,11 @@ const { readDocuments } = require("../mongodb/actions");
 
 // INF_01
 router.get(`/:productCode`, function(req, res) {
-  // if (!req.isLogged) {
-  //   res.status(401).send({ error: "Request unauthorized" });
-  //   return;
-  // }
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
+
   readDocuments("MasterFiles", "", response => {
     const products = response.find(type => {
       return type._id == "Products";
@@ -22,10 +23,11 @@ router.get(`/:productCode`, function(req, res) {
 
 // KPI_01 & TABLE_01 & MinimumUnitPrice
 router.get(`/:productCode/info`, function(req, res) {
-  // if (!req.isLogged) {
-  //   res.status(401).send({ error: "Request unauthorized" });
-  //   return;
-  // }
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
+
   let code = req.params.productCode;
   readDocuments(
     "SourceDocuments",
@@ -97,9 +99,5 @@ router.get(`/:productCode/info`, function(req, res) {
     code
   );
 });
-
-// IMG_01 (remove)
-
-// INF_02 (remove)
 
 module.exports = router;

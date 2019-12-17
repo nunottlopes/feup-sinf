@@ -215,7 +215,7 @@ const Sales = () => {
   useEffect(() => {
     // Get the top regions
     axios
-      .get(`${api_endpoint_base}/top-regions`)
+      .get(`${api_endpoint_base}/top-regions`, { withCredentials: true })
       .then(function(response) {
         set_top_regions(response.data);
       })
@@ -225,7 +225,7 @@ const Sales = () => {
 
     // Get the top products
     axios
-      .get(`${api_endpoint_base}/top-products`)
+      .get(`${api_endpoint_base}/top-products`, { withCredentials: true })
       .then(function(response) {
         set_top_products(response.data);
       })
@@ -235,7 +235,7 @@ const Sales = () => {
 
     // Get the top clients
     axios
-      .get(`${api_endpoint_base}/top-clients`)
+      .get(`${api_endpoint_base}/top-clients`, { withCredentials: true })
       .then(function(response) {
         set_top_clients(response.data);
       })
@@ -245,7 +245,7 @@ const Sales = () => {
 
     // Get the daily volume sales for every month
     axios
-      .get(`${api_endpoint_base}/daily-volume`)
+      .get(`${api_endpoint_base}/daily-volume`, { withCredentials: true })
       .then(function(response) {
         set_net_sales_volumes(__group_sales_by_month(response.data));
       })
@@ -255,7 +255,9 @@ const Sales = () => {
 
     // Get gross sales for every month and cumulative gross sales
     axios
-      .get(`${api_endpoint_base}/cumulative-month-gross`)
+      .get(`${api_endpoint_base}/cumulative-month-gross`, {
+        withCredentials: true
+      })
       .then(function(response) {
         const [cumulative, per_month] = response.data;
         set_gross_cumulative_sales(cumulative.data);
@@ -267,7 +269,7 @@ const Sales = () => {
 
     // Get profit, revenues and cost of goods sold
     axios
-      .get(`${api_endpoint_base}/profit`)
+      .get(`${api_endpoint_base}/profit`, { withCredentials: true })
       .then(function(response) {
         set_profits(response.data);
       })
@@ -277,7 +279,7 @@ const Sales = () => {
 
     // Get the total net sales
     axios
-      .get(`${api_endpoint_base}/total-net-sales`)
+      .get(`${api_endpoint_base}/total-net-sales`, { withCredentials: true })
       .then(function(response) {
         set_total_net_sales(response.data.totalNetSales);
       })
@@ -287,7 +289,7 @@ const Sales = () => {
 
     // Get the total gross (net + taxes) sales
     axios
-      .get(`${api_endpoint_base}/total-gross-sales`)
+      .get(`${api_endpoint_base}/total-gross-sales`, { withCredentials: true })
       .then(function(response) {
         set_total_gross_sales(response.data.totalGrossSales);
       })

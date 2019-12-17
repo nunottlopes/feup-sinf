@@ -74,7 +74,9 @@ const Product = ({ isOpen, close, data }) => {
   useEffect(() => {
     if (data.product_id) {
       axios
-        .get(`${api_endpoint_base}/${data.product_id}`)
+        .get(`${api_endpoint_base}/${data.product_id}`, {
+          withCredentials: true
+        })
         .then(function(response) {
           setProductDetail(response.data);
         })
@@ -83,7 +85,9 @@ const Product = ({ isOpen, close, data }) => {
         });
 
       axios
-        .get(`${api_endpoint_base}/${data.product_id}/info`)
+        .get(`${api_endpoint_base}/${data.product_id}/info`, {
+          withCredentials: true
+        })
         .then(function(response) {
           setProduct(response.data);
         })

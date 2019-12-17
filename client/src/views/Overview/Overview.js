@@ -46,7 +46,7 @@ const Overview = () => {
   useEffect(() => {
     // Get the top clients
     axios
-      .get(`${api_endpoint_base}/top-clients`)
+      .get(`${api_endpoint_base}/top-clients`, { withCredentials: true })
       .then(function(response) {
         set_top_clients(response.data);
       })
@@ -56,7 +56,7 @@ const Overview = () => {
 
     // Get the top regions
     axios
-      .get(`${api_endpoint_base}/top-regions`)
+      .get(`${api_endpoint_base}/top-regions`, { withCredentials: true })
       .then(function(response) {
         set_top_regions(response.data);
       })
@@ -66,7 +66,7 @@ const Overview = () => {
 
     // Get the top products
     axios
-      .get(`${api_endpoint_base}/top-products`)
+      .get(`${api_endpoint_base}/top-products`, { withCredentials: true })
       .then(function(response) {
         set_top_products(response.data);
       })
@@ -76,7 +76,7 @@ const Overview = () => {
 
     // Get the monthly sales
     axios
-      .get(`${api_endpoint_base}/month-sales`)
+      .get(`${api_endpoint_base}/month-sales`, { withCredentials: true })
       .then(function(response) {
         set_monthly_sales(response.data.data);
       })
@@ -86,7 +86,7 @@ const Overview = () => {
 
     // Get the financial data (income and expenses)
     axios
-      .get(`${api_endpoint_base}/global-finances`)
+      .get(`${api_endpoint_base}/global-finances`, { withCredentials: true })
       .then(function(response) {
         set_finances(response.data);
       })

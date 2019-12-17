@@ -9,7 +9,15 @@ const authMiddleware = require("./middleware/authMiddleware");
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: function(origin, callback) {
+      callback(null, true);
+    },
+    credentials: true
+  })
+);
+
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
