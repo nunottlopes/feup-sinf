@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { makeStyles } from '@material-ui/core/styles';
+import { Typography } from "@material-ui/core";
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core/';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import { Typography } from "@material-ui/core";
-import { Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core/';
-import { LineChart, Line, Legend, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import { makeStyles } from '@material-ui/core/styles';
+import React, { useEffect, useState } from "react";
+import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { formatCurrency, formatNumber } from '../../utils';
 
 const axios = require('axios');
@@ -36,10 +36,10 @@ const Balance = () => {
     // Get the balance sheet
     axios
       .get(`${api_endpoint_base}/balance`)
-      .then(function(response) {
+      .then(function (response) {
         set_balance(response.data);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       })
   }, [])
@@ -48,9 +48,7 @@ const Balance = () => {
     <Table>
       <TableHead>
         <TableRow>
-          {table_header.map(header => (
-            <TableCell>{header}</TableCell>
-          ))}
+          {table_header.map((header, index) => <TableCell key={`${header}_${index}`}>{header}</TableCell>)}
         </TableRow>
       </TableHead>
       <TableBody>
@@ -64,7 +62,10 @@ const Balance = () => {
         <TableRow selected>
           <TableCell> - </TableCell>
           <TableCell>Total</TableCell>
-          <TableCell> {balance.length == 0 ? "" : formatCurrency(balance.map(product => { return product.value }).reduce((n1, n2) => n1 + n2))}</TableCell>
+          <TableCell> {balance.length === 0 ?
+            "" : formatCurrency(
+              balance.map(product => { return product.value }).reduce((n1, n2) => n1 + n2))
+          }</TableCell>
         </TableRow>
       </TableBody>
     </Table>
@@ -90,7 +91,7 @@ const Revenue = () => {
           cost: cost.data[index]
         })));
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       })
   }, [])
