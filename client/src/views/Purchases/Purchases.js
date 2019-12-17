@@ -41,7 +41,7 @@ const SuppliersTable = (props) => {
     <Table>
       <TableHead>
         <TableRow>
-          {table_header.map(header => <TableCell>{header}</TableCell>)}
+          {table_header.map(header => <TableCell key={header}>{header}</TableCell>)}
         </TableRow>
       </TableHead>
       <TableBody>
@@ -86,7 +86,7 @@ const PendentBillsTable = (props) => {
     <Table>
       <TableHead>
         <TableRow>
-          {table_header.map(header => <TableCell>{header}</TableCell>)}
+          {table_header.map(header => <TableCell key={header}>{header}</TableCell>)}
         </TableRow>
       </TableHead>
       <TableBody>
@@ -111,7 +111,7 @@ const PendentOrdersDeliveryTable = (props) => {
     <Table>
       <TableHead>
         <TableRow>
-          {table_header.map(header => <TableCell>{header}</TableCell>)}
+          {table_header.map(header => <TableCell key={header}>{header}</TableCell>)}
         </TableRow>
       </TableHead>
       <TableBody>
