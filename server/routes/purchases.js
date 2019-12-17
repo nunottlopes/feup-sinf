@@ -84,9 +84,13 @@ router.get(`/expenses`, function(req, res) {
   }
 
   let startDate =
-    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
   let endDate =
-    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
 
   let expenses = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   getJasminAPI("/invoiceReceipt/expenses")
@@ -161,9 +165,13 @@ router.get(`/suppliers`, function(req, res) {
   }
 
   let startDate =
-    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
   let endDate =
-    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
 
   getJasminAPI("/invoiceReceipt/expenses")
     .then(response => {

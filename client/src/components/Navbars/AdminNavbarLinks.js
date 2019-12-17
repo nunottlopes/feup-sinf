@@ -20,7 +20,7 @@ const axios = require("axios");
 const useStyles = makeStyles(styles);
 
 export default function AdminNavbarLinks(props) {
-  const { setParsing } = props;
+  const { setParsing, setStartDate, setEndDate } = props;
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -63,7 +63,7 @@ export default function AdminNavbarLinks(props) {
           <TextField
             id="date_from"
             type="date"
-            defaultValue="2017-05-24"
+            onChange={event => setStartDate(event.target.value)}
             className={classes.dateContent}
             InputLabelProps={{
               shrink: true
@@ -75,7 +75,7 @@ export default function AdminNavbarLinks(props) {
           <TextField
             id="date_to"
             type="date"
-            defaultValue="2017-06-30"
+            onChange={event => setEndDate(event.target.value)}
             className={classes.dateContent}
             InputLabelProps={{
               shrink: true

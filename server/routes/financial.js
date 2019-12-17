@@ -1,15 +1,9 @@
 var async = require("async");
 var express = require("express");
 var router = express.Router();
-const getJasminAPI = require("../config/jasmin").getJasminAPI;
-const {
-  readDocuments,
-  accountsSum,
-  accountsSumMontlhy
-} = require("../mongodb/actions");
+const { accountsSum, accountsSumMontlhy } = require("../mongodb/actions");
 
 // SHEET_01
-// TODO:
 router.get(`/balance`, function(req, res) {
   if (!req.isLogged) {
     res.status(401).send({ error: "Request unauthorized" });
@@ -17,9 +11,13 @@ router.get(`/balance`, function(req, res) {
   }
 
   let startDate =
-    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
   let endDate =
-    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
 
   let accountNames = [
     { id: 11, name: "Caixa" },
@@ -125,9 +123,13 @@ router.get(`/ebit`, function(req, res) {
   }
 
   let startDate =
-    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
   let endDate =
-    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
 
   async.series(
     {
@@ -175,9 +177,13 @@ router.get(`/ebitda`, function(req, res) {
   }
 
   let startDate =
-    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
   let endDate =
-    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
 
   async.series(
     {

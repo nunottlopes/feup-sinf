@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
@@ -15,39 +15,55 @@ import Cookies from "js-cookie";
 
 let ps;
 
-const switchRoutes = (
-  <Switch>
-    {routes.map((prop, key) => {
-      if (prop.layout === "/admin") {
-        if (Cookies.get("__session")) {
-          return (
-            <Route
-              path={prop.layout + prop.path}
-              component={prop.component}
-              key={key}
-            />
-          );
-        } else {
-          return <Redirect to="/login" />;
+const switchRoutes = (startDate, endDate) => {
+  return (
+    <Switch>
+      {routes.map((prop, key) => {
+        if (prop.layout === "/admin") {
+          if (Cookies.get("__session")) {
+            const Component = prop.component;
+            return (
+              <Route
+                path={prop.layout + prop.path}
+                render={() => (
+                  <Component
+                    startDate={startDate}
+                    endDate={endDate}
+                  ></Component>
+                )}
+                key={key}
+                props={{ oi: "oi" }}
+              />
+            );
+          } else {
+            return <Redirect to="/login" />;
+          }
         }
-      }
-      return null;
-    })}
-    <Redirect from="/admin" to="/admin/overview" />
-  </Switch>
-);
+        return null;
+      })}
+      <Redirect from="/admin" to="/admin/overview" />
+    </Switch>
+  );
+};
 
 const useStyles = makeStyles(styles);
 
 export default function Admin({ ...rest }) {
   // styles
   const classes = useStyles();
+
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
+  console.log(startDate);
+  console.log(endDate);
+
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();
   // states and functions
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const [parsing, setParsing] = React.useState(false);
+  const [parsing, setParsing] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -90,8 +106,14 @@ export default function Admin({ ...rest }) {
       />
 
       <div className={classes.mainPanel} ref={mainPanel}>
-        <Navbar setParsing={setParsing}></Navbar>
-        {!parsing && <div className={classes.map}>{switchRoutes}</div>}
+        <Navbar
+          setParsing={setParsing}
+          setEndDate={setEndDate}
+          setStartDate={setStartDate}
+        ></Navbar>
+        {!parsing && (
+          <div className={classes.map}>{switchRoutes(startDate, endDate)}</div>
+        )}
         {parsing && (
           <div className={classes.parsing}>
             <CircularProgress />

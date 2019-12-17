@@ -12,9 +12,13 @@ router.get(`/top-products`, function(req, res) {
   }
 
   let startDate =
-    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
   let endDate =
-    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
 
   let products = {};
 
@@ -72,9 +76,13 @@ router.get("/top-regions", (req, res) => {
   }
 
   let startDate =
-    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
   let endDate =
-    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
 
   let countries = {};
 
@@ -175,9 +183,13 @@ router.get("/total-net-sales", (req, res) => {
   }
 
   let startDate =
-    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
   let endDate =
-    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
 
   let totalSales = 0;
 
@@ -215,9 +227,13 @@ router.get("/total-gross-sales", (req, res) => {
   }
 
   let startDate =
-    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
   let endDate =
-    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
 
   let totalSales = 0;
   readDocuments("SourceDocuments", { _id: "SalesInvoices" }, resp => {
@@ -254,9 +270,13 @@ router.get("/cumulative-month-gross", (req, res) => {
   }
 
   let startDate =
-    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
   let endDate =
-    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
 
   let cumulative = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let monthly = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -309,9 +329,13 @@ router.get("/profit", async (req, res) => {
   }
 
   let startDate =
-    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
   let endDate =
-    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
 
   async.series(
     {
@@ -347,9 +371,13 @@ router.get("/top-clients", (req, res) => {
   }
 
   let startDate =
-    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
   let endDate =
-    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
 
   let clients = {};
 

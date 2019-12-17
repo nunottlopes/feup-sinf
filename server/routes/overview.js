@@ -12,9 +12,13 @@ router.get(`/top-products`, function(req, res) {
   }
 
   let startDate =
-    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
   let endDate =
-    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
 
   let products = {};
 
@@ -72,9 +76,13 @@ router.get("/top-clients", (req, res) => {
   }
 
   let startDate =
-    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
   let endDate =
-    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
 
   let clients = {};
 
@@ -137,9 +145,13 @@ router.get("/top-regions", (req, res) => {
   }
 
   let startDate =
-    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
   let endDate =
-    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
 
   let countries = {};
 
@@ -196,9 +208,13 @@ router.get("/month-sales", (req, res) => {
   }
 
   let startDate =
-    "start-date" in req.query ? new Date(req.query["start-date"]) : null;
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
   let endDate =
-    "end-date" in req.query ? new Date(req.query["end-date"]) : null;
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
 
   let monthly = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 

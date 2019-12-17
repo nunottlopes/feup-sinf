@@ -55,7 +55,7 @@ const TopProductsTable = props => {
           ))}
         </TableBody>
       </Table>
-      <Product isOpen={modal} close={close} data={modalData} />
+      <Product isOpen={modal} close={close} data={modalData} props={props} />
     </div>
   );
 };

@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Balance = () => {
+const Balance = props => {
   const table_header = ["Account", "Name", "Credit - Debit"];
   // constant for the overview API endpoint
   const api_endpoint_base = "http://localhost:3001/api/financial";
@@ -49,14 +49,17 @@ const Balance = () => {
   useEffect(() => {
     // Get the balance sheet
     axios
-      .get(`${api_endpoint_base}/balance`, { withCredentials: true })
+      .get(
+        `${api_endpoint_base}/balance?start-date=${props.startDate}&end-date=${props.endDate}`,
+        { withCredentials: true }
+      )
       .then(function(response) {
         set_balance(response.data);
       })
       .catch(function(error) {
         console.log(error);
       });
-  }, []);
+  }, [props.startDate, props.endDate]);
 
   return (
     <Table>
@@ -96,7 +99,7 @@ const Balance = () => {
   );
 };
 
-const Revenue = () => {
+const Revenue = props => {
   // constant for the overview API endpoint
   const api_endpoint_base = "http://localhost:3001/api/financial";
   // hooks for data/state
@@ -106,7 +109,10 @@ const Revenue = () => {
   useEffect(() => {
     // Get the balance sheet
     axios
-      .get(`${api_endpoint_base}/revenue`, { withCredentials: true })
+      .get(
+        `${api_endpoint_base}/revenue?start-date=${props.startDate}&end-date=${props.endDate}`,
+        { withCredentials: true }
+      )
       .then(function(response) {
         const { revenue, cost } = response.data;
         const months = [
@@ -134,7 +140,7 @@ const Revenue = () => {
       .catch(function(error) {
         console.log(error);
       });
-  }, []);
+  }, [props.startDate, props.endDate]);
 
   return (
     <ResponsiveContainer width="100%" height={400}>
@@ -159,7 +165,7 @@ const Revenue = () => {
   );
 };
 
-const Financial = () => {
+const Financial = props => {
   const classes = useStyles();
   const api_endpoint_base = "http://localhost:3001/api/financial";
 
@@ -169,7 +175,10 @@ const Financial = () => {
   useEffect(() => {
     // Get the ebit
     axios
-      .get(`${api_endpoint_base}/ebit`, { withCredentials: true })
+      .get(
+        `${api_endpoint_base}/ebit?start-date=${props.startDate}&end-date=${props.endDate}`,
+        { withCredentials: true }
+      )
       .then(function(response) {
         set_ebit(response.data);
       })
@@ -179,14 +188,17 @@ const Financial = () => {
 
     // Get the ebitda
     axios
-      .get(`${api_endpoint_base}/ebitda`, { withCredentials: true })
+      .get(
+        `${api_endpoint_base}/ebitda?start-date=${props.startDate}&end-date=${props.endDate}`,
+        { withCredentials: true }
+      )
       .then(function(response) {
         set_ebitda(response.data);
       })
       .catch(function(error) {
         console.log(error);
       });
-  }, []);
+  }, [props.startDate, props.endDate]);
 
   return (
     <Grid className={classes.grid} container spacing={2}>
@@ -195,7 +207,7 @@ const Financial = () => {
           <Typography variant="h5" className={classes.graphs_title}>
             Revenue from sales and cost of goods sold
           </Typography>
-          {Revenue()}
+          {Revenue(props)}
         </Paper>
       </Grid>
       <Grid item md={4} sm={12}>
@@ -220,7 +232,7 @@ const Financial = () => {
           <Typography variant="h5" className={classes.graphs_title}>
             Balance Sheet
           </Typography>
-          {Balance()}
+          {Balance(props)}
         </Paper>
       </Grid>
     </Grid>

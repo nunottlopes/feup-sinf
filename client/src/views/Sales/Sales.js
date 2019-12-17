@@ -184,7 +184,7 @@ InformationCard.propTypes = {
   classes: PropTypes.object
 };
 
-const Sales = () => {
+const Sales = props => {
   const classes = useStyles();
   // constant for the overview API endpoint
   const api_endpoint_base = "http://localhost:3001/api/sales";
@@ -215,7 +215,10 @@ const Sales = () => {
   useEffect(() => {
     // Get the top regions
     axios
-      .get(`${api_endpoint_base}/top-regions`, { withCredentials: true })
+      .get(
+        `${api_endpoint_base}/top-regions?start-date=${props.startDate}&end-date=${props.endDate}`,
+        { withCredentials: true }
+      )
       .then(function(response) {
         set_top_regions(response.data);
       })
@@ -225,7 +228,10 @@ const Sales = () => {
 
     // Get the top products
     axios
-      .get(`${api_endpoint_base}/top-products`, { withCredentials: true })
+      .get(
+        `${api_endpoint_base}/top-products?start-date=${props.startDate}&end-date=${props.endDate}`,
+        { withCredentials: true }
+      )
       .then(function(response) {
         set_top_products(response.data);
       })
@@ -235,7 +241,10 @@ const Sales = () => {
 
     // Get the top clients
     axios
-      .get(`${api_endpoint_base}/top-clients`, { withCredentials: true })
+      .get(
+        `${api_endpoint_base}/top-clients?start-date=${props.startDate}&end-date=${props.endDate}`,
+        { withCredentials: true }
+      )
       .then(function(response) {
         set_top_clients(response.data);
       })
@@ -245,7 +254,10 @@ const Sales = () => {
 
     // Get the daily volume sales for every month
     axios
-      .get(`${api_endpoint_base}/daily-volume`, { withCredentials: true })
+      .get(
+        `${api_endpoint_base}/daily-volume?start-date=${props.startDate}&end-date=${props.endDate}`,
+        { withCredentials: true }
+      )
       .then(function(response) {
         set_net_sales_volumes(__group_sales_by_month(response.data));
       })
@@ -255,9 +267,12 @@ const Sales = () => {
 
     // Get gross sales for every month and cumulative gross sales
     axios
-      .get(`${api_endpoint_base}/cumulative-month-gross`, {
-        withCredentials: true
-      })
+      .get(
+        `${api_endpoint_base}/cumulative-month-gross?start-date=${props.startDate}&end-date=${props.endDate}`,
+        {
+          withCredentials: true
+        }
+      )
       .then(function(response) {
         const [cumulative, per_month] = response.data;
         set_gross_cumulative_sales(cumulative.data);
@@ -269,7 +284,10 @@ const Sales = () => {
 
     // Get profit, revenues and cost of goods sold
     axios
-      .get(`${api_endpoint_base}/profit`, { withCredentials: true })
+      .get(
+        `${api_endpoint_base}/profit?start-date=${props.startDate}&end-date=${props.endDate}`,
+        { withCredentials: true }
+      )
       .then(function(response) {
         set_profits(response.data);
       })
@@ -279,7 +297,10 @@ const Sales = () => {
 
     // Get the total net sales
     axios
-      .get(`${api_endpoint_base}/total-net-sales`, { withCredentials: true })
+      .get(
+        `${api_endpoint_base}/total-net-sales?start-date=${props.startDate}&end-date=${props.endDate}`,
+        { withCredentials: true }
+      )
       .then(function(response) {
         set_total_net_sales(response.data.totalNetSales);
       })
@@ -289,14 +310,17 @@ const Sales = () => {
 
     // Get the total gross (net + taxes) sales
     axios
-      .get(`${api_endpoint_base}/total-gross-sales`, { withCredentials: true })
+      .get(
+        `${api_endpoint_base}/total-gross-sales?start-date=${props.startDate}&end-date=${props.endDate}`,
+        { withCredentials: true }
+      )
       .then(function(response) {
         set_total_gross_sales(response.data.totalGrossSales);
       })
       .catch(function(error) {
         console.log(error);
       });
-  }, []);
+  }, [props.startDate, props.endDate]);
 
   return (
     <Grid

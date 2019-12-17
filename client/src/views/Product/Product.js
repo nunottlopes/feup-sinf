@@ -64,7 +64,7 @@ const top_clients_table = clients => {
   );
 };
 
-const Product = ({ isOpen, close, data }) => {
+const Product = ({ isOpen, close, data, props }) => {
   const classes = useStyles();
   const [product, setProduct] = useState(null);
   const [productDetail, setProductDetail] = useState(null);
@@ -74,9 +74,12 @@ const Product = ({ isOpen, close, data }) => {
   useEffect(() => {
     if (data.product_id) {
       axios
-        .get(`${api_endpoint_base}/${data.product_id}`, {
-          withCredentials: true
-        })
+        .get(
+          `${api_endpoint_base}/${data.product_id}?start-date=${props.startDate}&end-date=${props.endDate}`,
+          {
+            withCredentials: true
+          }
+        )
         .then(function(response) {
           setProductDetail(response.data);
         })
@@ -85,9 +88,12 @@ const Product = ({ isOpen, close, data }) => {
         });
 
       axios
-        .get(`${api_endpoint_base}/${data.product_id}/info`, {
-          withCredentials: true
-        })
+        .get(
+          `${api_endpoint_base}/${data.product_id}/info?start-date=${props.startDate}&end-date=${props.endDate}`,
+          {
+            withCredentials: true
+          }
+        )
         .then(function(response) {
           setProduct(response.data);
         })
@@ -98,7 +104,7 @@ const Product = ({ isOpen, close, data }) => {
       setProduct(null);
       setProductDetail(null);
     }
-  }, [data]);
+  }, [data, props.startDate, props.endDate]);
 
   return (
     <Modal open={isOpen} onClose={close}>

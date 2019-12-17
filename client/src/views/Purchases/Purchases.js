@@ -159,7 +159,7 @@ const PendentOrdersDeliveryTable = props => {
   );
 };
 
-const Purchases = () => {
+const Purchases = props => {
   const classes = useStyles();
   // constant for the overview API endpoint
   const api_endpoint_base = "http://localhost:3001/api/purchases";
@@ -176,7 +176,10 @@ const Purchases = () => {
   useEffect(() => {
     // Get the pendent orders
     axios
-      .get(`${api_endpoint_base}/orders-to-receive`, { withCredentials: true })
+      .get(
+        `${api_endpoint_base}/orders-to-receive?start-date=${props.startDate}&end-date=${props.endDate}`,
+        { withCredentials: true }
+      )
       .then(function(response) {
         set_pendent_orders(response.data);
       })
@@ -186,7 +189,10 @@ const Purchases = () => {
 
     // Get the expenses orders
     axios
-      .get(`${api_endpoint_base}/expenses`, { withCredentials: true })
+      .get(
+        `${api_endpoint_base}/expenses?start-date=${props.startDate}&end-date=${props.endDate}`,
+        { withCredentials: true }
+      )
       .then(function(response) {
         set_expenses(response.data);
       })
@@ -196,7 +202,10 @@ const Purchases = () => {
 
     // Get the pendent bills
     axios
-      .get(`${api_endpoint_base}/pendent-bills`, { withCredentials: true })
+      .get(
+        `${api_endpoint_base}/pendent-bills?start-date=${props.startDate}&end-date=${props.endDate}`,
+        { withCredentials: true }
+      )
       .then(function(response) {
         set_pendent_bills(response.data);
       })
@@ -206,14 +215,17 @@ const Purchases = () => {
 
     // Get the list of suppliers
     axios
-      .get(`${api_endpoint_base}/suppliers`, { withCredentials: true })
+      .get(
+        `${api_endpoint_base}/suppliers?start-date=${props.startDate}&end-date=${props.endDate}`,
+        { withCredentials: true }
+      )
       .then(function(response) {
         set_suppliers(response.data);
       })
       .catch(function(error) {
         console.log(error);
       });
-  }, []);
+  }, [props.startDate, props.endDate]);
   return (
     <Grid className={classes.grid} container spacing={2}>
       <Grid item md={3} sm={12}>

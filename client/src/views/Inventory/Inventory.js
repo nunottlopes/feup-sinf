@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Inventory = () => {
+const Inventory = props => {
   const classes = useStyles();
   const api_endpoint_base = "http://localhost:3001/api/inventory";
 
@@ -58,7 +58,10 @@ const Inventory = () => {
   useEffect(() => {
     // Get products
     axios
-      .get(`${api_endpoint_base}/products`, { withCredentials: true })
+      .get(
+        `${api_endpoint_base}/products?start-date=${props.startDate}&end-date=${props.endDate}`,
+        { withCredentials: true }
+      )
       .then(function(response) {
         setProducts(response.data);
       })
@@ -68,7 +71,10 @@ const Inventory = () => {
 
     // Get stock balance
     axios
-      .get(`${api_endpoint_base}/stock-balance`, { withCredentials: true })
+      .get(
+        `${api_endpoint_base}/stock-balance?start-date=${props.startDate}&end-date=${props.endDate}`,
+        { withCredentials: true }
+      )
       .then(function(response) {
         setAssets(response.data.stockTotalBalance);
       })
@@ -78,14 +84,17 @@ const Inventory = () => {
 
     // Get warehouse stock
     axios
-      .get(`${api_endpoint_base}/warehouse-units`, { withCredentials: true })
+      .get(
+        `${api_endpoint_base}/warehouse-units?start-date=${props.startDate}&end-date=${props.endDate}`,
+        { withCredentials: true }
+      )
       .then(function(response) {
         setWarehouses(response.data);
       })
       .catch(function(error) {
         console.log(error);
       });
-  }, []);
+  }, [props.startDate, props.endDate]);
 
   const action = product => {
     setModal(true);
@@ -165,7 +174,12 @@ const Inventory = () => {
                   </TableRow>
                 ))}
             </TableBody>
-            <Product isOpen={modal} close={close} data={modalData} />
+            <Product
+              isOpen={modal}
+              close={close}
+              data={modalData}
+              props={props}
+            />
           </Table>
         </Paper>
       </Grid>
