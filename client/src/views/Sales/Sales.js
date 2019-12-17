@@ -5,13 +5,22 @@ import { makeStyles } from "@material-ui/core/styles";
 import Skeleton from "@material-ui/lab/Skeleton";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
+} from "recharts";
 import { formatCurrency, formatNumber } from "../../utils";
 import { MyPieChart } from "./../../components";
 import TopClientsTable from "./TopClientsTable";
-import TopProductsTable from "./TopProductsTable";
-
-
+import TopProductsTable from "../../components/TopProductsTable/TopProductsTable";
 
 const axios = require("axios");
 
@@ -79,14 +88,14 @@ const SalesVolumes = props => {
       <BarChart data={data} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="month" />
-        <YAxis tickFormatter={(value) => formatNumber(value)} />
-        <Tooltip formatter={(value) => formatCurrency(value)} />
+        <YAxis tickFormatter={value => formatNumber(value)} />
+        <Tooltip formatter={value => formatCurrency(value)} />
         <Legend />
         <Bar type="monotone" dataKey="net_sales" fill="red" />
         <Bar type="monotone" dataKey="gross_sales" fill="green" />
       </BarChart>
     </ResponsiveContainer>
-  )
+  );
 };
 
 SalesVolumes.propTypes = {
@@ -122,16 +131,24 @@ const CumulativeSalesVolumes = props => {
 
   return (
     <ResponsiveContainer width="100%" height={400}>
-      <LineChart data={data} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
+      <LineChart
+        data={data}
+        margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
+      >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="month" />
-        <YAxis tickFormatter={(value) => formatNumber(value)} />
-        <Tooltip formatter={(value) => formatCurrency(value)} />
+        <YAxis tickFormatter={value => formatNumber(value)} />
+        <Tooltip formatter={value => formatCurrency(value)} />
         <Legend />
-        <Line type="monotone" dataKey="cumulative_gross_sale" stroke="red" strokeWidth={2} />
+        <Line
+          type="monotone"
+          dataKey="cumulative_gross_sale"
+          stroke="red"
+          strokeWidth={2}
+        />
       </LineChart>
     </ResponsiveContainer>
-  )
+  );
 };
 
 CumulativeSalesVolumes.propTypes = {
@@ -155,8 +172,8 @@ const InformationCard = props => {
           {formatCurrency(value)}
         </Typography>
       ) : (
-          <Skeleton variant="text" />
-        )}
+        <Skeleton variant="text" />
+      )}
     </Paper>
   );
 };
@@ -199,82 +216,82 @@ const Sales = () => {
     // Get the top regions
     axios
       .get(`${api_endpoint_base}/top-regions`)
-      .then(function (response) {
+      .then(function(response) {
         set_top_regions(response.data);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
     // Get the top products
     axios
       .get(`${api_endpoint_base}/top-products`)
-      .then(function (response) {
+      .then(function(response) {
         set_top_products(response.data);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
     // Get the top clients
     axios
       .get(`${api_endpoint_base}/top-clients`)
-      .then(function (response) {
+      .then(function(response) {
         set_top_clients(response.data);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
     // Get the daily volume sales for every month
     axios
       .get(`${api_endpoint_base}/daily-volume`)
-      .then(function (response) {
+      .then(function(response) {
         set_net_sales_volumes(__group_sales_by_month(response.data));
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
     // Get gross sales for every month and cumulative gross sales
     axios
       .get(`${api_endpoint_base}/cumulative-month-gross`)
-      .then(function (response) {
+      .then(function(response) {
         const [cumulative, per_month] = response.data;
         set_gross_cumulative_sales(cumulative.data);
         set_gross_sales_volumes(per_month.data);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
     // Get profit, revenues and cost of goods sold
     axios
       .get(`${api_endpoint_base}/profit`)
-      .then(function (response) {
+      .then(function(response) {
         set_profits(response.data);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
     // Get the total net sales
     axios
       .get(`${api_endpoint_base}/total-net-sales`)
-      .then(function (response) {
+      .then(function(response) {
         set_total_net_sales(response.data.totalNetSales);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
     // Get the total gross (net + taxes) sales
     axios
       .get(`${api_endpoint_base}/total-gross-sales`)
-      .then(function (response) {
+      .then(function(response) {
         set_total_gross_sales(response.data.totalGrossSales);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   }, []);
@@ -329,9 +346,9 @@ const Sales = () => {
           </Typography>
           <MyPieChart
             data={top_regions.slice(0, 5)}
-            colors={['#bf211e', '#e82f2c', '#f95f5c', '#f99593', '#a06968']}
-            pieProps={{ nameKey: 'id', dataKey: 'netTotal' }}
-            cellProps={{ stroke: '#7f1614' }}
+            colors={["#bf211e", "#e82f2c", "#f95f5c", "#f99593", "#a06968"]}
+            pieProps={{ nameKey: "id", dataKey: "netTotal" }}
+            cellProps={{ stroke: "#7f1614" }}
           />
         </Paper>
       </Grid>
