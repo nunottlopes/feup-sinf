@@ -2,7 +2,6 @@ import React, {useState, useEffect} from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import ChartistGraph from 'react-chartist';
 import { Typography } from "@material-ui/core";
 import {
   Table,
@@ -11,6 +10,7 @@ import {
   TableRow,
   TableCell
 } from "@material-ui/core/";
+import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 import { formatCurrency, formatNumber, formatDate } from '../../utils';
 
@@ -58,24 +58,24 @@ const SuppliersTable = (props) => {
 
 const ExpensesLineGraph = (props) => {
   const {monthly_expenses} = props;
-  const data = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    series: [
-      {
-        className: 'series-expenses',
-        data: monthly_expenses
-      },
-    ]
-  }
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const data = months.map((value, index) => ({
+    month: value,
+    expense: monthly_expenses[index]
+  }));
 
-  const options = {
-    height: 400,
-    axisY: {
-      labelInterpolationFnc: (label) => formatNumber(label, 3)
-    }
-  }
-
-  return <ChartistGraph type='Line' data={data} options={options}></ChartistGraph>
+  return (
+    <ResponsiveContainer width="100%" height={400}>
+      <LineChart data={data} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="month" />
+        <YAxis tickFormatter={(value) => formatNumber(value)} />
+        <Tooltip formatter={(value) => formatCurrency(value)} />
+        <Legend />
+        <Line type="monotone" dataKey="expense" stroke="red" strokeWidth={2} />
+      </LineChart>
+    </ResponsiveContainer>
+  )
 }
 
 const PendentBillsTable = (props) => {
