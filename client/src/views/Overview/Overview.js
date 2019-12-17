@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { LineChart, Line } from 'recharts';
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
@@ -99,7 +100,7 @@ const Overview = () => {
 
   return (
     <Grid className={classes.grid} container spacing={3}>
-      <Grid item md={6} sm={12}>
+      <Grid item md={6} xs={12}>
         <Paper>
           <Typography variant="h5" className={classes.graphs_title}>
             Global finances
@@ -110,7 +111,7 @@ const Overview = () => {
           />
         </Paper>
       </Grid>
-      <Grid item md={6} sm={12}>
+      <Grid item md={6} xs={12}>
         <Paper>
           <Typography variant="h5" className={classes.graphs_title}>
             Monthly Sales
@@ -118,7 +119,7 @@ const Overview = () => {
           <MonthlySalesGraph sales={monthly_sales} />
         </Paper>
       </Grid>
-      <Grid item lg={4} md={6} sm={12}>
+      <Grid item md={6} xs={12}>
         <Paper>
           <Typography variant="h5" className={classes.graphs_title}>
             Top Clients
@@ -126,7 +127,7 @@ const Overview = () => {
           <TopClientsGraph clients={top_clients.slice(0, 5)} />
         </Paper>
       </Grid>
-      <Grid item lg={4} md={6} sm={12}>
+      <Grid item md={6} xs={12}>
         <Paper>
           <Typography variant="h5" className={classes.graphs_title}>
             Top Regions
@@ -134,7 +135,7 @@ const Overview = () => {
           <TopRegionsGraph regions={top_regions.slice(0, 5)} />
         </Paper>
       </Grid>
-      <Grid item lg={4} sm={12}>
+      <Grid item xs={12}>
         <Paper>
           <Typography variant="h5" className={classes.graphs_title}>
             Top Products
