@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import ChartistGraph from "react-chartist";
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import { Typography } from "@material-ui/core";
 import { Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core/';
-import { formatCurrency } from '../../utils';
-require('chartist-plugin-legend');
+import { LineChart, Line, Legend, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import { formatCurrency, formatNumber } from '../../utils';
 
 const axios = require('axios');
 
@@ -24,15 +23,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-// const reducer_debit = (acc_1, product) => acc_1 + product.debit;
-// const reducer_credit = (acc_2, product) => acc_2 + product.credit;
-
 const Balance = () => {
 
   const table_header = ['Account', 'Name', 'Credit - Debit']
-
-  // styling classes
-  // const classes = useStyles();
   // constant for the overview API endpoint
   const api_endpoint_base = "http://localhost:3001/api/financial";
   // hooks for data/state
@@ -68,10 +61,10 @@ const Balance = () => {
             <TableCell>{formatCurrency(product.value)}</TableCell>
           </TableRow>
         ))}
-        <TableRow>
+        <TableRow selected>
           <TableCell> - </TableCell>
           <TableCell>Total</TableCell>
-          <TableCell> {balance.length == 0 ? "" : balance.map(product => { return product.value }).reduce((n1, n2) => n1 + n2)} €</TableCell>
+          <TableCell> {balance.length == 0 ? "" : formatCurrency(balance.map(product => { return product.value }).reduce((n1, n2) => n1 + n2))}</TableCell>
         </TableRow>
       </TableBody>
     </Table>
@@ -79,72 +72,41 @@ const Balance = () => {
 }
 
 const Revenue = () => {
-  // styling classes
-  // const classes = useStyles();
   // constant for the overview API endpoint
   const api_endpoint_base = "http://localhost:3001/api/financial";
   // hooks for data/state
   const [revenue, set_revenue] = useState([]);
 
-  // Perform all API calls for this page
+  // Perform the API call
   useEffect(() => {
     // Get the balance sheet
-    axios
-      .get(`${api_endpoint_base}/revenue`)
-      .then(function(response) {
-        set_revenue(response.data);
+    axios.get(`${api_endpoint_base}/revenue`)
+      .then(function (response) {
+        const { revenue, cost } = response.data;
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        set_revenue(months.map((month, index) => ({
+          month: month,
+          revenue: revenue.data[index],
+          cost: cost.data[index]
+        })));
       })
       .catch(function(error) {
         console.log(error);
       })
   }, [])
 
-  console.log(revenue)
-
-  const data = {
-    labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ],
-    series: [
-      {
-        className: "revenue_from_sales",
-        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-      },
-      {
-        className: "cost_of_goods_sold",
-        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-      }
-    ]
-  }
-
-  if (revenue.length == 0) {
-    return <ChartistGraph type="Line" data={data}></ChartistGraph>
-  }
-
-  data.series = [
-    {
-      className: "revenue_from_sales",
-      data: revenue.revenue.data
-    },
-    {
-      className: "cost_of_goods_sold",
-      data: revenue.cost.data
-    }
-  ]
-
   return (
-    <ChartistGraph type="Line" data={data}></ChartistGraph>
+    <ResponsiveContainer width="100%" height={400}>
+      <LineChart data={revenue} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="month" />
+        <YAxis tickFormatter={(value) => formatNumber(value)} />
+        <Tooltip formatter={(value) => formatCurrency(value)} />
+        <Legend />
+        <Line type="monotone" dataKey="cost" stroke="red" />
+        <Line type="monotone" dataKey="revenue" stroke="green" />
+      </LineChart>
+    </ResponsiveContainer>
   )
 
 };
@@ -179,8 +141,6 @@ const Financial = () => {
 
   return (
     <Grid className={classes.grid} container spacing={2}>
-
-
       <Grid item md={8} sm={12}>
         <Paper>
           <Typography variant='h5' className={classes.graphs_title}>Revenue from sales and cost of goods sold</Typography>
