@@ -104,8 +104,8 @@ const Revenue = () => {
         <YAxis tickFormatter={(value) => formatNumber(value)} />
         <Tooltip formatter={(value) => formatCurrency(value)} />
         <Legend />
-        <Line type="monotone" dataKey="cost" stroke="red" />
-        <Line type="monotone" dataKey="revenue" stroke="green" />
+        <Line type="monotone" dataKey="cost" stroke="red" strokeWidth={2} />
+        <Line type="monotone" dataKey="revenue" stroke="green" strokeWidth={2} />
       </LineChart>
     </ResponsiveContainer>
   )
