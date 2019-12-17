@@ -6,8 +6,7 @@ import Paper from "@material-ui/core/Paper";
 import Skeleton from "@material-ui/lab/Skeleton";
 import ChartistGraph from "react-chartist";
 import { Typography } from "@material-ui/core";
-
-import TopRegionsGraph from "./TopRegionsGraph";
+import { MyPieChart } from "./../../components";
 import TopProductsTable from "./TopProductsTable";
 import TopClientsTable from "./TopClientsTable";
 
@@ -315,7 +314,12 @@ const Sales = () => {
           <Typography variant="h5" className={classes.graphs_title}>
             Sales Per Region
           </Typography>
-          <TopRegionsGraph regions={top_regions} />
+          <MyPieChart 
+            data={top_regions} 
+            colors={['#bf211e', '#e82f2c', '#f95f5c', '#f99593', '#a06968']}
+            pieProps={{nameKey: 'id', dataKey: 'netTotal'}}
+            cellProps={{stroke: '#7f1614'}}
+          />
         </Paper>
       </Grid>
       <Grid item xs={12} lg={6}>
