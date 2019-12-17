@@ -29,7 +29,7 @@ router.get(`/:productCode/info`, function(req, res) {
   let code = req.params.productCode;
   readDocuments(
     "SourceDocuments",
-    "",
+    { _id: "SalesInvoices" },
     response => {
       let info = {};
       let minimum = Number.MAX_VALUE;
@@ -37,6 +37,15 @@ router.get(`/:productCode/info`, function(req, res) {
       let unitsSold = 0;
 
       response[0].Invoice.forEach(invoice => {
+        const type = invoice.InvoiceType;
+        if (
+          !(
+            invoice.Line.length &&
+            (type == "FT" || type == "FS" || type == "FR" || type == "VD")
+          )
+        )
+          return;
+
         let code = req.params.productCode;
         let company = invoice.SourceID;
 
@@ -46,25 +55,28 @@ router.get(`/:productCode/info`, function(req, res) {
               if (line.ProductCode == code) {
                 if (info[company] != undefined) {
                   info[company] = {
-                    units: info[company].units + 1,
+                    units: info[company].units + line.Quantity,
                     amount: info[company].amount + line.UnitPrice
                   };
                 } else {
-                  info[company] = { units: 1, amount: line.UnitPrice };
+                  info[company] = {
+                    units: line.Quantity,
+                    amount: line.UnitPrice
+                  };
                 }
 
                 if (line.UnitPrice < minimum) minimum = line.UnitPrice;
 
                 if (name == undefined) name = line.ProductDescription;
 
-                unitsSold++;
+                unitsSold += line.Quantity;
               }
             });
           } else {
             if (invoice.Line.ProductCode == code) {
               if (info[company] != undefined) {
                 info[company] = {
-                  units: info[company].value + 1,
+                  units: info[company].units + invoice.Line.Quantity,
                   amount: info[company].amount + invoice.Line.UnitPrice
                 };
               } else {
@@ -75,7 +87,7 @@ router.get(`/:productCode/info`, function(req, res) {
                 minimum = invoice.Line.UnitPrice;
 
               if (name == undefined) name = invoice.Line.ProductDescription;
-              unitsSold++;
+              unitsSold += invoice.Line.Quantity;
             }
           }
         }

@@ -26,6 +26,9 @@ const useStyles = makeStyles(theme => ({
   graphs_title: {
     fontWeight: "lighter",
     marginBottom: "1rem"
+  },
+  product: {
+    cursor: "pointer"
   }
 }));
 
@@ -121,10 +124,7 @@ const Inventory = () => {
               {warehouses &&
                 warehouses.length !== 0 &&
                 warehouses.map(warehouse => (
-                  <TableRow
-                    key={warehouse.warehouse}
-                    onClick={() => action(warehouse)}
-                  >
+                  <TableRow key={warehouse.warehouse}>
                     <TableCell>{warehouse.warehouse}</TableCell>
                     <TableCell>{warehouse.warehouseDescription}</TableCell>
                     <TableCell>{warehouse.stockBalance}</TableCell>
@@ -134,7 +134,6 @@ const Inventory = () => {
                   </TableRow>
                 ))}
             </TableBody>
-            <Product isOpen={modal} close={close} data={modalData} />
           </Table>
         </Paper>
       </Grid>
@@ -151,7 +150,7 @@ const Inventory = () => {
                 ))}
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody className={classes.product}>
               {products &&
                 products.length !== 0 &&
                 products.map(product => (

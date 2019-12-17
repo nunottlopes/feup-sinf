@@ -114,8 +114,6 @@ const Revenue = () => {
       });
   }, []);
 
-  console.log(revenue);
-
   const data = {
     labels: [
       "Jan",

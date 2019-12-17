@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
@@ -14,6 +14,8 @@ import {
 
 import { formatCurrency } from "../../utils";
 
+const axios = require("axios");
+
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 0
@@ -28,12 +30,17 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const top_clients_table = () => {
-  const table_header = ["Client", "Units", "Amount"];
-  const table_rows = [
-    { client: "Administrador", units: 171, amount: 16205 },
-    { client: "EUGENIO.VEIGA", units: 1, amount: 94.77 }
-  ];
+const top_clients_table = clients => {
+  const table_header = ["Client", "Units", "Total Amount"];
+
+  let table_rows = [];
+  for (let key in clients) {
+    table_rows.push({
+      client: key,
+      units: clients[key].units,
+      amount: clients[key].amount
+    });
+  }
 
   return (
     <Table>
@@ -59,6 +66,36 @@ const top_clients_table = () => {
 
 const Product = ({ isOpen, close, data }) => {
   const classes = useStyles();
+  const [product, setProduct] = useState(null);
+  const [productDetail, setProductDetail] = useState(null);
+
+  const api_endpoint_base = "http://localhost:3001/api/product";
+
+  useEffect(() => {
+    if (data.product_id) {
+      axios
+        .get(`${api_endpoint_base}/${data.product_id}`)
+        .then(function(response) {
+          setProductDetail(response.data);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+
+      axios
+        .get(`${api_endpoint_base}/${data.product_id}/info`)
+        .then(function(response) {
+          setProduct(response.data);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    } else {
+      setProduct(null);
+      setProductDetail(null);
+    }
+  }, [data]);
+
   return (
     <Modal open={isOpen} onClose={close}>
       <div className="modal_css">
@@ -70,28 +107,29 @@ const Product = ({ isOpen, close, data }) => {
                 variant="h5"
                 className={classes.graphs_title}
               >
-                Hand Scanner -TR89
+                {product && product.name}
               </Typography>
               <Typography className="product_description" align="left">
                 Product Group:{" "}
                 <b>
                   {" "}
-                  Scanners <br />
+                  {productDetail && productDetail.ProductGroup} <br />
                 </b>
                 Product Code:{" "}
                 <b>
                   {" "}
-                  C0003 <br />
+                  {productDetail && productDetail.ProductNumberCode} <br />
                 </b>
                 Product Type:{" "}
                 <b>
                   {" "}
-                  P <br />{" "}
+                  {productDetail && productDetail.ProductType} <br />{" "}
                 </b>
                 Minimum selling price:{" "}
                 <b>
                   {" "}
-                  {formatCurrency(94.77)} <br />{" "}
+                  {product &&
+                    formatCurrency(product.minimumUnitPrice)} <br />{" "}
                 </b>
               </Typography>
             </Paper>
@@ -102,7 +140,7 @@ const Product = ({ isOpen, close, data }) => {
               <Typography variant="h5" className={classes.graphs_title}>
                 Units Sold
               </Typography>
-              172
+              {product && product.unitsSold}
             </Paper>
           </Grid>
 
@@ -115,7 +153,7 @@ const Product = ({ isOpen, close, data }) => {
               >
                 Top Clients
               </Typography>
-              {top_clients_table()}
+              {product && top_clients_table(product.clients)}
             </Paper>
           </Grid>
         </Grid>
