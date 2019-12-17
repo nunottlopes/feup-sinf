@@ -11,10 +11,10 @@ const {
 // SHEET_01
 // TODO:
 router.get(`/balance`, function(req, res) {
-  // if (!req.isLogged) {
-  //   res.status(401).send({ error: "Request unauthorized" });
-  //   return;
-  // }
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
 
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
@@ -119,10 +119,10 @@ router.get(`/balance`, function(req, res) {
 
 // INFO_01
 router.get(`/ebit`, function(req, res) {
-  // if (!req.isLogged) {
-  //   res.status(401).send({ error: "Request unauthorized" });
-  //   return;
-  // }
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
 
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
@@ -169,10 +169,11 @@ router.get(`/ebit`, function(req, res) {
 
 // INFO_02
 router.get(`/ebitda`, function(req, res) {
-  // if (!req.isLogged) {
-  //   res.status(401).send({ error: "Request unauthorized" });
-  //   return;
-  // }
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
+
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
   let endDate =
@@ -218,10 +219,11 @@ router.get(`/ebitda`, function(req, res) {
 
 // GRAPH_01
 router.get(`/revenue`, function(req, res) {
-  // if (!req.isLogged) {
-  //   res.status(401).send({ error: "Request unauthorized" });
-  //   return;
-  // }
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
+
   let costs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let sales = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 

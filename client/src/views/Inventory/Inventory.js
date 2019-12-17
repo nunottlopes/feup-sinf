@@ -58,7 +58,7 @@ const Inventory = () => {
   useEffect(() => {
     // Get products
     axios
-      .get(`${api_endpoint_base}/products`)
+      .get(`${api_endpoint_base}/products`, { withCredentials: true })
       .then(function(response) {
         setProducts(response.data);
       })
@@ -68,7 +68,7 @@ const Inventory = () => {
 
     // Get stock balance
     axios
-      .get(`${api_endpoint_base}/stock-balance`)
+      .get(`${api_endpoint_base}/stock-balance`, { withCredentials: true })
       .then(function(response) {
         setAssets(response.data.stockTotalBalance);
       })
@@ -78,7 +78,7 @@ const Inventory = () => {
 
     // Get warehouse stock
     axios
-      .get(`${api_endpoint_base}/warehouse-units`)
+      .get(`${api_endpoint_base}/warehouse-units`, { withCredentials: true })
       .then(function(response) {
         setWarehouses(response.data);
       })

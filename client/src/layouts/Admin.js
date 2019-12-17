@@ -11,6 +11,7 @@ import Navbar from "components/Navbars/AdminNavbarLinks.js";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import routes from "routes.js";
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
+import Cookies from "js-cookie";
 
 let ps;
 
@@ -18,13 +19,17 @@ const switchRoutes = (
   <Switch>
     {routes.map((prop, key) => {
       if (prop.layout === "/admin") {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            component={prop.component}
-            key={key}
-          />
-        );
+        if (Cookies.get("__session")) {
+          return (
+            <Route
+              path={prop.layout + prop.path}
+              component={prop.component}
+              key={key}
+            />
+          );
+        } else {
+          return <Redirect to="/login" />;
+        }
       }
       return null;
     })}
@@ -78,7 +83,6 @@ export default function Admin({ ...rest }) {
         routes={routes}
         logoText={"360º CompanyDashboard"}
         className={classes.sideBar}
-        //logo={logo}
         handleDrawerToggle={handleDrawerToggle}
         open={mobileOpen}
         color="blue"

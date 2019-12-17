@@ -9,7 +9,7 @@ import Sync from "@material-ui/icons/Sync";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import TextField from "@material-ui/core/TextField";
-
+import Cookies from "js-cookie";
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 
 import AppBar from "@material-ui/core/AppBar";
@@ -34,10 +34,17 @@ export default function AdminNavbarLinks(props) {
     setAnchorEl(null);
   };
 
+  const handleLogOut = () => {
+    setAnchorEl(null);
+    Cookies.remove("__session");
+    window.location.href = "/login";
+    console.log("LOGOUT");
+  };
+
   const handleParse = () => {
     setParsing(true);
     axios
-      .get(`http://localhost:3001/api/parse/saft`)
+      .get(`http://localhost:3001/api/parse/saft`, { withCredentials: true })
       .then(function(response) {
         setParsing(false);
       })
@@ -112,7 +119,7 @@ export default function AdminNavbarLinks(props) {
               open={open}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>Logout</MenuItem>
+              <MenuItem onClick={handleLogOut}>Logout</MenuItem>
             </Menu>
           </div>
         </Toolbar>

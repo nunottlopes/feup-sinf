@@ -6,10 +6,11 @@ var async = require("async");
 
 // TABLE_01
 router.get(`/top-products`, function(req, res) {
-  // if (!req.isLogged) {
-  //   res.status(401).send({ error: "Request unauthorized" });
-  //   return;
-  // }
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
+
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
   let endDate =
@@ -65,10 +66,11 @@ router.get(`/top-products`, function(req, res) {
 
 // PIE_02
 router.get("/top-regions", (req, res) => {
-  // if (!req.isLogged) {
-  //   res.status(401).send({ error: "Request unauthorized" });
-  //   return;
-  // }
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
+
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
   let endDate =
@@ -121,10 +123,11 @@ router.get("/top-regions", (req, res) => {
 
 // LINE_01
 router.get("/daily-volume", (req, res) => {
-  // if (!req.isLogged) {
-  //   res.status(401).send({ error: "Request unauthorized" });
-  //   return;
-  // }
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
+
   let dailySales = {};
 
   readDocuments("SourceDocuments", { _id: "SalesInvoices" }, resp => {
@@ -166,10 +169,11 @@ router.get("/daily-volume", (req, res) => {
 
 // (not profit but instead is total net sales)
 router.get("/total-net-sales", (req, res) => {
-  // if (!req.isLogged) {
-  //   res.status(401).send({ error: "Request unauthorized" });
-  //   return;
-  // }
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
+
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
   let endDate =
@@ -205,10 +209,11 @@ router.get("/total-net-sales", (req, res) => {
 
 // GROSS_TOTAL = NET_TOTAL + TAX_PAYABLE
 router.get("/total-gross-sales", (req, res) => {
-  // if (!req.isLogged) {
-  //   res.status(401).send({ error: "Request unauthorized" });
-  //   return;
-  // }
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
+
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
   let endDate =
@@ -243,10 +248,11 @@ router.get("/total-gross-sales", (req, res) => {
 
 // LINE_02
 router.get("/cumulative-month-gross", (req, res) => {
-  // if (!req.isLogged) {
-  //   res.status(401).send({ error: "Request unauthorized" });
-  //   return;
-  // }
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
+
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
   let endDate =
@@ -297,10 +303,11 @@ router.get("/cumulative-month-gross", (req, res) => {
 
 // INF_02 (fazer um card para profit, outro para revenue e outro para cost)
 router.get("/profit", async (req, res) => {
-  // if (!req.isLogged) {
-  //   res.status(401).send({ error: "Request unauthorized" });
-  //   return;
-  // }
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
+
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
   let endDate =
@@ -334,10 +341,11 @@ router.get("/profit", async (req, res) => {
 
 // Add top clients table/pie chart i guess
 router.get("/top-clients", (req, res) => {
-  // if (!req.isLogged) {
-  //   res.status(401).send({ error: "Request unauthorized" });
-  //   return;
-  // }
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
+
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
   let endDate =

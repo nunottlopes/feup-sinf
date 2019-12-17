@@ -5,6 +5,11 @@ const { readDocuments } = require("../mongodb/actions");
 
 // All orders
 router.get(`/all-orders`, function(req, res) {
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
+
   getJasminAPI("/purchases/orders")
     .then(response => {
       let orders = [];
@@ -43,6 +48,11 @@ router.get(`/all-orders`, function(req, res) {
 
 // TABLE_03 Waiting orders
 router.get(`/orders-to-receive`, function(req, res) {
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
+
   getJasminAPI("/goodsReceipt/processOrders/1/10?company=")
     .then(response => {
       let orders = [];
@@ -68,6 +78,11 @@ router.get(`/orders-to-receive`, function(req, res) {
 
 // LINEAR_01 Expenses
 router.get(`/expenses`, function(req, res) {
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
+
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
   let endDate =
@@ -97,6 +112,11 @@ router.get(`/expenses`, function(req, res) {
 
 // TABLE_02
 router.get(`/pendent-bills`, function(req, res) {
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
+
   getJasminAPI("/invoiceReceipt/invoices")
     .then(response => {
       let bills = [];
@@ -135,6 +155,11 @@ router.get(`/pendent-bills`, function(req, res) {
 
 // TABLE_01
 router.get(`/suppliers`, function(req, res) {
+  if (!req.isLogged) {
+    res.status(401).send({ error: "Request unauthorized" });
+    return;
+  }
+
   let startDate =
     "start-date" in req.query ? new Date(req.query["start-date"]) : null;
   let endDate =
