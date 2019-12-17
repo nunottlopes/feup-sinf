@@ -315,7 +315,7 @@ const Sales = () => {
             Sales Per Region
           </Typography>
           <MyPieChart 
-            data={top_regions} 
+            data={top_regions.slice(0, 5)} 
             colors={['#bf211e', '#e82f2c', '#f95f5c', '#f99593', '#a06968']}
             pieProps={{nameKey: 'id', dataKey: 'netTotal'}}
             cellProps={{stroke: '#7f1614'}}
