@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { MyPieChart } from "./../../components";
 import FinancesGraph from "./FinancesGraph";
 import MonthlySalesGraph from "./MonthlySalesGraph";
-import TopProductsTable from "./TopProductsTable";
+import TopProductsTable from "../../components/TopProductsTable/TopProductsTable";
 
 const axios = require("axios");
 
@@ -47,50 +47,50 @@ const Overview = () => {
     // Get the top clients
     axios
       .get(`${api_endpoint_base}/top-clients`)
-      .then(function (response) {
+      .then(function(response) {
         set_top_clients(response.data);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
     // Get the top regions
     axios
       .get(`${api_endpoint_base}/top-regions`)
-      .then(function (response) {
+      .then(function(response) {
         set_top_regions(response.data);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
     // Get the top products
     axios
       .get(`${api_endpoint_base}/top-products`)
-      .then(function (response) {
+      .then(function(response) {
         set_top_products(response.data);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
     // Get the monthly sales
     axios
       .get(`${api_endpoint_base}/month-sales`)
-      .then(function (response) {
+      .then(function(response) {
         set_monthly_sales(response.data.data);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
     // Get the financial data (income and expenses)
     axios
       .get(`${api_endpoint_base}/global-finances`)
-      .then(function (response) {
+      .then(function(response) {
         set_finances(response.data);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   }, []);
@@ -124,9 +124,9 @@ const Overview = () => {
           <MyPieChart
             data={top_clients.slice(0, 5)}
             //https://coolors.co/00292d-475a5b-799496-97bec1-9de4ea
-            colors={['#00292d', '#475a5b', '#799496', '#97bec1', '#9de4ea']}
-            pieProps={{ nameKey: 'client', dataKey: 'totalPurchased' }}
-            cellProps={{ stroke: '#001719' }}
+            colors={["#00292d", "#475a5b", "#799496", "#97bec1", "#9de4ea"]}
+            pieProps={{ nameKey: "client", dataKey: "totalPurchased" }}
+            cellProps={{ stroke: "#001719" }}
           />
         </Paper>
       </Grid>
@@ -138,9 +138,9 @@ const Overview = () => {
           <MyPieChart
             data={top_regions.slice(0, 5)}
             // https://coolors.co/bf211e-e82f2c-f95f5c-f99593-a06968
-            colors={['#bf211e', '#e82f2c', '#f95f5c', '#f99593', '#a06968']}
-            pieProps={{ nameKey: 'id', dataKey: 'netTotal' }}
-            cellProps={{ stroke: '#7f1614' }}
+            colors={["#bf211e", "#e82f2c", "#f95f5c", "#f99593", "#a06968"]}
+            pieProps={{ nameKey: "id", dataKey: "netTotal" }}
+            cellProps={{ stroke: "#7f1614" }}
           />
         </Paper>
       </Grid>
