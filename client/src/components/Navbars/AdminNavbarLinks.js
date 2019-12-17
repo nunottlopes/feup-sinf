@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import IconButton from "@material-ui/core/IconButton";
+import Sync from "@material-ui/icons/Sync";
 // core components
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
@@ -15,9 +16,11 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 
+const axios = require("axios");
 const useStyles = makeStyles(styles);
 
-export default function AdminNavbarLinks() {
+export default function AdminNavbarLinks(props) {
+  const { setParsing } = props;
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -29,6 +32,18 @@ export default function AdminNavbarLinks() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleParse = () => {
+    setParsing(true);
+    axios
+      .get(`http://localhost:3001/api/parse/saft`)
+      .then(function(response) {
+        setParsing(false);
+      })
+      .catch(function(error) {
+        setParsing(false);
+      });
   };
 
   return (
@@ -59,38 +74,47 @@ export default function AdminNavbarLinks() {
               shrink: true
             }}
           />
-          {
-            <div>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                className={classes.count}
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right"
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right"
-                }}
-                open={open}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>Zé das Couves</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
-              </Menu>
-            </div>
-          }
+          <div>
+            <IconButton
+              aria-label="parse information"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              className={classes.parse}
+              onClick={handleParse}
+              color="inherit"
+            >
+              <Sync />
+            </IconButton>
+          </div>
+          <div>
+            <IconButton
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              className={classes.count}
+              onClick={handleMenu}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right"
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right"
+              }}
+              open={open}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={handleClose}>Logout</MenuItem>
+            </Menu>
+          </div>
         </Toolbar>
       </AppBar>
     </div>

@@ -23,6 +23,9 @@ const headerLinksStyle = theme => ({
   dateContent: {
     marginLeft: theme.spacing(1),
     width: 200
+  },
+  parse: {
+    marginLeft: "25%"
   }
 });
 
