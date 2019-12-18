@@ -78,6 +78,7 @@ router.get(`/stock-balance`, function(req, res) {
 
   getJasminAPI("/materialscore/materialsitems")
     .then(response => {
+      
       let warehouses = JSON.parse(response)[0]["materialsItemWarehouses"];
 
       let amount = 0;

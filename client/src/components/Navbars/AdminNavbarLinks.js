@@ -38,7 +38,6 @@ export default function AdminNavbarLinks(props) {
     setAnchorEl(null);
     Cookies.remove("__session");
     window.location.href = "/login";
-    console.log("LOGOUT");
   };
 
   const handleParse = () => {

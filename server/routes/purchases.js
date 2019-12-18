@@ -53,20 +53,35 @@ router.get(`/orders-to-receive`, function(req, res) {
     return;
   }
 
+  let startDate =
+  "start-date" in req.query && req.query["start-date"] !== "null"
+    ? new Date(req.query["start-date"])
+    : null;
+let endDate =
+  "end-date" in req.query && req.query["end-date"] !== "null"
+    ? new Date(req.query["end-date"])
+    : null;
+
   getJasminAPI("/goodsReceipt/processOrders/1/10?company=")
     .then(response => {
       let orders = [];
       response = JSON.parse(response);
-      // res.send(response);
+      
       for (let i = 0; i < response.length; i++) {
-        if (!response[i].isDeleted) {
-          orders.push({
-            item: response[i].item,
-            itemDescription: response[i].itemDescription,
-            quantity: response[i].quantity,
-            deliveryDate: response[i].deliveryDate,
-            sourceDocKey: response[i].sourceDocKey
-          });
+        let deliveryDate = new Date(response[i].deliveryDate)
+        if (
+          (startDate == null || startDate <= deliveryDate) &&
+          (endDate == null || deliveryDate <= endDate)
+        ) {  
+          if (!response[i].isDeleted) {
+            orders.push({
+              item: response[i].item,
+              itemDescription: response[i].itemDescription,
+              quantity: response[i].quantity,
+              deliveryDate: response[i].deliveryDate,
+              sourceDocKey: response[i].sourceDocKey
+            });
+          }
         }
       }
       res.send(orders);
@@ -95,19 +110,19 @@ router.get(`/expenses`, function(req, res) {
   let expenses = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   getJasminAPI("/invoiceReceipt/expenses")
     .then(response => {
-      response = JSON.parse(response);
-
+       response = JSON.parse(response);
+      
       for (let i = 0; i < response.length; i++) {
-        let dueDate = new Date(response[i].dueDate);
+        let createdOn = new Date(response[i].createdOn);
         if (
-          !response[i].isDeleted &&
-          (startDate == null || startDate <= dueDate) &&
-          (endDate == null || dueDate <= endDate)
+          (startDate == null || startDate <= createdOn) &&
+          (endDate == null || createdOn <= endDate)
         ) {
-          expenses[dueDate.getMonth()] += response[i].payableAmount.amount;
+          expenses[createdOn.getMonth()] += response[i].payableAmount.amount;
         }
       }
-      res.send({ data: expenses, label: "Expenses per Month" });
+      
+      res.send({ data: expenses, label: "Expenses per Month" }); 
     })
     .catch(err => {
       res.send(err);
@@ -121,12 +136,26 @@ router.get(`/pendent-bills`, function(req, res) {
     return;
   }
 
+  let startDate =
+  "start-date" in req.query && req.query["start-date"] !== "null"
+    ? new Date(req.query["start-date"])
+    : null;
+let endDate =
+  "end-date" in req.query && req.query["end-date"] !== "null"
+    ? new Date(req.query["end-date"])
+    : null;
+
   getJasminAPI("/invoiceReceipt/invoices")
     .then(response => {
       let bills = [];
       response = JSON.parse(response);
       for (let i = 0; i < response.length; i++) {
         if (!response[i].isDeleted && response[i].documentStatus !== 2) {
+          let dueDate = new Date(response[i].dueDate)
+          if (
+            (startDate == null || startDate <= dueDate) &&
+            (endDate == null || dueDate <= endDate)
+          ) {
           let items = [];
 
           response[i].documentLines.forEach(element => {
@@ -149,8 +178,9 @@ router.get(`/pendent-bills`, function(req, res) {
             items: items
           });
         }
+        }
       }
-      res.send(bills);
+      res.send(bills); 
     })
     .catch(err => {
       res.send(err);
@@ -176,15 +206,13 @@ router.get(`/suppliers`, function(req, res) {
   getJasminAPI("/invoiceReceipt/expenses")
     .then(response => {
       response = JSON.parse(response);
-
       let suppliers = {};
 
       for (let i = 0; i < response.length; i++) {
-        let dueDate = new Date(response[i].dueDate);
+        let createdOn = new Date(response[i].createdOn)
         if (
-          !response[i].isDeleted &&
-          (startDate == null || startDate <= dueDate) &&
-          (endDate == null || dueDate <= endDate)
+          (startDate == null || startDate <= createdOn) &&
+          (endDate == null || createdOn <= endDate)
         ) {
           try {
             if (suppliers.hasOwnProperty(response[i].sellerSupplierParty)) {

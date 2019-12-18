@@ -55,8 +55,6 @@ export default function Admin({ ...rest }) {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  console.log(startDate);
-  console.log(endDate);
 
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();

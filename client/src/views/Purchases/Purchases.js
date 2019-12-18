@@ -108,7 +108,7 @@ const ExpensesLineGraph = props => {
 const PendentBillsTable = props => {
   const { pendent_bills } = props;
   const table_header = ["Order ID", "Supplier", "Debt", "Due Date"];
-
+  
   return (
     <Table>
       <TableHead>
