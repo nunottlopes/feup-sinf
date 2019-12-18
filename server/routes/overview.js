@@ -254,16 +254,25 @@ router.get("/global-finances", (req, res) => {
     return;
   }
 
+  let startDate =
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
+  let endDate =
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
+
   let costs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let sales = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   async.series(
     {
       account61: function(callback) {
-        accountsSumMontlhy(61, callback);
+        accountsSumMontlhy(61, startDate, endDate, callback);
       },
       account71: function(callback) {
-        accountsSumMontlhy(71, callback);
+        accountsSumMontlhy(71, startDate, endDate, callback);
       }
     },
     function(err, results) {

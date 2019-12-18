@@ -10,6 +10,8 @@ router.get(`/all-orders`, function(req, res) {
     return;
   }
 
+  // TODO: FILTRAR
+
   getJasminAPI("/purchases/orders")
     .then(response => {
       let orders = [];
@@ -52,6 +54,8 @@ router.get(`/orders-to-receive`, function(req, res) {
     res.status(401).send({ error: "Request unauthorized" });
     return;
   }
+
+  // TODO: FILTRAR
 
   getJasminAPI("/goodsReceipt/processOrders/1/10?company=")
     .then(response => {
@@ -120,6 +124,8 @@ router.get(`/pendent-bills`, function(req, res) {
     res.status(401).send({ error: "Request unauthorized" });
     return;
   }
+
+  // TODO: FILTRAR
 
   getJasminAPI("/invoiceReceipt/invoices")
     .then(response => {
