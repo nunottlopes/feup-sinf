@@ -136,6 +136,15 @@ router.get("/daily-volume", (req, res) => {
     return;
   }
 
+  let startDate =
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
+  let endDate =
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
+
   let dailySales = {};
 
   readDocuments("SourceDocuments", { _id: "SalesInvoices" }, resp => {
@@ -150,18 +159,24 @@ router.get("/daily-volume", (req, res) => {
       )
         return;
 
-      if (dailySales.hasOwnProperty(invoice.InvoiceDate)) {
-        dailySales[invoice.InvoiceDate].NetTotal += parseFloat(
-          invoice.DocumentTotals.NetTotal
-        );
-      } else {
-        let date = new Date(invoice.InvoiceDate);
-        let day = date.getDate();
-        dailySales[invoice.InvoiceDate] = {
-          Day: day,
-          Period: parseInt(invoice.Period),
-          NetTotal: parseFloat(invoice.DocumentTotals.NetTotal)
-        };
+      let invoiceDate = new Date(invoice.InvoiceDate);
+      if (
+        (startDate == null || startDate <= invoiceDate) &&
+        (endDate == null || invoiceDate <= endDate)
+      ) {
+        if (dailySales.hasOwnProperty(invoice.InvoiceDate)) {
+          dailySales[invoice.InvoiceDate].NetTotal += parseFloat(
+            invoice.DocumentTotals.NetTotal
+          );
+        } else {
+          let date = new Date(invoice.InvoiceDate);
+          let day = date.getDate();
+          dailySales[invoice.InvoiceDate] = {
+            Day: day,
+            Period: parseInt(invoice.Period),
+            NetTotal: parseFloat(invoice.DocumentTotals.NetTotal)
+          };
+        }
       }
     });
 

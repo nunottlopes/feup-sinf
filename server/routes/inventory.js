@@ -76,6 +76,8 @@ router.get(`/stock-balance`, function(req, res) {
     return;
   }
 
+  // TODO: FILTRAR
+
   getJasminAPI("/materialscore/materialsitems")
     .then(response => {
       
@@ -98,6 +100,8 @@ router.get(`/warehouse-units`, function(req, res) {
     res.status(401).send({ error: "Request unauthorized" });
     return;
   }
+
+  // TODO: FILTRAR
 
   getJasminAPI("/materialscore/materialsitems")
     .then(response => {

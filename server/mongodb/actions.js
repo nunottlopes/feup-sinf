@@ -133,15 +133,18 @@ function accountsSum(account, startDate, endDate, callback) {
   });
 }
 
-function accountsSumMontlhy(account, callback) {
+function accountsSumMontlhy(account, startDate, endDate, callback) {
   readDocuments("GeneralLedgerEntries", "", response => {
     let journals = response[0];
     let accountSumMontlhy = {};
-    let fiscalYear = 2016;
+    let fiscalYear = 2019;
+    if (endDate !== null && endDate !== undefined) {
+      fiscalYear = endDate.getFullYear();
+    }
 
     for (let i = 1; i <= 12; i++) {
-      let startDate = new Date(fiscalYear + "-" + i + "-01");
-      let endDate = new Date(fiscalYear + "-" + i + "-31");
+      let start_date = new Date(fiscalYear + "-" + i + "-01");
+      let end_date = new Date(fiscalYear + "-" + i + "-31");
 
       let credit = 0;
       let debit = 0;
@@ -153,8 +156,8 @@ function accountsSumMontlhy(account, callback) {
               let result = processTransaction(
                 transaction,
                 account,
-                startDate,
-                endDate
+                start_date,
+                end_date
               );
               debit += result.debit;
               credit += result.credit;
@@ -163,8 +166,8 @@ function accountsSumMontlhy(account, callback) {
             let result = processTransaction(
               journal.Transaction,
               account,
-              startDate,
-              endDate
+              start_date,
+              end_date
             );
             credit += result.credit;
             debit += result.debit;

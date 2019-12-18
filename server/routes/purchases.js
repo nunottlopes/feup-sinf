@@ -10,6 +10,8 @@ router.get(`/all-orders`, function(req, res) {
     return;
   }
 
+  // TODO: FILTRAR
+
   getJasminAPI("/purchases/orders")
     .then(response => {
       let orders = [];

@@ -95,24 +95,6 @@ router.get(`/balance`, function(req, res) {
       res.send(accountNames);
     }
   );
-
-  /*
-  for (let i = 11; i <= 81; i++) {
-
-    let id = i.toString()
-    let accountSum = data['debit'] - data['credit'];
-    if (accountSum != 0) {
-      this.accounts.push({
-        id: id,
-        name: this.accountNames.has(id) ? this.accountNames.get(id) : ' - ',
-        debit: accountSum > 0 ? accountSum : 0,
-        credit: accountSum < 0 ? -accountSum : 0
-      })
-
-      this.totalDebit += data['debit']
-      this.totalCredit += data['credit']
-    }
-  }*/
 });
 
 // INFO_01
@@ -154,8 +136,6 @@ router.get(`/ebit`, function(req, res) {
         console.log(err);
         return;
       }
-
-      // res.send({1: results.earnings, 2:results.expensesCOGS, 3:results.expensesServices, 4:results.expensesPersonnel, 5:results.expensesDepreciationAndAmortization})
 
       const ebit =
         results.earnings -
@@ -209,7 +189,6 @@ router.get(`/ebitda`, function(req, res) {
         console.log(err);
         return;
       }
-      // res.send({1: results.earningsSales, 2:results.earningsServices, 3:results.expensesCOGS, 4:results.expensesServices, 5:results.expensesPersonnel})
 
       const ebitda =
         results.earningsSales +
@@ -230,16 +209,25 @@ router.get(`/revenue`, function(req, res) {
     return;
   }
 
+  let startDate =
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
+  let endDate =
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
+
   let costs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let sales = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   async.series(
     {
       account61: function(callback) {
-        accountsSumMontlhy(61, callback);
+        accountsSumMontlhy(61, startDate, endDate, callback);
       },
       account71: function(callback) {
-        accountsSumMontlhy(71, callback);
+        accountsSumMontlhy(71, startDate, endDate, callback);
       }
     },
     function(err, results) {
