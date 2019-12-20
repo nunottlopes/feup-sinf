@@ -6,6 +6,7 @@ import {
   TableHead,
   TableRow
 } from "@material-ui/core/";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
@@ -43,7 +44,7 @@ const Balance = props => {
   // constant for the overview API endpoint
   const api_endpoint_base = "http://localhost:3001/api/financial";
   // hooks for data/state
-  const [balance, set_balance] = useState([]);
+  const [balance, set_balance] = useState({ loaded: false, data: [] });
 
   // Perform all API calls for this page
   useEffect(() => {
@@ -53,15 +54,15 @@ const Balance = props => {
         `${api_endpoint_base}/balance?start-date=${props.startDate}&end-date=${props.endDate}`,
         { withCredentials: true }
       )
-      .then(function(response) {
-        set_balance(response.data);
+      .then(function (response) {
+        set_balance({ loaded: true, data: response.data });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }, [props.startDate, props.endDate]);
 
-  return (
+  return balance.loaded ? (
     <Table>
       <TableHead>
         <TableRow>
@@ -71,7 +72,7 @@ const Balance = props => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {balance.map(product => (
+        {balance.data.map(product => (
           <TableRow key={product.id}>
             <TableCell>{product.id}</TableCell>
             <TableCell>{product.name}</TableCell>
@@ -83,27 +84,29 @@ const Balance = props => {
           <TableCell>Total</TableCell>
           <TableCell>
             {" "}
-            {balance.length === 0
+            {balance.data.length === 0
               ? ""
               : formatCurrency(
-                  balance
-                    .map(product => {
-                      return product.value;
-                    })
-                    .reduce((n1, n2) => n1 + n2)
-                )}
+                balance.data
+                  .map(product => {
+                    return product.value;
+                  })
+                  .reduce((n1, n2) => n1 + n2)
+              )}
           </TableCell>
         </TableRow>
       </TableBody>
-    </Table>
-  );
+    </Table>)
+    :
+    <CircularProgress />
+
 };
 
 const Revenue = props => {
   // constant for the overview API endpoint
   const api_endpoint_base = "http://localhost:3001/api/financial";
   // hooks for data/state
-  const [revenue, set_revenue] = useState([]);
+  const [revenue, set_revenue] = useState({ loaded: false, data: []});
 
   // Perform the API call
   useEffect(() => {
@@ -113,7 +116,7 @@ const Revenue = props => {
         `${api_endpoint_base}/revenue?start-date=${props.startDate}&end-date=${props.endDate}`,
         { withCredentials: true }
       )
-      .then(function(response) {
+      .then(function (response) {
         const { revenue, cost } = response.data;
         const months = [
           "Jan",
@@ -129,23 +132,24 @@ const Revenue = props => {
           "Nov",
           "Dec"
         ];
-        set_revenue(
-          months.map((month, index) => ({
+        set_revenue({
+          loaded: true,
+          data: months.map((month, index) => ({
             month: month,
             revenue: revenue.data[index],
             cost: cost.data[index]
           }))
-        );
+        });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }, [props.startDate, props.endDate]);
 
-  return (
+  return revenue.loaded ? (
     <ResponsiveContainer width="100%" height={400}>
       <LineChart
-        data={revenue}
+        data={revenue.data}
         margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
@@ -162,7 +166,9 @@ const Revenue = props => {
         />
       </LineChart>
     </ResponsiveContainer>
-  );
+  )
+  :
+  <CircularProgress />
 };
 
 const Financial = props => {
@@ -179,10 +185,10 @@ const Financial = props => {
         `${api_endpoint_base}/ebit?start-date=${props.startDate}&end-date=${props.endDate}`,
         { withCredentials: true }
       )
-      .then(function(response) {
+      .then(function (response) {
         set_ebit(response.data);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -192,10 +198,10 @@ const Financial = props => {
         `${api_endpoint_base}/ebitda?start-date=${props.startDate}&end-date=${props.endDate}`,
         { withCredentials: true }
       )
-      .then(function(response) {
+      .then(function (response) {
         set_ebitda(response.data);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }, [props.startDate, props.endDate]);
