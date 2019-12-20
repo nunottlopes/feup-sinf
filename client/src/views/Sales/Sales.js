@@ -211,9 +211,9 @@ const Sales = props => {
     }
   });
   // total net sales value
-  const [total_net_sales, set_total_net_sales] = useState({ loaded: false, data: [] });
+  const [total_net_sales, set_total_net_sales] = useState({ loaded: false, data: null });
   // total gross sales value
-  const [total_gross_sales, set_total_gross_sales] = useState({ loaded: false, data: [] });
+  const [total_gross_sales, set_total_gross_sales] = useState({ loaded: false, data: null });
   // Perform all API calls for this page
   useEffect(() => {
     // Get the top regions

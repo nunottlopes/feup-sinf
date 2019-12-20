@@ -126,7 +126,7 @@ const Inventory = props => {
               <TableHead>
                 <TableRow>
                   {warehouses_header.map(header => (
-                    <TableCell>{header}</TableCell>
+                    <TableCell key={`header_${header}`}>{header}</TableCell>
                   ))}
                 </TableRow>
               </TableHead>
