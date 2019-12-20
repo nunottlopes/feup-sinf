@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import { Typography } from "@material-ui/core";
+import { Typography, CircularProgress } from "@material-ui/core";
 import {
   Table,
   TableHead,
@@ -51,9 +51,9 @@ const Inventory = props => {
 
   const [modal, setModal] = useState(false);
   const [modalData, setModalData] = useState({});
-  const [products, setProducts] = useState([]);
-  const [assets, setAssets] = useState(null);
-  const [warehouses, setWarehouses] = useState([]);
+  const [products, setProducts] = useState({ loaded: false, data: [] });
+  const [assets, setAssets] = useState({ loaded: false, data: null });
+  const [warehouses, setWarehouses] = useState({ loaded: false, data: [] });
 
   useEffect(() => {
     // Get products
@@ -62,10 +62,10 @@ const Inventory = props => {
         `${api_endpoint_base}/products?start-date=${props.startDate}&end-date=${props.endDate}`,
         { withCredentials: true }
       )
-      .then(function(response) {
-        setProducts(response.data);
+      .then(function (response) {
+        setProducts({ loaded: true, data: response.data });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -75,10 +75,10 @@ const Inventory = props => {
         `${api_endpoint_base}/stock-balance?start-date=${props.startDate}&end-date=${props.endDate}`,
         { withCredentials: true }
       )
-      .then(function(response) {
-        setAssets(response.data.stockTotalBalance);
+      .then(function (response) {
+        setAssets({ loaded: true, data: response.data.stockTotalBalance });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -88,10 +88,10 @@ const Inventory = props => {
         `${api_endpoint_base}/warehouse-units?start-date=${props.startDate}&end-date=${props.endDate}`,
         { withCredentials: true }
       )
-      .then(function(response) {
-        setWarehouses(response.data);
+      .then(function (response) {
+        setWarehouses({ loaded: true, data: response.data });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }, [props.startDate, props.endDate]);
@@ -113,7 +113,7 @@ const Inventory = props => {
           <Typography variant="h5" className={classes.graphs_title}>
             Assets in Stock
           </Typography>
-          {assets && formatCurrency(assets)}
+          {assets.loaded && formatCurrency(assets.data)}
         </Paper>
       </Grid>
       <Grid item sm={12}>
@@ -121,18 +121,17 @@ const Inventory = props => {
           <Typography variant="h5" className={classes.graphs_title}>
             Warehouses
           </Typography>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {warehouses_header.map(header => (
-                  <TableCell>{header}</TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {warehouses &&
-                warehouses.length !== 0 &&
-                warehouses.map(warehouse => (
+          {warehouses.loaded ?
+            <Table>
+              <TableHead>
+                <TableRow>
+                  {warehouses_header.map(header => (
+                    <TableCell>{header}</TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {warehouses.data.map(warehouse => (
                   <TableRow key={warehouse.warehouse}>
                     <TableCell>{warehouse.warehouse}</TableCell>
                     <TableCell>{warehouse.warehouseDescription}</TableCell>
@@ -142,8 +141,12 @@ const Inventory = props => {
                     </TableCell>
                   </TableRow>
                 ))}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+            :
+            <CircularProgress />
+          }
+
         </Paper>
       </Grid>
       <Grid item sm={12}>
@@ -151,18 +154,17 @@ const Inventory = props => {
           <Typography variant="h5" className={classes.graphs_title}>
             Products
           </Typography>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {products_header.map(header => (
-                  <TableCell>{header}</TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody className={classes.product}>
-              {products &&
-                products.length !== 0 &&
-                products.map(product => (
+          {products.loaded ?
+            <Table>
+              <TableHead>
+                <TableRow>
+                  {products_header.map(header => (
+                    <TableCell key={`header_${header}`}>{header}</TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody className={classes.product}>
+                {products.data.map(product => (
                   <TableRow
                     key={product.product_id}
                     onClick={() => action(product)}
@@ -173,14 +175,17 @@ const Inventory = props => {
                     <TableCell>{formatCurrency(product.base_price)}</TableCell>
                   </TableRow>
                 ))}
-            </TableBody>
-            <Product
-              isOpen={modal}
-              close={close}
-              data={modalData}
-              props={props}
-            />
-          </Table>
+              </TableBody>
+              <Product
+                isOpen={modal}
+                close={close}
+                data={modalData}
+                props={props}
+              />
+            </Table>
+            :
+            <CircularProgress />
+          }
         </Paper>
       </Grid>
     </Grid>
