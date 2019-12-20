@@ -103,7 +103,6 @@ const Overview = props => {
         { withCredentials: true }
       )
       .then(function (response) {
-        console.log(response)
         set_finances({ loaded: true, data: { revenue: response.data.revenue.data, cost: response.data.cost.data } });
       })
       .catch(function (error) {
