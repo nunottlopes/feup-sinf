@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { Typography, CircularProgress } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
@@ -172,8 +172,8 @@ const InformationCard = props => {
           {formatCurrency(value)}
         </Typography>
       ) : (
-        <Skeleton variant="text" />
-      )}
+          <Skeleton variant="text" />
+        )}
     </Paper>
   );
 };
@@ -190,27 +190,30 @@ const Sales = props => {
   const api_endpoint_base = "http://localhost:3001/api/sales";
   // hooks for data/state
   // list of the top regions that purchase more products
-  const [top_regions, set_top_regions] = useState([]);
+  const [top_regions, set_top_regions] = useState({ loaded: false, data: [] });
   // list of most sold products
-  const [top_products, set_top_products] = useState([]);
+  const [top_products, set_top_products] = useState({ loaded: false, data: [] });
   // list of top clients
-  const [top_clients, set_top_clients] = useState([]);
+  const [top_clients, set_top_clients] = useState({ loaded: false, data: [] });
   // information about sales for every day of every month (net values)
-  const [net_sales_volumes, set_net_sales_volumes] = useState([]);
+  const [net_sales_volumes, set_net_sales_volumes] = useState({ loaded: false, data: [] });
   // gross sales for every month
-  const [gross_sales_volumes, set_gross_sales_volumes] = useState([]);
+  const [gross_sales_volumes, set_gross_sales_volumes] = useState({ loaded: false, data: [] });
   // cumulative gross sales over a year
-  const [gross_cumulative_sales, set_gross_cumulative_sales] = useState([]);
+  const [gross_cumulative_sales, set_gross_cumulative_sales] = useState({ loaded: false, data: [] });
   // total value of profit, revenues from sales, and production costs
   const [profits, set_profits] = useState({
-    profit: undefined,
-    revenueFromSales: undefined,
-    costOfGoodsSold: undefined
+    loaded: false,
+    data: {
+      profit: undefined,
+      revenueFromSales: undefined,
+      costOfGoodsSold: undefined
+    }
   });
   // total net sales value
-  const [total_net_sales, set_total_net_sales] = useState();
+  const [total_net_sales, set_total_net_sales] = useState({ loaded: false, data: null });
   // total gross sales value
-  const [total_gross_sales, set_total_gross_sales] = useState();
+  const [total_gross_sales, set_total_gross_sales] = useState({ loaded: false, data: null });
   // Perform all API calls for this page
   useEffect(() => {
     // Get the top regions
@@ -219,10 +222,10 @@ const Sales = props => {
         `${api_endpoint_base}/top-regions?start-date=${props.startDate}&end-date=${props.endDate}`,
         { withCredentials: true }
       )
-      .then(function(response) {
-        set_top_regions(response.data);
+      .then(function (response) {
+        set_top_regions({ loaded: true, data: response.data });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -232,10 +235,10 @@ const Sales = props => {
         `${api_endpoint_base}/top-products?start-date=${props.startDate}&end-date=${props.endDate}`,
         { withCredentials: true }
       )
-      .then(function(response) {
-        set_top_products(response.data);
+      .then(function (response) {
+        set_top_products({ loaded: true, data: response.data });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -245,10 +248,10 @@ const Sales = props => {
         `${api_endpoint_base}/top-clients?start-date=${props.startDate}&end-date=${props.endDate}`,
         { withCredentials: true }
       )
-      .then(function(response) {
-        set_top_clients(response.data);
+      .then(function (response) {
+        set_top_clients({ loaded: true, data: response.data });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -258,10 +261,10 @@ const Sales = props => {
         `${api_endpoint_base}/daily-volume?start-date=${props.startDate}&end-date=${props.endDate}`,
         { withCredentials: true }
       )
-      .then(function(response) {
-        set_net_sales_volumes(__group_sales_by_month(response.data));
+      .then(function (response) {
+        set_net_sales_volumes({ loaded: true, data: __group_sales_by_month(response.data) });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -273,12 +276,12 @@ const Sales = props => {
           withCredentials: true
         }
       )
-      .then(function(response) {
+      .then(function (response) {
         const [cumulative, per_month] = response.data;
-        set_gross_cumulative_sales(cumulative.data);
-        set_gross_sales_volumes(per_month.data);
+        set_gross_cumulative_sales({ loaded: true, data: cumulative.data });
+        set_gross_sales_volumes({ loaded: true, data: per_month.data });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -288,10 +291,10 @@ const Sales = props => {
         `${api_endpoint_base}/profit?start-date=${props.startDate}&end-date=${props.endDate}`,
         { withCredentials: true }
       )
-      .then(function(response) {
-        set_profits(response.data);
+      .then(function (response) {
+        set_profits({ loaded: true, data: response.data });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -301,10 +304,10 @@ const Sales = props => {
         `${api_endpoint_base}/total-net-sales?start-date=${props.startDate}&end-date=${props.endDate}`,
         { withCredentials: true }
       )
-      .then(function(response) {
-        set_total_net_sales(response.data.totalNetSales);
+      .then(function (response) {
+        set_total_net_sales({ loaded: true, data: response.data.totalNetSales });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -314,10 +317,10 @@ const Sales = props => {
         `${api_endpoint_base}/total-gross-sales?start-date=${props.startDate}&end-date=${props.endDate}`,
         { withCredentials: true }
       )
-      .then(function(response) {
-        set_total_gross_sales(response.data.totalGrossSales);
+      .then(function (response) {
+        set_total_gross_sales({ loaded: true, data: response.data.totalGrossSales });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }, [props.startDate, props.endDate]);
@@ -333,35 +336,35 @@ const Sales = props => {
       <Grid item xs={6} sm={4} md={3} lg>
         <InformationCard
           title="Profit"
-          value={profits.profit}
+          value={profits.data.profit}
           classes={classes}
         />
       </Grid>
       <Grid item xs={6} sm={4} md={3} lg>
         <InformationCard
           title="Revenue from sales"
-          value={profits.revenueFromSales}
+          value={profits.data.revenueFromSales}
           classes={classes}
         />
       </Grid>
       <Grid item xs={6} sm={4} md={3} lg>
         <InformationCard
           title="Costs of good solds"
-          value={profits.costOfGoodsSold}
+          value={profits.data.costOfGoodsSold}
           classes={classes}
         />
       </Grid>
       <Grid item xs={6} sm={4} md={3} lg>
         <InformationCard
           title="Total Net Sales"
-          value={total_net_sales}
+          value={total_net_sales.data}
           classes={classes}
         />
       </Grid>
       <Grid item xs={6} sm={4} md={3} lg>
         <InformationCard
           title="Total Gross Sales"
-          value={total_gross_sales}
+          value={total_gross_sales.data}
           classes={classes}
         />
       </Grid>
@@ -370,12 +373,16 @@ const Sales = props => {
           <Typography variant="h5" className={classes.graphs_title}>
             Sales Per Region
           </Typography>
-          <MyPieChart
-            data={top_regions.slice(0, 5)}
-            colors={["#bf211e", "#e82f2c", "#f95f5c", "#f99593", "#a06968"]}
-            pieProps={{ nameKey: "id", dataKey: "netTotal" }}
-            cellProps={{ stroke: "#7f1614" }}
-          />
+          {top_regions.loaded ?
+            <MyPieChart
+              data={top_regions.data.slice(0, 5)}
+              colors={["#bf211e", "#e82f2c", "#f95f5c", "#f99593", "#a06968"]}
+              pieProps={{ nameKey: "id", dataKey: "netTotal" }}
+              cellProps={{ stroke: "#7f1614" }}
+            />
+            :
+            <CircularProgress />
+          }
         </Paper>
       </Grid>
       <Grid item xs={12} lg={6}>
@@ -383,10 +390,14 @@ const Sales = props => {
           <Typography variant="h5" className={classes.graphs_title}>
             Sales Volume (net &amp; gross)
           </Typography>
-          <SalesVolumes
-            net_sales={net_sales_volumes}
-            gross_sales={gross_sales_volumes}
-          />
+          {net_sales_volumes.loaded && gross_sales_volumes.loaded ?
+            <SalesVolumes
+              net_sales={net_sales_volumes.data}
+              gross_sales={gross_sales_volumes.data}
+            />
+            :
+            <CircularProgress />
+          }
         </Paper>
       </Grid>
       <Grid item xs={12} lg={6}>
@@ -394,9 +405,13 @@ const Sales = props => {
           <Typography variant="h5" className={classes.graphs_title}>
             Cumulative Sales Volume (gross)
           </Typography>
-          <CumulativeSalesVolumes
-            cumulative_gross_sales={gross_cumulative_sales}
-          />
+          {gross_cumulative_sales.data ?
+            <CumulativeSalesVolumes
+              cumulative_gross_sales={gross_cumulative_sales.data}
+            />
+            :
+            <CircularProgress />
+          }
         </Paper>
       </Grid>
       <Grid item xs={12}>
@@ -404,7 +419,11 @@ const Sales = props => {
           <Typography variant="h5" className={classes.graphs_title}>
             Top Products
           </Typography>
-          <TopProductsTable products={top_products.slice(0, 10)} />
+          {top_products.loaded ?
+            <TopProductsTable products={top_products.data.slice(0, 10)} />
+            :
+            <CircularProgress />
+          }
         </Paper>
       </Grid>
       <Grid item xs={12}>
@@ -412,7 +431,11 @@ const Sales = props => {
           <Typography variant="h5" className={classes.graphs_title}>
             Top Clients
           </Typography>
-          <TopClientsTable clients={top_clients.slice(0, 10)} />
+          {top_clients.loaded ?
+            <TopClientsTable clients={top_clients.data.slice(0, 10)} />
+            :
+            <CircularProgress />
+          }
         </Paper>
       </Grid>
     </Grid>
