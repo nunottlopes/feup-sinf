@@ -1,0 +1,14 @@
+{
+  "name": "feup-sinf",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "install": "concurrently \"cd server/ && npm install\" \"cd client && npm install\"",
+    "start": "concurrently \"cd server/ && npm run start\" \"cd client && npm run start\""
+  },
+  "author": "Class 1, Group N",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^5.0.2"
+  }
+}
