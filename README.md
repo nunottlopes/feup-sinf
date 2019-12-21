@@ -1,4 +1,6 @@
-- To start the database run: `docker-compose up``
+- To start the database run: `docker-compose up -d`
+
+- Inside server folder add an .env file unsing the file .env.template as a template
 
 - To run both the client and the server do:
 
