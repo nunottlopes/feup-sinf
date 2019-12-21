@@ -1,6 +1,5 @@
 var express = require("express");
 var router = express.Router();
-const getJasminAPI = require("../config/jasmin").getJasminAPI;
 const { readDocuments } = require("../mongodb/actions");
 
 // INF_01

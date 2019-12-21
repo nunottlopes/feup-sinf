@@ -1,7 +1,6 @@
 var express = require("express");
 var router = express.Router();
 const getJasminAPI = require("../config/jasmin").getJasminAPI;
-const { readDocuments } = require("../mongodb/actions");
 
 // All orders
 router.get(`/all-orders`, function(req, res) {
@@ -9,8 +8,6 @@ router.get(`/all-orders`, function(req, res) {
     res.status(401).send({ error: "Request unauthorized" });
     return;
   }
-
-  // TODO: FILTRAR
 
   getJasminAPI("/purchases/orders")
     .then(response => {

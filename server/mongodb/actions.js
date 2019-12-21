@@ -2,18 +2,10 @@ var assert = require("assert");
 var MongoClient = require("mongodb").MongoClient;
 var { url, dbName, config } = require("../config/config.js")["mongodb"];
 
-// Documentation
-// https://www.npmjs.com/package/mongodb
-// https://mongodb.github.io/node-mongodb-native/3.2/api/
-
 /* ----------- Simple actions ----------- */
 
 function insertDocuments(db, collectionName, data) {
   const collection = db.collection(collectionName);
-
-  // If _id is not defined  in data it will generate one randomly
-  // Data needs to be an array
-  // data example -> [{ a: 1 }, { a: 2 }, { a: 3 }]
 
   return collection
     .insertMany(data)
@@ -27,8 +19,6 @@ function insertDocuments(db, collectionName, data) {
 function findDocuments(db, collectionName, query, callback) {
   const collection = db.collection(collectionName);
 
-  // To find all documents query = {}
-  // To add a query filter, e.g. query = {'a': 3}
   collection.find(query).toArray(function(err, docs) {
     assert.equal(err, null);
     callback(docs);
@@ -37,8 +27,6 @@ function findDocuments(db, collectionName, query, callback) {
 
 function updateDocument(db, collectionName, query, change) {
   const collection = db.collection(collectionName);
-
-  // query = { a: 2 },  change ={ $set: { b: 1 } } -> Update document where a is 2, set b equal to 1
 
   return collection
     .updateOne(query, change)
@@ -97,11 +85,6 @@ function accountsSum(account, startDate, endDate, callback) {
     let journals = response[0];
     let credit = 0;
     let debit = 0;
-    // let startDate =
-    //   "start-date" in req.query ? new Date(req.query["start-date"]) : null;
-    // let endDate =
-    //   "end-date" in req.query ? new Date(req.query["end-date"]) : null;
-    // let account = req.params.account;
 
     journals.Journal.forEach(journal => {
       if (journal.Transaction != undefined) {
@@ -129,7 +112,6 @@ function accountsSum(account, startDate, endDate, callback) {
       }
     });
     callback(null, credit - debit);
-    // return { credit, debit };
   });
 }
 
@@ -187,9 +169,7 @@ function accountsSumMontlhy(account, startDate, endDate, callback) {
 
 processTransaction = (transaction, account, startDate, endDate) => {
   function processLine(line, type) {
-    //Não é fornecedores
     if ((line.AccountID + " ").indexOf(account) != 0) return 0;
-    //if((line.AccountID+ " ").indexOf(63) == 0)console.log(line.AccountID, type, line.CreditAmount,line.DebitAmount )
     return type == "credit" ? line.CreditAmount : line.DebitAmount;
   }
 

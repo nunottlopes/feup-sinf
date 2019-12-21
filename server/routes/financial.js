@@ -10,14 +10,18 @@ router.get(`/balance`, function(req, res) {
     return;
   }
 
+  let currentYear = new Date().getFullYear();
+  let startDateTemp = new Date(`${currentYear}-01-01T00:00:00.000Z`);
+  let endDateTemp = new Date(`${currentYear}-12-31T23:59:59.999Z`);
+
   let startDate =
     "start-date" in req.query && req.query["start-date"] !== "null"
       ? new Date(req.query["start-date"])
-      : null;
+      : startDateTemp;
   let endDate =
     "end-date" in req.query && req.query["end-date"] !== "null"
       ? new Date(req.query["end-date"])
-      : null;
+      : endDateTemp;
 
   let accountNames = [
     { id: 11, name: "Caixa" },
