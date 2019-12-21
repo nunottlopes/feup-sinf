@@ -56,25 +56,25 @@ router.get(`/orders-to-receive`, function(req, res) {
   }
 
   let startDate =
-  "start-date" in req.query && req.query["start-date"] !== "null"
-    ? new Date(req.query["start-date"])
-    : null;
-let endDate =
-  "end-date" in req.query && req.query["end-date"] !== "null"
-    ? new Date(req.query["end-date"])
-    : null;
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
+  let endDate =
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
 
   getJasminAPI("/goodsReceipt/processOrders/1/10?company=")
     .then(response => {
       let orders = [];
       response = JSON.parse(response);
-      
+
       for (let i = 0; i < response.length; i++) {
-        let deliveryDate = new Date(response[i].deliveryDate)
+        let deliveryDate = new Date(response[i].deliveryDate);
         if (
           (startDate == null || startDate <= deliveryDate) &&
           (endDate == null || deliveryDate <= endDate)
-        ) {  
+        ) {
           if (!response[i].isDeleted) {
             orders.push({
               item: response[i].item,
@@ -112,8 +112,8 @@ router.get(`/expenses`, function(req, res) {
   let expenses = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   getJasminAPI("/invoiceReceipt/expenses")
     .then(response => {
-       response = JSON.parse(response);
-      
+      response = JSON.parse(response);
+
       for (let i = 0; i < response.length; i++) {
         let createdOn = new Date(response[i].createdOn);
         if (
@@ -123,8 +123,8 @@ router.get(`/expenses`, function(req, res) {
           expenses[createdOn.getMonth()] += response[i].payableAmount.amount;
         }
       }
-      
-      res.send({ data: expenses, label: "Expenses per Month" }); 
+
+      res.send({ data: expenses, label: "Expenses per Month" });
     })
     .catch(err => {
       res.send(err);
@@ -139,13 +139,13 @@ router.get(`/pendent-bills`, function(req, res) {
   }
 
   let startDate =
-  "start-date" in req.query && req.query["start-date"] !== "null"
-    ? new Date(req.query["start-date"])
-    : null;
-let endDate =
-  "end-date" in req.query && req.query["end-date"] !== "null"
-    ? new Date(req.query["end-date"])
-    : null;
+    "start-date" in req.query && req.query["start-date"] !== "null"
+      ? new Date(req.query["start-date"])
+      : null;
+  let endDate =
+    "end-date" in req.query && req.query["end-date"] !== "null"
+      ? new Date(req.query["end-date"])
+      : null;
 
   getJasminAPI("/invoiceReceipt/invoices")
     .then(response => {
@@ -153,36 +153,36 @@ let endDate =
       response = JSON.parse(response);
       for (let i = 0; i < response.length; i++) {
         if (!response[i].isDeleted && response[i].documentStatus !== 2) {
-          let dueDate = new Date(response[i].dueDate)
+          let dueDate = new Date(response[i].dueDate);
           if (
             (startDate == null || startDate <= dueDate) &&
             (endDate == null || dueDate <= endDate)
           ) {
-          let items = [];
+            let items = [];
 
-          response[i].documentLines.forEach(element => {
-            items.push({
-              quantity: element.quantity,
-              totalAmount: element.lineExtensionAmount.amount,
-              warehouse: element.warehouse,
-              itemId: element.purchasesItem,
-              itemDescription: element.purchasesItemDescription,
-              deliveryDate: element.deliveryDate
+            response[i].documentLines.forEach(element => {
+              items.push({
+                quantity: element.quantity,
+                totalAmount: element.lineExtensionAmount.amount,
+                warehouse: element.warehouse,
+                itemId: element.purchasesItem,
+                itemDescription: element.purchasesItemDescription,
+                deliveryDate: element.deliveryDate
+              });
             });
-          });
 
-          bills.push({
-            dueDate: response[i].dueDate,
-            amount: response[i].payableAmount.amount,
-            entity: response[i].accountingParty,
-            supplier: response[i].accountingPartyDescription,
-            orderId: response[i].naturalKey,
-            items: items
-          });
-        }
+            bills.push({
+              dueDate: response[i].dueDate,
+              amount: response[i].payableAmount.amount,
+              entity: response[i].accountingParty,
+              supplier: response[i].accountingPartyDescription,
+              orderId: response[i].naturalKey,
+              items: items
+            });
+          }
         }
       }
-      res.send(bills); 
+      res.send(bills);
     })
     .catch(err => {
       res.send(err);
@@ -197,7 +197,9 @@ router.get(`/suppliers`, function(req, res) {
   }
 
   let startDate =
-    "start-date" in req.query && req.query["start-date"] !== "null"
+    "start-date" in req.query &&
+    req.query["start-date"] !== "null" &&
+    req.query["start-date"] !== null
       ? new Date(req.query["start-date"])
       : null;
   let endDate =
@@ -211,7 +213,7 @@ router.get(`/suppliers`, function(req, res) {
       let suppliers = {};
 
       for (let i = 0; i < response.length; i++) {
-        let createdOn = new Date(response[i].createdOn)
+        let createdOn = new Date(response[i].createdOn);
         if (
           (startDate == null || startDate <= createdOn) &&
           (endDate == null || createdOn <= endDate)
